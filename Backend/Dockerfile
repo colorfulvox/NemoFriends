@@ -5,4 +5,4 @@ COPY requirements.txt ./
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY . .
-CMD ["gunicorn", "backend.wsgi", "--bind", "0.0.0.0:80"]
+CMD ["gunicorn", "project.wsgi", "--bind", "0.0.0.0:80"]
