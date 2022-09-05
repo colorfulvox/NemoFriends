@@ -1,5 +1,5 @@
 FROM python:3.10.5
-WORKDIR /var/jenkins_home/workspace/deploytest/backend
+WORKDIR /var/jenkins_home/workspace/deploytest/Backend
 COPY requirements.txt ./
 
 RUN pip install --upgrade pip
