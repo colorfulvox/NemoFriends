@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'animals',
     'djangotest',
     'rest_framework',
     'django.contrib.admin',
