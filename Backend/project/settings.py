@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os
-import environ
+import os, environ
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,9 +37,24 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # local apps
+    'accounts',
     'animals',
     'djangotest',
+    # 3rd party apps
     'rest_framework',
+    'rest_framework.authtoken',
+    
+    # DRF auth
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+    
+    # signup 위해 필요
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    
+    # 기본
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,6 +62,28 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+# 로그인, 인증 관련 설정
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    ),
+    # 로그인 할 때 헤더에서 jwt 토큰 유효한지 확인하는 설정
+    # 'DEFAULT_PERMISSION_CLASSES' : [
+    #     'rest_framework.permissions.IsAuthenticated'
+    # ],
+}
+STATE = env('STATE')
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD= "username"
+AUTH_USER_MODEL = 'accounts.User'
+REST_USE_JWT = True
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=6),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
