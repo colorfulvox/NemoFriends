@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from accounts.models import User
 from allauth.socialaccount.models import SocialAccount
 from django.conf import settings
@@ -8,11 +9,38 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from django.http import JsonResponse
 import requests
 from rest_framework import status
+from rest_framework.response import Response
 from json.decoder import JSONDecodeError
+from rest_framework.decorators import APIView
+
 state = getattr(settings, 'STATE')
 BASE_URL = 'http://localhost:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
 
+
+class ChangeBGMView(APIView):
+    def post(self,request):
+        response = {"success": False}
+
+        user = request.user
+        user.bgm = request.data.get("bgm")
+        user.save()
+        
+        response['success'] = True
+        
+        return Response(response)
+
+class ChangeEffectView(APIView):
+    def post(self,request):
+        response = {"success": False}
+
+        user = request.user
+        user.effect = request.data.get("effect")
+        user.save()
+        
+        response['success'] = True
+        
+        return Response(response)
 def google_callback(request):
     client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
     client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
