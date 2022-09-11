@@ -1,9 +1,8 @@
 from django.db import models
 
-# Create your models here.
 class Animal(models.Model):
     species = models.TextField()
-    feeds = models.JSONField(defalut={})
-    characteristics = models.JSONField(default={})
-    commands = models.JSONField(default={})
+    feeds = models.JSONField(default=list)
+    characteristics = models.JSONField(default=list)
+    commands = models.JSONField(default=list)
     default_color = models.IntegerField()
