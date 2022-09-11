@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Animal
+
+
+class AnimalAdmin(admin.ModelAdmin):
+    fields = ['species','feeds', 'characteristics', 'commands', 'default_color']
+
+admin.site.register(Animal, AnimalAdmin) 
