@@ -39,7 +39,10 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     # local apps
     'accounts',
+    'animals',
     'djangotest',
+    'items',
+
     # 3rd party apps
     'rest_framework',
     'rest_framework.authtoken',
@@ -120,14 +123,14 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES={
-'default': {
-'ENGINE': 'django.db.backends.mysql',
-'NAME': env('DB_NAME'),
-'USER': env('DB_USER'),
-'PASSWORD': env('DB_PASSWORD'),
-"HOST": env('DB_HOST'),
-"PORT": env('DB_PORT'),
-}
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+    }
 }
 
 
