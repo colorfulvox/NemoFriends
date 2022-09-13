@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'accounts',
     'animals',
     'djangotest',
+    'items',
+
     # 3rd party apps
     'rest_framework',
     'rest_framework.authtoken',
