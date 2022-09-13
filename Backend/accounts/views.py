@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from accounts.models import User
 from allauth.socialaccount.models import SocialAccount
 from django.conf import settings
@@ -8,10 +9,61 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from django.http import JsonResponse
 import requests
 from rest_framework import status
+from rest_framework.response import Response
 from json.decoder import JSONDecodeError
+from rest_framework.decorators import APIView
+
 state = getattr(settings, 'STATE')
 BASE_URL = 'http://localhost:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
+
+class AccountDeleteView(APIView):
+    def delete(self,request):
+        response = {"success": False}
+
+        user = request.user
+        user.delete()
+
+        response['success'] = True
+        return Response(response)
+# 가챠 의문 : 가챠 자체 진행은 백에서 해야 되는 게 아닌가? 안전을 위해서. 일단 다른 테이블이 생성되어있지 않으니 보류
+class GachaView(APIView):
+    def post(self,request):
+        response = {"success": False}
+        # 동물일 경우
+        if request.data.get('type') == 1:
+            i = 1
+        # 조경일 경우
+        elif request.data.get('type') == 2:
+            j = 1
+        # 염색약일 경우
+        elif request.data.get('type') == 3:
+            k = 1
+
+class ChangeBGMView(APIView):
+    def post(self,request):
+        response = {"success": False}
+
+        user = request.user
+        user.bgm = request.data.get("bgm")
+        user.save()
+        
+        response['success'] = True
+        
+        return Response(response)
+
+class ChangeEffectView(APIView):
+    def post(self,request):
+        response = {"success": False}
+
+        user = request.user
+        user.effect = request.data.get("effect")
+        user.save()
+        
+        response['success'] = True
+        
+        return Response(response)
+
 
 def google_callback(request):
     client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
