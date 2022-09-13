@@ -2,14 +2,14 @@ from .models import Decoration, User_Decoration
 from rest_framework import serializers
 
 
-class ItemsCreateRequestSerializer(serializers.ModelSerializer):
+class ItemsCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Decoration
         fields = '__all__'
 
 
-class ItemsUpdateRequestSerializer(serializers.ModelSerializer):
+class ItemsUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User_Decoration
