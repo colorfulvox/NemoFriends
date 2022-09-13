@@ -1,0 +1,902 @@
+[
+{
+  "model": "animals.animal",
+  "pk": 1,
+  "fields": {
+    "species": "닭",
+    "feeds": [
+      [
+        "개미",
+        "거미",
+        "잎"
+      ],
+      [
+        "블루베리",
+        "달팽이",
+        "딸기"
+      ],
+      [
+        "사과",
+        "빵",
+        "풀"
+      ],
+      [
+        "ant",
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "cake",
+        "carrot",
+        "donuts",
+        "flower",
+        "frog",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "pear",
+        "pineapple",
+        "potato",
+        "sandwich",
+        "spider",
+        "strawberry",
+        "watermelon",
+        "snail"
+      ]
+    ],
+    "characteristics": [
+      "닭은 시각과 청각이 예민하지만, 냄새나 맛을 거의 못 느낀다.",
+      "닭은 사실 7살 아이 수준의 매우 높은 지능을 가지고 있다.",
+      "닭은 조류 중 지구상에서 개체 수가 가장 많은 동물이다."
+    ],
+    "commands": [
+      "앉아",
+      "파닥파닥",
+      "날아라"
+    ],
+    "default_color": 1
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 2,
+  "fields": {
+    "species": "개",
+    "feeds": [
+      [
+        "블루베리",
+        "바나나",
+        "감자"
+      ],
+      [
+        "당근",
+        "사과",
+        "빵"
+      ],
+      [
+        "고기",
+        "수박",
+        "브로콜리"
+      ],
+      [
+        "apple",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "cake",
+        "carrot",
+        "donuts",
+        "pear",
+        "pineapple",
+        "potato",
+        "sandwich",
+        "steak",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "개는 평균적으로 하루에 10.1시간을 자며, 사람처럼 꿈을 꾼다.",
+      "개는 의사소통 시 청각 신호보다 시각 신호에 훨씬 많이 의존한다. 상대방의 아주 짧은 시간동안의 자세 변화, 미세한 몸짓, 심지어는 신체의 무게중심 변화까지 감지한다.",
+      "개도 혈액형 구분이 있다. 1번에서 7번까지의 숫자로 분류되는 개의 혈액형은 최소 13개 이상으로 알려져 있다."
+    ],
+    "commands": [
+      "앉아",
+      "엎드려",
+      "빵야"
+    ],
+    "default_color": 2
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 3,
+  "fields": {
+    "species": "고양이",
+    "feeds": [
+      [
+        "물고기",
+        "딸기",
+        "사과"
+      ],
+      [
+        "개구리",
+        "브로콜리",
+        "당근"
+      ],
+      [
+        "쥐",
+        "새",
+        "고기"
+      ],
+      [
+        "apple",
+        "banana",
+        "bird",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "cake",
+        "carrot",
+        "donuts",
+        "fish",
+        "frog",
+        "pear",
+        "pineapple",
+        "potato",
+        "sandwich",
+        "steak",
+        "strawberry",
+        "watermelon",
+        "mouse"
+      ]
+    ],
+    "characteristics": [
+      "고양이는 죽이기 전에 사냥감의 힘을 빼기 위해 잡은 짐승을 가지고 논다.",
+      "목뒤의 특히 느슨한 피부는 뒷덜미이며, 어미 고양이가 새끼를 운반 할 때 새끼를 잡는 부위이다.따라서, 고양이들은 그 부위를 잡혔을 때 조용해지고 순종적으로 되는 경향이 있다.",
+      "무리 생활을 하지는 않지만 자신보다 높은 서열의 고양이의 식사 순서를 지키는 등 서열 의식이 갖춰져 있다."
+    ],
+    "commands": [
+      "앉아",
+      "엎드려",
+      "손"
+    ],
+    "default_color": 3
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 4,
+  "fields": {
+    "species": "고슴도치",
+    "feeds": [
+      [
+        "달팽이",
+        "개미",
+        "빵"
+      ],
+      [
+        "당근",
+        "바나나",
+        "거미"
+      ],
+      [
+        "사과",
+        "개구리",
+        "고기"
+      ],
+      [
+        "ant",
+        "apple",
+        "asparagus",
+        "banana",
+        "bread",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "carrot",
+        "frog",
+        "grapes",
+        "pear",
+        "pineapple",
+        "potato",
+        "snail",
+        "spider",
+        "steak",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "체모가 변형되어서 생긴 가시가 몸에 돋혀 있으며, 전체적으로 억세며 가로줄 모양의 어두운 무늬가 있다.",
+      "11월부터 동면 세태에 들어가고 가시갈이를 하며, 겨울잠을 잔다.",
+      "천적과 맞닥뜨리면 네다리를 배 부위에 모아 공처럼 몸을 둥글게 하여, 등에 난 가시털로 자신을 방어한다."
+    ],
+    "commands": [
+      "앉아",
+      "누워",
+      "웅크려"
+    ],
+    "default_color": 4
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 5,
+  "fields": {
+    "species": "사슴",
+    "feeds": [
+      [
+        "잎",
+        "블루베리",
+        "당근"
+      ],
+      [
+        "아스파라거스",
+        "사과",
+        "바나나"
+      ],
+      [
+        "풀",
+        "브로콜리",
+        "감자"
+      ],
+      [
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "bush",
+        "carrot",
+        "cake",
+        "donuts",
+        "flower",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "pear",
+        "pineapple",
+        "potato",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "사슴은 먹이를 먹을 때나 쉴 때 항상 바람이 부는 쪽을 향하는데, 이는 바람에 실려 오는 포식자의 소리를 듣고, 냄새를 맡기 위해서이다.",
+      "주기적으로 떨어지고 다시 솟아나는 수사슴의 뿔은 \"생명의 나무\"와 같다.그것은 자연의 법칙을 반영하여 재탄생, 장수, 성욕, 빛과 태양 등을 뜻하는 보편적인 상징이다.",
+      "위험이 닥칠 때는 궁둥이의 흰 털을 세워 다른 수컷에게 신호를 보내어 경고한다."
+    ],
+    "commands": [
+      "앉아",
+      "뿔",
+      "메리 크리스마스~"
+    ],
+    "default_color": 5
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 6,
+  "fields": {
+    "species": "코끼리",
+    "feeds": [
+      [
+        "풀",
+        "블루베리",
+        "바나나"
+      ],
+      [
+        "브로콜리",
+        "사과",
+        "배"
+      ],
+      [
+        "당근",
+        "수박",
+        "파인애플"
+      ],
+      [
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "bush",
+        "cake",
+        "carrot",
+        "donuts",
+        "flower",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "pear",
+        "pineapple",
+        "potato",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "코끼리의 코는 가장 활용을 많이하는 수단이다. 코는 숨을 쉴뿐만 아니라 물을 마시고, 나무잎을 뜯고, 손과 같은 역할을 하여 동전까지 집을 수 있는 아주 예민한 것으로 손과 같다. 또 물 속에서 숨을 쉴 수 있고 적을 물리칠 때 쓰기도 한다. 죽은 동료를 인식할 때도 동료의 뼈를 코로 더듬으면서 인식한다.",
+      "청각은 예민하여 3km나 떨어진 곳에서 나는 소리도 들을 수 있다. 시각은 둔하며 색맹이어서 적의 접근을 탐지하는 데는 주로 후각에 의지한다. 머리에 비해 눈은 작고 미각은 발달되어 있지 않다.",
+      "거기에 하루에 최대 300kg을 먹기에 배설량이 상당한데, 하루에 50Kg정도를 배출한다. 현재 지구상 코끼리들의 배설물은 세계에서 가장 큰 것이다."
+    ],
+    "commands": [
+      "앉아",
+      "파닥파닥",
+      "안녕"
+    ],
+    "default_color": 6
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 7,
+  "fields": {
+    "species": "사자",
+    "feeds": [
+      [
+        "고기",
+        "돼지",
+        "너구리"
+      ],
+      [
+        "낙타",
+        "소",
+        "새"
+      ],
+      [
+        "얼룩말",
+        "캥거루",
+        "악어"
+      ],
+      [
+        "bird",
+        "cow",
+        "fish",
+        "horse",
+        "octopus",
+        "pig",
+        "steak",
+        "zebra",
+        "mouse",
+        "camel",
+        "duck",
+        "crocodile",
+        "flamingo",
+        "kangaroo",
+        "raccoon",
+        "parrot",
+        "swan",
+        "owl"
+      ]
+    ],
+    "characteristics": [
+      "수컷사자는 하루에 20시간을 자거나 쉬면서 보낸다. 반면 암컷사자들은 하루종일 사냥한다. 수컷사자의 경우 포유류 중에 유난히 잠이 많아 사냥은 암컷사자들이 대신 담당하면서 수사자는 암사자들이 갖다 바치는 사냥감으로 살아간다. 한마디로 수컷사자는 포유류 중, 가장 게으르다고 볼 수 있다.",
+      "사냥은 다른 고양이과 육식동물처럼 밤에만 사냥한다. 낮보다는 훨씬 먹잇감을 쉽게 기습할 수 있기 때문이다.",
+      "시속은 보통 50km로 달리지만, 최고 속도는 80km에 이른다."
+    ],
+    "commands": [
+      "앉아",
+      "엎드려",
+      "으르렁 )"
+    ],
+    "default_color": 7
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 8,
+  "fields": {
+    "species": "기린",
+    "feeds": [
+      [
+        "잎",
+        "꽃",
+        "딸기"
+      ],
+      [
+        "아스파라거스",
+        "바나나",
+        "당근"
+      ],
+      [
+        "사과",
+        "수박",
+        "풀"
+      ],
+      [
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bush",
+        "carrot",
+        "flower",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "pear",
+        "pineapple",
+        "potato",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "수컷 기린은 뿔 끝까지 약 4.8-5.5m이며, 일반적으로 1300-1700kg이다. 암컷은 수컷보다 30-60cm 정도 작고, 200-400kg 정도 적다. ",
+      "사자가 기린을 사냥할 때는, 기린의 가늘고 호리호리한 다리를 쳐서 넘어뜨리는 방법을 사용하지만, 기린이 스스로를 방어하기 위해 엄청난 힘으로 걷어찰 수 있기 때문에 사자에게 기린은 매우 위험한 사냥감이다. 다 자란 기린에게 제대로 걷어차이면, 사자의 두개골이 산산조각나거나 척추가 부러질 수도 있다.",
+      "태어난 지 몇 시간 만에 새끼 기린은 생후 1주 된 기린과 비슷한 수준으로 달릴 수 있다. 그러나 생후 2주 동안, 대부분의 시간을 앉아서 보내며 어미 기린의 보호를 받는다."
+    ],
+    "commands": [
+      "앉아",
+      "잘자",
+      "안녕?"
+    ],
+    "default_color": 8
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 9,
+  "fields": {
+    "species": "거북이",
+    "feeds": [
+      [
+        "풀",
+        "아스파라거스",
+        "바나나"
+      ],
+      [
+        "게",
+        "당근",
+        "개구리"
+      ],
+      [
+        "브로콜리",
+        "문어",
+        "물고기"
+      ],
+      [
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "bush",
+        "carrot",
+        "crab",
+        "fish",
+        "flower",
+        "frog",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "octopus",
+        "pear",
+        "pineapple",
+        "potato",
+        "steak",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "거북은 뭍에 살든 물에 살든 모두 폐호흡을 해야 하기 때문에 숨을 쉬려면 30분에 한 번 꼴로 수면으로 올라와야 한다. 바다거북이 잠을 잘 때는 바다 밑바닥의 으슥한 구석으로 내려가서 숨을 참은 채로 잔다. 쉬거나 잠자는 바다거북은 4~7시간 정도 호흡을 참을 수 있다. ",
+      "그러나 물 속에 너무 오래 있으면 거북도 버티지 못하고 익사한다. 실제로 바다거북의 은신처에 잠수부가 들어가 보면 자다 깨서 몽롱한 상태에서 나갈 구멍을 찾지 못해 익사한 바다거북의 뼈가 가끔씩 발견된다고 한다.",
+      "거북의 몸은 단단한 등딱지 안에 갇혀 있으며 배갑과 복갑은 각각 연결되어 상자와 같은 인상을 준다. 그러나 가죽처럼 등딱지가 부드럽고 유연한 거북 종류도 있다. 단단한 등딱지 덕분에 천적도 별로 없다. 피부도 두꺼워서 15분만에 성인을 죽일 수 있는 해파리의 독이 파고들지 않아 해파리를 주식으로 삼기까지 할 정도이다."
+    ],
+    "commands": [
+      "앉아",
+      "누워",
+      "빵야"
+    ],
+    "default_color": 9
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 10,
+  "fields": {
+    "species": "펭귄",
+    "feeds": [
+      [
+        "물고기"
+      ],
+      [
+        "문어",
+        "물고기"
+      ],
+      [
+        "가재",
+        "문어",
+        "물고기"
+      ],
+      [
+        "crab",
+        "fish",
+        "lobster",
+        "octopus",
+        "scorpion"
+      ]
+    ],
+    "characteristics": [
+      "수컷이 더 적기 때문에, 짝짓기 철이 되면 암컷 여러 마리가 수컷 한 마리를 걸고 싸우는, 지구상에 몇 안 되는 종 가운데 하나이다.",
+      "극지방의 폭풍을 견뎌내지 못하거나 천적인 도둑 갈매기의 공격을 받아 새끼를 잃은 어미는, 아마도 슬픔을 달래기 위해, 다른 어미의 새끼를 도둑질하려 드는 것으로 알려져 있다. 이것은 자기 유전자를 퍼뜨리기 위한 본능에 기인한 것이 아니라 순수하게 감정적인 이유로 보인다.",
+      "독일의 빅토어 베노 마이어로쇼프 박사 연구팀은 턱끈펭귄과 아델리펭귄의 분변활동을 관찰해 이들이 항문에서 대략 60킬로파스칼의 압력으로 분비물을 발사한다는 결과를 발표했다. 이는 인간보다 최대 8배 강한 힘이라고 한다."
+    ],
+    "commands": [
+      "앉아",
+      "엎드려",
+      "박수"
+    ],
+    "default_color": 10
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 11,
+  "fields": {
+    "species": "양",
+    "feeds": [
+      [
+        "잎",
+        "블루베리",
+        "아스파라거스"
+      ],
+      [
+        "풀",
+        "사과",
+        "브로콜리"
+      ],
+      [
+        "감자",
+        "당근",
+        "수박"
+      ],
+      [
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "bush",
+        "carrot",
+        "flower",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "pear",
+        "pineapple",
+        "potato",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "화를 거의 잘 안 내고 온화한 성질을 가진 사람을 양이라고 부를 정도로 온순해 보이는 이미지 때문에 사람들은 양을 유순한 동물이라고 생각할 수 있지만 양은 실제로는 매우 억세고 사나운 동물이다. 염소와 마찬가지로 고집이 세서",
+      "다른 동물에게 박치기를 하기도 하고 사람에게도 죽기살기로 달려들기 때문에 양치기들도 애를 많이 먹는다.",
+      "흔히 알려진 폭신폭신한 양의 모습은 양모라고도 하는 털을 얻기 위한 개량종으로, 이 양들은 털갈이를 하지 못하기 때문에 인간이 주기적으로 털을 깎아 줘야만 한다. 방치해뒀다가는 양들이 털 무게에 눌려서 제대로 움직이지도 못한다.그래서 오스트레일리아나 뉴질랜드에서는 양의 털을 주기적으로 깎지 않는 행위를 동물학대로 간주한다.",
+      "포유류 가운데 몸집에 비해 뇌의 부피가 가장 크다. 그런데 포유류 치고 지능이 낮은 편에 속한다."
+    ],
+    "commands": [
+      "앉아",
+      "잘자",
+      "안녕?"
+    ],
+    "default_color": 11
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 12,
+  "fields": {
+    "species": "토끼",
+    "feeds": [
+      [
+        "잎",
+        "블루베리",
+        "포도"
+      ],
+      [
+        "브로콜리",
+        "감자",
+        "바나나"
+      ],
+      [
+        "풀",
+        "사과",
+        "딸기"
+      ],
+      [
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bush",
+        "carrot",
+        "flower",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "pear",
+        "pineapple",
+        "potato",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "토끼는 똥을 두 번 나누어 싸는데 처음 싼 똥은 영양분이 많아서 먹는다. 똥은 동글동글하다.똥이 딱딱한 환약처럼 생겼다. ",
+      "토끼는 후각으로 자기 새끼와 남의 새끼를 판별한다. ",
+      "서로 그루밍을 하는 토끼. 토끼가 그루밍을 하는 것은 상대를 좋아하고 있다는 표시이다."
+    ],
+    "commands": [
+      "앉아",
+      "엎드려",
+      "점프점프"
+    ],
+    "default_color": 12
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 13,
+  "fields": {
+    "species": "원숭이",
+    "feeds": [
+      [
+        "개미",
+        "빵",
+        "사과"
+      ],
+      [
+        "감자",
+        "쥐",
+        "당근"
+      ],
+      [
+        "고기",
+        "바나나",
+        "케이크"
+      ],
+      [
+        "ant",
+        "apple",
+        "asparagus",
+        "banana",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "bush",
+        "cake",
+        "carrot",
+        "donuts",
+        "fish",
+        "flower",
+        "frog",
+        "garden",
+        "grapes",
+        "grass",
+        "leaf",
+        "mouse",
+        "pear",
+        "pineapple",
+        "potato",
+        "sandwich",
+        "snail",
+        "spider",
+        "steak",
+        "strawberry",
+        "watermelon"
+      ]
+    ],
+    "characteristics": [
+      "잔나비는 원숭이의 또 다른 이름이다.",
+      "바나나를 좋아한다는 이미지가 강해서 일반적으로 바나나와 자주 엮이지만,",
+      "모든 과일을 가리지 않고 닥치는대로 잘 먹으며 가장 좋아하는 과일은 바나나가 아닌 자몽이다.",
+      "일반적으로 나뭇잎과 과실 등을 먹는 것으로 알려져 있지만 곤충이나 작은 설치류 등도 먹는다."
+    ],
+    "commands": [
+      "앉아",
+      "안녕",
+      "우끼끼"
+    ],
+    "default_color": 13
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 14,
+  "fields": {
+    "species": "호랑이",
+    "feeds": [
+      [
+        "돼지",
+        "오리",
+        "쥐"
+      ],
+      [
+        "고기",
+        "소",
+        "얼룩말"
+      ],
+      [
+        "악어",
+        "새",
+        "너구리"
+      ],
+      [
+        "bird",
+        "cow",
+        "fish",
+        "horse",
+        "octopus",
+        "pig",
+        "steak",
+        "zebra",
+        "mouse",
+        "camel",
+        "duck",
+        "crocodile",
+        "flamingo",
+        "kangaroo",
+        "raccoon",
+        "parrot",
+        "swan",
+        "owl"
+      ]
+    ],
+    "characteristics": [
+      "호랑이는 줄무늬가 사람의 지문처럼 각각 다르다. 사육사들은 호랑이들의 눈 위 줄무늬로 구분한다.",
+      "엄마 호랑이가 육아를 담당한다. 아빠 호랑이는 짝짓기가 끝나면 도망간다. 수컷은 아이에 대한 애정이 없어 분리시켜야 한다. 남겨진 엄마는 아이들에게 모든 것을 혼자 키운다.",
+      "호랑이는 우리나라에서 1946년도에 멸종되었다."
+    ],
+    "commands": [
+      "앉아",
+      "엎드려",
+      "점프"
+    ],
+    "default_color": 14
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 15,
+  "fields": {
+    "species": "곰",
+    "feeds": [
+      [
+        "개미",
+        "블루베리",
+        "물고기"
+      ],
+      [
+        "수박",
+        "풀",
+        "고기"
+      ],
+      [
+        "사과",
+        "감자",
+        "돼지"
+      ],
+      [
+        "ant",
+        "apple",
+        "asparagus",
+        "banana",
+        "bird",
+        "blueberry",
+        "blackberry",
+        "broccoli",
+        "bread",
+        "bush",
+        "cake",
+        "camel",
+        "carrot",
+        "cow",
+        "crab",
+        "crocodile",
+        "donuts",
+        "duck",
+        "fish",
+        "flamingo",
+        "flower",
+        "frog",
+        "garden",
+        "grapes",
+        "grass",
+        "horse",
+        "kangaroo",
+        "leaf",
+        "mouse",
+        "owl",
+        "octopus",
+        "parrot",
+        "pear",
+        "pig",
+        "pineapple",
+        "potato",
+        "raccoon",
+        "sandwich",
+        "snail",
+        "spider",
+        "steak",
+        "strawberry",
+        "swan",
+        "watermelon",
+        "zebra"
+      ]
+    ],
+    "characteristics": [
+      "곰은 온건한 성격의 짐승으로 충돌을 피하려고 하며, 위험할 때는 도망친다.",
+      "곰은 큰 발, 짧은 다리, 뒤꿈치를 먼저 대고 걷는 행동 때문에 느리게 보이지만, 민첩하고 빠르게 달릴 수도 있다. 한 예로 북극곰은 시속 약 50km로 달릴 수 있다.",
+      "동물들 중에서 후각이 뛰어난 동물이다. 후각세포는 개와도 비교가 안 될 정도로 많으며, 곰의 후각은 영국의 경찰견 블러드 하운드보다 7배는 뛰어난 것으로 간주된다. 이 녀석들은 깡통 통조림의 밀봉된 표면에 새어나오는 냄새로도 내용물을 판단할 수 있다. 실제로 북극곰은 후각으로만 얼음벌판인 북극에서 먹이를 찾아낸다."
+    ],
+    "commands": [
+      "앉아",
+      "엎드려",
+      "안녕"
+    ],
+    "default_color": 15
+  }
+},
+{
+  "model": "animals.animal",
+  "pk": 16,
+  "fields": {
+    "species": "용",
+    "feeds": [
+      [
+        "구름"
+      ],
+      [
+        "구름"
+      ],
+      [
+        "구름"
+      ],
+      [
+        "cloud"
+      ]
+    ],
+    "characteristics": [
+      "전설의 동물이다."
+    ],
+    "commands": [
+      "날아라",
+      "물",
+      "불"
+    ],
+    "default_color": 16
+  }
+}
+]
