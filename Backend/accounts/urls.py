@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from . import views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('test/', include('djangotest.urls')),
-    path('items/', include('items.urls')),
-    path('accounts/', include('accounts.urls')),
->>>>>>> Backend/project/urls.py
+    path('google/callback/', views.google_callback, name='google_callback'),
+    path('google/login/finish/', views.GoogleLogin.as_view(), name='google_login_todjango'),
+    path('', include('dj_rest_auth.urls')),
+    path('', include('dj_rest_auth.registration.urls')),
+    path('', include('allauth.urls'))
 ]
