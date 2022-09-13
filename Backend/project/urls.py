@@ -21,4 +21,5 @@ urlpatterns = [
     path('test/', include('djangotest.urls')),
     path('items/', include('items.urls')),
     path('accounts/', include('accounts.urls')),
+    path('animals/', include('animals.urls')),
 ]
