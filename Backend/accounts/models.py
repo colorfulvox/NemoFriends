@@ -15,6 +15,9 @@ class User(AbstractUser):
     effect = models.IntegerField(default=50)
     is_called = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.username
+        
 class WordChain(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     score = models.IntegerField(default=0)
