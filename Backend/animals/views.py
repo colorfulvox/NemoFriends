@@ -43,12 +43,13 @@ class AnimalsEatView(APIView):
             user_animal.save()  # 동물 정보 업데이트(호감도, 쿨타임)
             user_animal.user.gold += 100
             user_animal.user.save()  # 유저 정보 업데이트(골드)
+            response['last_eating_time'] = now.strftime(date_format_slash)
             response.update(SUCCESS)
             return Response(response)
 
         # 먹이 섭취 No
-        response['recommend'] = random.choice(feeds)
         response.update(FAIL)
+        # response['recommend'] = random.choice(feeds)
         return Response(response)
 
 
