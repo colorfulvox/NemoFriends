@@ -1,67 +1,111 @@
+from datetime import datetime
+import re
+from django.shortcuts import get_list_or_404, get_object_or_404
 from django.conf import settings
+from django.http import JsonResponse
 
-from accounts.models import User
+
 from allauth.socialaccount.models import SocialAccount
-from django.conf import settings
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google import views as google_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from django.http import JsonResponse
-import requests
 from rest_framework import status
 from rest_framework.response import Response
 from json.decoder import JSONDecodeError
 from rest_framework.decorators import APIView
+import requests, random
+
+from .models import User
+from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer
+from animals.models import User_Animal, Animal
+from items.models import Color, Decoration
+from utils import *
 
 state = getattr(settings, 'STATE')
 BASE_URL = 'http://localhost:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
 
-class AccountDeleteView(APIView):
+class StartAnimalView(APIView):
+    def post(self,request):
+        response = FAIL
+        user = request.user
+        animal = get_object_or_404(Animal, id=2)
+        
+        user_animal = User_Animal(user=request.user, animal=animal, name=animal.species, color_id=0)
+        user_animal.save()
+        response = SUCCESS
+        return Response(response)
+class UserDeleteView(APIView):
     def delete(self,request):
-        response = {"success": False}
+        response = FAIL
 
         user = request.user
         user.delete()
 
-        response['success'] = True
+        response = SUCCESS
         return Response(response)
-# 가챠 의문 : 가챠 자체 진행은 백에서 해야 되는 게 아닌가? 안전을 위해서. 일단 다른 테이블이 생성되어있지 않으니 보류
+
 class GachaView(APIView):
     def post(self,request):
-        response = {"success": False}
-        # 동물일 경우
-        if request.data.get('type') == 1:
-            i = 1
+        response = FAIL
+        user = request.user
+        # 돈이 있는지 체크
+        if user.gold > 300:
+        # 돈이 있다면 동물 목록(가지고 있지 않은), 염색약 목록, 희귀조경 목록을 가져와 하나의 리스트에 저장
+            random_box = []
+            own_animals = [i.animal for i in User_Animal.objects.filter(user=user)]
+            all_animals = Animal.objects.all()
+            colors = Color.objects.all()
+            decos = Decoration.objects.filter(is_rare=True)
+            for animal in all_animals:
+                random_box.append(animal)
+            for check_animal in random_box:
+                if check_animal in own_animals:
+                    random_box.remove(check_animal)
+            for color in  colors:
+                random_box.append(color)
+            for deco in decos:
+                random_box.append(deco)
+        # 랜덤 함수로 번호 선정
+            number = random.randint(0, len(random_box)-1)
+            obj = random_box[number]
+        # 뽑힌 오브젝트의 타입 판별
+            print(obj)
+        # 동물일 경우(animals.models.Animal)
+        if type(obj) is Animal:
+            print("this is Animal")
         # 조경일 경우
-        elif request.data.get('type') == 2:
-            j = 1
+        elif type(obj) is Decoration:
+            print("this is Decoration")
         # 염색약일 경우
-        elif request.data.get('type') == 3:
-            k = 1
+        elif type(obj) is Color:
+            print("this is Color")
+        # 타입별로 DB에 저장이 완료되었다면 골드 차감
 
+        # 성공메시지 반환
+        return Response(response)
 class ChangeBGMView(APIView):
     def post(self,request):
-        response = {"success": False}
+        response = FAIL
 
         user = request.user
-        user.bgm = request.data.get("bgm")
-        user.save()
-        
-        response['success'] = True
-        
+        serializers = UserChangeBGMSerializer(instance=user, data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            serializers.save()
+        User.objects
+        response = SUCCESS
         return Response(response)
 
 class ChangeEffectView(APIView):
     def post(self,request):
-        response = {"success": False}
+        response = FAIL
 
         user = request.user
-        user.effect = request.data.get("effect")
-        user.save()
-        
-        response['success'] = True
-        
+        serializers = UserChangeEffectSerializer(instance=user, data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            serializers.save()
+
+        response = SUCCESS
         return Response(response)
 
 
