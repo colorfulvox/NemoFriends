@@ -10,4 +10,3 @@ class UserChangeEffectSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ('effect',)
-        

@@ -18,7 +18,7 @@ import requests, random
 from .models import User
 from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer
 from animals.models import User_Animal, Animal
-from items.models import Color, Decoration
+from items.models import Color, Decoration, User_Color, User_Decoration
 from utils import *
 
 state = getattr(settings, 'STATE')
@@ -55,13 +55,19 @@ class GachaView(APIView):
             random_box = []
             own_animals = [i.animal for i in User_Animal.objects.filter(user=user)]
             all_animals = Animal.objects.all()
+            print(own_animals)
+            print(all_animals)
             colors = Color.objects.all()
             decos = Decoration.objects.filter(is_rare=True)
             for animal in all_animals:
                 random_box.append(animal)
-            for check_animal in random_box:
+            print("before")
+            print(random_box)
+            for check_animal in random_box[:]:
                 if check_animal in own_animals:
                     random_box.remove(check_animal)
+            print("after")
+            print(random_box)
             for color in  colors:
                 random_box.append(color)
             for deco in decos:
@@ -71,19 +77,41 @@ class GachaView(APIView):
             obj = random_box[number]
         # 뽑힌 오브젝트의 타입 판별
             print(obj)
-        # 동물일 경우(animals.models.Animal)
-        if type(obj) is Animal:
-            print("this is Animal")
-        # 조경일 경우
-        elif type(obj) is Decoration:
-            print("this is Decoration")
-        # 염색약일 경우
-        elif type(obj) is Color:
-            print("this is Color")
-        # 타입별로 DB에 저장이 완료되었다면 골드 차감
-
-        # 성공메시지 반환
-        return Response(response)
+            # 동물일 경우(animals.models.Animal)
+            if type(obj) is Animal:
+                user_animal = User_Animal(user=user, animal=obj, name=obj.species, color_id=0)
+                user_animal.save()
+                user_animals = user.user_animal_set.all()
+                response['user_animals'] = user_animals
+            # 조경일 경우
+            elif type(obj) is Decoration:
+                user_decoration = User_Decoration(user=user, decoration=obj, is_located=False, location=-1, angle=-1)
+                user_decoration.save()
+                user_decorations = user.user_decoration_set.all()
+                response['user_decorations'] = user_decorations
+            # 염색약일 경우
+            elif type(obj) is Color:
+                user_colors = user.user_color_set.all()
+                check = False
+                for user_color in user_colors:
+                    if user_color.color == obj:
+                        check = True
+                        user_color.cnt += 1
+                        user_color.save()
+                        break;
+                if not check:
+                    user_color = User_Color(user=user, color=obj)
+                    user_color.save()
+                user_colors = user.user_color_set.all()
+                response['user_colors'] = user_colors
+            # 타입별로 DB에 저장이 완료되었다면 골드 차감
+            user.gold -= 300
+            user.save()
+            # 성공메시지 반환
+            response['success'] = True
+            return Response(response)
+        else:
+            return Response(response)
 class ChangeBGMView(APIView):
     def post(self,request):
         response = FAIL
