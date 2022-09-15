@@ -5,7 +5,7 @@ from rest_framework.decorators import APIView
 from rest_framework.response import Response
 
 from .models import Animal, User_Animal
-from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer
+from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer, UserAnimalSerializer
 from animals import serializers
 from items.models import User_Color
 from utils import *
@@ -13,6 +13,14 @@ from utils import *
 import random
 from datetime import datetime, timedelta
 from time import strftime, strptime
+
+
+class DepthTestView(APIView):
+    def get(self, request, id):
+        user_animal = get_object_or_404(User_Animal, pk=id)
+        serializers = UserAnimalSerializer(instance=user_animal)
+        return Response(serializers.data)
+
 
 
 class AnimalsEatView(APIView):
