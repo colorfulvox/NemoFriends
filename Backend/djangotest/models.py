@@ -6,4 +6,4 @@ class Test(models.Model):
     success = models.CharField(max_length=20, default="Success!!")
 
 class ArrayTest(models.Model):
-    column = models.JSONField(default='{}')
+    column = models.JSONField(default=dict)

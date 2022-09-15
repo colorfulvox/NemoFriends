@@ -26,5 +26,7 @@ urlpatterns = [
     path('', include('allauth.urls')),
     path('bgm/', views.ChangeBGMView.as_view(), name='change_bgm'),
     path('effect/', views.ChangeEffectView.as_view(), name='change_effect'),
-    path('delete/', views.AccountDeleteView.as_view(), name='account_delete'),
+    path('delete/', views.UserDeleteView.as_view(), name='account_delete'),
+    path('gacha/', views.GachaView.as_view(), name='gacha'),
+    path('start/', views.StartAnimalView.as_view(), name='start_animal')
 ]
