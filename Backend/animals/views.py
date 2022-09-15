@@ -107,7 +107,7 @@ class AnimalsTalkView(APIView):
             user_animal.level = level_up(user_animal.exp, user_animal.level)
             user_animal.save()
             user_animal.user.gold += 100
-            user
+            user_animal.user.save()
             return Response(SUCCESS)
         return Response(FAIL)
 

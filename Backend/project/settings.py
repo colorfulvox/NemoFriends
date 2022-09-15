@@ -29,7 +29,7 @@ environ.Env.read_env(
 SECRET_KEY = 'django-insecure-d0xo-huf@-+5k=c+4y*h*i+q#iom6y*e_ud=afm48r5qedq*t8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -171,7 +171,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
