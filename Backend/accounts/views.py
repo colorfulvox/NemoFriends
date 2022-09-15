@@ -29,7 +29,7 @@ class StartAnimalView(APIView):
     def post(self,request):
         response = FAIL
         user = request.user
-        animal = get_object_or_404(Animal, id=2)
+        animal = get_object_or_404(Animal, id=1)
         
         user_animal = User_Animal(user=request.user, animal=animal, name=animal.species, color_id=0)
         user_animal.save()
@@ -37,7 +37,7 @@ class StartAnimalView(APIView):
         return Response(response)
 class UserDeleteView(APIView):
     def delete(self,request):
-        response = FAIL
+        response = FAIL.copy()
 
         user = request.user
         user.delete()
@@ -47,27 +47,23 @@ class UserDeleteView(APIView):
 
 class GachaView(APIView):
     def post(self,request):
-        response = FAIL
+        res = Response()
+        response = FAIL.copy()
         user = request.user
         # 돈이 있는지 체크
-        if user.gold > 300:
+        if user.gold >= 300:
         # 돈이 있다면 동물 목록(가지고 있지 않은), 염색약 목록, 희귀조경 목록을 가져와 하나의 리스트에 저장
             random_box = []
-            own_animals = [i.animal for i in User_Animal.objects.filter(user=user)]
+            own_animals = [i.animal for i in User_Animal.objects.filter(user=user)] 
             all_animals = Animal.objects.all()
-            print(own_animals)
-            print(all_animals)
             colors = Color.objects.all()
             decos = Decoration.objects.filter(is_rare=True)
             for animal in all_animals:
                 random_box.append(animal)
-            print("before")
-            print(random_box)
+
             for check_animal in random_box[:]:
                 if check_animal in own_animals:
                     random_box.remove(check_animal)
-            print("after")
-            print(random_box)
             for color in  colors:
                 random_box.append(color)
             for deco in decos:
@@ -76,46 +72,49 @@ class GachaView(APIView):
             number = random.randint(0, len(random_box)-1)
             obj = random_box[number]
         # 뽑힌 오브젝트의 타입 판별
-            print(obj)
             # 동물일 경우(animals.models.Animal)
             if type(obj) is Animal:
                 user_animal = User_Animal(user=user, animal=obj, name=obj.species, color_id=0)
                 user_animal.save()
-                user_animals = user.user_animal_set.all()
-                response['user_animals'] = user_animals
+                response.update({"result" : {"type" : "animal", "pk" : user_animal.id,"id" : obj.id}})
             # 조경일 경우
             elif type(obj) is Decoration:
                 user_decoration = User_Decoration(user=user, decoration=obj, is_located=False, location=-1, angle=-1)
                 user_decoration.save()
-                user_decorations = user.user_decoration_set.all()
-                response['user_decorations'] = user_decorations
+                response.update({"result" : {"type" : "decoration", "pk" : user_decoration.id,"id" : obj.id}})
+
             # 염색약일 경우
             elif type(obj) is Color:
                 user_colors = user.user_color_set.all()
                 check = False
+                id = ""
                 for user_color in user_colors:
                     if user_color.color == obj:
                         check = True
                         user_color.cnt += 1
                         user_color.save()
+                        id = user_color.id
                         break;
                 if not check:
                     user_color = User_Color(user=user, color=obj)
                     user_color.save()
-                user_colors = user.user_color_set.all()
-                response['user_colors'] = user_colors
+                    id = user_color.id
+                response.update({"result" : {"type" : "color", "pk" : id,"id" : obj.id}})
             # 타입별로 DB에 저장이 완료되었다면 골드 차감
             user.gold -= 300
             user.save()
             # 성공메시지 반환
-            response['success'] = True
-            return Response(response)
-        else:
-            return Response(response)
+            response["success"] = True
+            res.data = response
+            return res
+        elif user.gold < 300:
+            response = FAIL
+            res.data = response
+            return res
+
 class ChangeBGMView(APIView):
     def post(self,request):
         response = FAIL
-
         user = request.user
         serializers = UserChangeBGMSerializer(instance=user, data=request.data)
         if serializers.is_valid(raise_exception=True):
@@ -127,12 +126,10 @@ class ChangeBGMView(APIView):
 class ChangeEffectView(APIView):
     def post(self,request):
         response = FAIL
-
         user = request.user
         serializers = UserChangeEffectSerializer(instance=user, data=request.data)
         if serializers.is_valid(raise_exception=True):
             serializers.save()
-
         response = SUCCESS
         return Response(response)
 
