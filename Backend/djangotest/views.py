@@ -1,7 +1,8 @@
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from .serializers import TestSerializer, ArraySerializer
-# Create your views here.
+from animals.models import Animal
+import json
 
 
 class TestView(APIView):
@@ -18,3 +19,11 @@ class ArrayView(APIView):
             data = serializer.save()
             print(data.column)
         return Response(serializer.data)
+
+class DataAnimals(APIView):
+    def post(self, request):
+        with open('animals.json', encoding='utf-8') as json_file:
+            data = json.load(json_file)['results']
+            for animal in data:
+                Animal.objects.create(**animal)
+            print(type(data))

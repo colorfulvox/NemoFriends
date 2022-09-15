@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 User = settings.AUTH_USER_MODEL
@@ -26,7 +26,7 @@ class User_Animal(models.Model):
     talking_cnt = models.IntegerField(default=0)
     playing_cnt = models.IntegerField(default=0)
     created_at = models.DateField(auto_now_add=True)
-    last_eating_time = models.DateTimeField(default=datetime.now() - timedelta(hours=4))
+    last_eating_time = models.DateTimeField(default=datetime(2022, 9, 1, 0, 0, 0))
     level = models.IntegerField(default=0)
 
     def __str__(self):
