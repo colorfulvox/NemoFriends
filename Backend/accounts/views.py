@@ -30,7 +30,7 @@ class StartAnimalView(APIView):
         response = FAIL
         user = request.user
         animal = get_object_or_404(Animal, id=1)
-        
+
         user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0)
         user_animal.save()
         response = SUCCESS
@@ -121,7 +121,7 @@ class LoadGameView(APIView):
             "shop" : shop_data
         }
         response.data = {
-            "user_animal" : animals_data,
+            "user_animal" : user_animals_data,
             "user" : user_info,
             "gameinfo" : gameinfo
         }
@@ -145,7 +145,7 @@ class GachaView(APIView):
         if user.gold >= 300:
         # 돈이 있다면 동물 목록(가지고 있지 않은), 염색약 목록, 희귀조경 목록을 가져와 하나의 리스트에 저장
             random_box = []
-            own_animals = [i.animal for i in User_Animal.objects.filter(user=user)] 
+            own_animals = [i.animal for i in User_Animal.objects.filter(user=user)]
             all_animals = Animal.objects.all()
             items = Item.objects.all()
             decos = Decoration.objects.filter(is_rare=True)
