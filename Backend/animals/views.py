@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .models import Animal, User_Animal
 from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer
 from animals import serializers
-from items.models import User_Color
+from items.models import User_Item
 from utils import *
 
 import random
@@ -73,7 +73,7 @@ class AnimalsColorView(APIView):
         user_animal_id = request.data.get('user_animal_id')
         user_animal = get_object_or_404(User_Animal, pk=user_animal_id)
         user_color_id = request.data.get('user_color_id')
-        user_color = get_object_or_404(User_Color, pk=user_color_id)
+        user_color = get_object_or_404(User_Item, pk=user_color_id)
 
         # request.user == user_animal.user 체크 필요
         # 염색 Ok
