@@ -108,8 +108,17 @@ class LoadGameView(APIView):
             animal['feeds'].insert(0,[])
             animal['features'].insert(0,"")
             animal['commands'].insert(0,"")
+            one_feed = animal['feeds'][1]
+            two_feed = animal['feeds'][2]
+            three_feed = animal['feeds'][3]
+            animal['feeds'] = {
+                "one" : one_feed,
+                "two" : two_feed,
+                "three" : three_feed
+            }
         animals_data = animals_serializer.data.copy()
         animals_data.insert(0,{})
+
         # 게임 정보 - 상점 정보 가공
         shop = Decoration.objects.exclude(is_rare=True)
         shop_serializer = ShopInfoSerializer(shop, many=True)
