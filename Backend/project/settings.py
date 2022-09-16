@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'djangotest',
     'items',
 
-    # 3rd party apps
+    # 3rd party 라이브러리
     'rest_framework',
     'rest_framework.authtoken',
     
@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     
-    # 기본
+    # django 내장
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
