@@ -1,6 +1,6 @@
 from dataclasses import fields
 
-from items.models import User_Item
+from items.models import User_Item, Decoration
 from . import models
 from rest_framework import serializers
 from animals.models import User_Animal, Animal
@@ -29,3 +29,8 @@ class AnimalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Animal
         fields = ('id','species','feeds','features','commands')
+        
+class ShopInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Decoration
+        fields = ('id', 'cost')

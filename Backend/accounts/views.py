@@ -16,7 +16,7 @@ from rest_framework.decorators import APIView
 import requests, random
 
 from .models import User
-from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer
+from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
 from animals.models import User_Animal, Animal
 from items.models import Item, Decoration, User_Item, User_Decoration
 from utils import *
@@ -56,8 +56,8 @@ class LoadGameView(APIView):
             user_animal['last_eating_time']=user_animal['last_eating_time'].replace(':','/')
             user_animal['created_at']=user_animal['created_at'].replace('-','/')
         # 리스트 패딩
-        animals_data = user_animals_serializer.data.copy()
-        animals_data.insert(0,{})
+        user_animals_data = user_animals_serializer.data.copy()
+        user_animals_data.insert(0,{})
         # 가구 정보 가공 : 보관함
         decorations = user.user_decoration_set.all()
         decoration_len = Decoration.objects.all()
@@ -108,11 +108,18 @@ class LoadGameView(APIView):
             animal['feeds'].insert(0,[])
             animal['features'].insert(0,"")
             animal['commands'].insert(0,"")
+        animals_data = animals_serializer.data.copy()
+        animals_data.insert(0,{})
+        # 게임 정보 - 상점 정보 가공
+        shop = Decoration.objects.exclude(is_rare=True)
+        shop_serializer = ShopInfoSerializer(shop, many=True)
+        shop_data = shop_serializer.data.copy()
+        shop_data.insert(0,{})
         # 게임 정보 Json
         gameinfo = {
-            "animal" : animals_serializer.data
+            "animal" : animals_data,
+            "shop" : shop_data
         }
-        # 상점 정보 - 상점 정보 가공 : 논의 필요
         response.data = {
             "user_animal" : animals_data,
             "user" : user_info,
