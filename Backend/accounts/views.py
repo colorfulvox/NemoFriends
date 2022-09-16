@@ -16,9 +16,9 @@ from rest_framework.decorators import APIView
 import requests, random
 
 from .models import User
-from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer
+from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer
 from animals.models import User_Animal, Animal
-from items.models import Color, Decoration, User_Color, User_Decoration
+from items.models import Item, Decoration, User_Item, User_Decoration
 from utils import *
 
 state = getattr(settings, 'STATE')
@@ -26,15 +26,101 @@ BASE_URL = 'http://localhost:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
 
 class StartAnimalView(APIView):
-    def post(self,request):
+    def get(self,request):
         response = FAIL
         user = request.user
         animal = get_object_or_404(Animal, id=1)
         
-        user_animal = User_Animal(user=request.user, animal=animal, name=animal.species, color_id=0)
+        user_animal = User_Animal(user=user, animal=animal, name=animal.species, item_id=0)
         user_animal.save()
         response = SUCCESS
         return Response(response)
+
+class LoadGameView(APIView):
+    def post(self, request):
+        id = request.data.get('id')
+        # 구글 로그인 부분
+        response = Response()
+        user = request.user
+        user = get_object_or_404(User, username=id) # 이 코드는 추후 구글로그인 때 사용 할 지도?
+
+        # 데이터 전달 부분 : 로그인 직후 바로 보내는 것이기 때문에 jwt 토큰 없이 진행될 수 있음.
+
+        # 획득한 동물 정보
+        user_animals = user.user_animal_set.all()
+        user_animals_serializer = UserAnimalInfoSerializer(user_animals,many=True)
+        # 시간정보 '/' 구분자로 변경
+        for user_animal in user_animals_serializer.data:
+            user_animal['last_eating_time']=user_animal['last_eating_time'].replace('-','/')
+            user_animal['last_eating_time']=user_animal['last_eating_time'].replace('T','/')
+            user_animal['last_eating_time']=user_animal['last_eating_time'].replace(':','/')
+            user_animal['created_at']=user_animal['created_at'].replace('-','/')
+        # 리스트 패딩
+        animals_data = user_animals_serializer.data.copy()
+        animals_data.insert(0,{})
+        # 가구 정보 가공 : 보관함
+        decorations = user.user_decoration_set.all()
+        decoration_len = Decoration.objects.all()
+        list = [0 for i in range(0,decoration_len.count())]
+        for decoration in decorations:
+            if not decoration.decoration.is_rare and not decoration.is_located:
+                list[decoration.decoration.id] += 1
+        decorations_ilst = []
+        decorations_ilst.append({})
+        for i in range(0,len(list)):
+            if list[i] != 0:
+                decorations_ilst.append({
+                    "decoration_id" : i,
+                    "cnt" : list[i],
+                })
+        # 가구 정보 가공 : 배치 가구
+        located_decorations = []
+        located_decorations.append({})
+        for decoration in decorations:
+            if decoration.is_located:
+                located_decorations.append({
+                    "id" : decoration.id,
+                    "location" : decoration.location,
+                    "decoration_id" : decoration.decoration.id,
+                    "angle" : decoration.angle,
+                })
+        # 아이템 정보 가공
+        items = user.user_item_set.all()
+        items_serializer = UserItemInfoSerializer(items, many=True)
+        items_data = items_serializer.data
+        items_data.insert(0,{})
+        # 유저 정보 Json
+        user_info = {
+            "name" : user.name,
+            "gold" : user.gold,
+            "decorations" : decorations_ilst,
+            "located_decorations": located_decorations,
+            "items" : items_data,
+            "is_called" : user.is_called,
+            "bgm" : user.bgm,
+            "effect" : user.effect
+        }
+
+        # 게임 정보 - 동물 정보 가공
+        animals = Animal.objects.all()
+        animals_serializer = AnimalInfoSerializer(animals, many=True)
+        for animal in animals_serializer.data:
+            animal['feeds'].insert(0,[])
+            animal['features'].insert(0,"")
+            animal['commands'].insert(0,"")
+        # 게임 정보 Json
+        gameinfo = {
+            "animal" : animals_serializer.data
+        }
+        
+        # 상점 정보 - 상점 정보 가공 : 논의 필요
+
+        response.data = {
+            "user_animal" : animals_data,
+            "user" : user_info,
+            "gameinfo" : gameinfo
+        }
+        return response
 class UserDeleteView(APIView):
     def delete(self,request):
         response = FAIL.copy()
@@ -46,7 +132,7 @@ class UserDeleteView(APIView):
         return Response(response)
 
 class GachaView(APIView):
-    def post(self,request):
+    def get(self,request):
         res = Response()
         response = FAIL.copy()
         user = request.user
@@ -56,7 +142,7 @@ class GachaView(APIView):
             random_box = []
             own_animals = [i.animal for i in User_Animal.objects.filter(user=user)] 
             all_animals = Animal.objects.all()
-            colors = Color.objects.all()
+            items = Item.objects.all()
             decos = Decoration.objects.filter(is_rare=True)
             for animal in all_animals:
                 random_box.append(animal)
@@ -64,8 +150,8 @@ class GachaView(APIView):
             for check_animal in random_box[:]:
                 if check_animal in own_animals:
                     random_box.remove(check_animal)
-            for color in  colors:
-                random_box.append(color)
+            for item in  items:
+                random_box.append(item)
             for deco in decos:
                 random_box.append(deco)
         # 랜덤 함수로 번호 선정
@@ -74,7 +160,7 @@ class GachaView(APIView):
         # 뽑힌 오브젝트의 타입 판별
             # 동물일 경우(animals.models.Animal)
             if type(obj) is Animal:
-                user_animal = User_Animal(user=user, animal=obj, name=obj.species, color_id=0)
+                user_animal = User_Animal(user=user, animal=obj, name=obj.species, item_id=0)
                 user_animal.save()
                 response.update({"result" : {"type" : "animal", "pk" : user_animal.id,"id" : obj.id}})
             # 조경일 경우
@@ -84,22 +170,22 @@ class GachaView(APIView):
                 response.update({"result" : {"type" : "decoration", "pk" : user_decoration.id,"id" : obj.id}})
 
             # 염색약일 경우
-            elif type(obj) is Color:
-                user_colors = user.user_color_set.all()
+            elif type(obj) is Item:
+                user_items = user.user_item_set.all()
                 check = False
                 id = ""
-                for user_color in user_colors:
-                    if user_color.color == obj:
+                for user_item in user_items:
+                    if user_item.item == obj:
                         check = True
-                        user_color.cnt += 1
-                        user_color.save()
-                        id = user_color.id
+                        user_item.cnt += 1
+                        user_item.save()
+                        id = user_item.id
                         break;
                 if not check:
-                    user_color = User_Color(user=user, color=obj)
-                    user_color.save()
-                    id = user_color.id
-                response.update({"result" : {"type" : "color", "pk" : id,"id" : obj.id}})
+                    user_item = User_Item(user=user, item=obj)
+                    user_item.save()
+                    id = user_item.id
+                response.update({"result" : {"type" : "item", "pk" : id,"id" : obj.id}})
             # 타입별로 DB에 저장이 완료되었다면 골드 차감
             user.gold -= 300
             user.save()
