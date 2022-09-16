@@ -31,18 +31,18 @@ class StartAnimalView(APIView):
         user = request.user
         animal = get_object_or_404(Animal, id=1)
         
-        user_animal = User_Animal(user=user, animal=animal, name=animal.species, item_id=0)
+        user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0)
         user_animal.save()
         response = SUCCESS
         return Response(response)
 
 class LoadGameView(APIView):
-    def post(self, request):
-        id = request.data.get('id')
+    def get(self, request):
+        # id = request.data.get('id')
         # 구글 로그인 부분
         response = Response()
         user = request.user
-        user = get_object_or_404(User, username=id) # 이 코드는 추후 구글로그인 때 사용 할 지도?
+        # user = get_object_or_404(User, username=id) # 이 코드는 추후 구글로그인 때 사용 할 지도?
 
         # 데이터 전달 부분 : 로그인 직후 바로 보내는 것이기 때문에 jwt 토큰 없이 진행될 수 있음.
 
@@ -112,9 +112,7 @@ class LoadGameView(APIView):
         gameinfo = {
             "animal" : animals_serializer.data
         }
-        
         # 상점 정보 - 상점 정보 가공 : 논의 필요
-
         response.data = {
             "user_animal" : animals_data,
             "user" : user_info,
