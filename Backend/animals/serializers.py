@@ -10,6 +10,13 @@ class AnimalsRenameSerializer(serializers.ModelSerializer):
         fields = ('name',)
 
 
+class AnimalColorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.User_Animal
+        fields = ('color',)
+
+
 class AnimalsTestSerializer(serializers.ModelSerializer):
     
     class Meta:

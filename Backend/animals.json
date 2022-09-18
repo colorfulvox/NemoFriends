@@ -1,0 +1,822 @@
+{
+	"results": [
+		{
+			"species": "닭",
+			"feeds": [
+				[
+					"개미",
+					"거미",
+					"잎"
+				],
+				[
+					"블루베리",
+					"달팽이",
+					"딸기"
+				],
+				[
+					"사과",
+					"빵",
+					"풀"
+				],
+				[
+					"ant",
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"cake",
+					"carrot",
+					"donut",
+					"flower",
+					"frog",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"pear",
+					"pineapple",
+					"potato",
+					"sandwich",
+					"spider",
+					"strawberry",
+					"watermelon",
+					"snail"
+				]
+			],
+			"commands": [
+				"앉아",
+				"파닥파닥",
+				"날아랏"
+			],
+			"characteristics": [
+				"닭은 시각과 청각이 예민하지만, 후각과 미각이 둔해서 냄새나 맛을 거의 못 느낀다.",
+				"닭은 머리가 작아서 지능이 낮아보이지만 사실 7살 아이 수준의 매우 높은 지능을 가지고 있다.",
+				"닭은 가금류를 대표하는 동물로, 조류 중 지구상에서 개체 수가 가장 많은 동물이다."
+			]
+		},
+		{
+			"species": "개",
+			"feeds": [
+				[
+					"블루베리",
+					"바나나",
+					"감자"
+				],
+				[
+					"당근",
+					"사과",
+					"빵"
+				],
+				[
+					"고기",
+					"수박",
+					"브로콜리"
+				],
+				[
+					"apple",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"cake",
+					"carrot",
+					"donut",
+					"pear",
+					"pineapple",
+					"potato",
+					"sandwich",
+					"steak",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"엎드려",
+				"빵야"
+			],
+			"characteristics": [
+				"개는 평균적으로 하루에 10.1시간을 자고, 사람처럼 꿈을 꾸는 것으로 알려져 있다.",
+				"개는 의사소통할 때 청각 신호보다 시각 신호에 더 많이 의존하며, 아주 미세한 몸짓에도 반응한다.",
+				"개도 혈액형을 구분하는데, 1부터 7까지 숫자로 분류하며 13개 이상의 종류가 있다."
+			]
+		},
+		{
+			"species": "고양이",
+			"feeds": [
+				[
+					"물고기",
+					"딸기",
+					"사과"
+				],
+				[
+					"개구리",
+					"브로콜리",
+					"당근"
+				],
+				[
+					"쥐",
+					"새",
+					"고기"
+				],
+				[
+					"apple",
+					"banana",
+					"bird",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"cake",
+					"carrot",
+					"donut",
+					"fish",
+					"frog",
+					"pear",
+					"pineapple",
+					"potato",
+					"sandwich",
+					"steak",
+					"strawberry",
+					"watermelon",
+					"mouse"
+				]
+			],
+			"commands": [
+				"앉아",
+				"엎드려",
+				"손"
+			],
+			"characteristics": [
+				"고양이는 사냥감의 힘을 빼기 위해 잡은 짐승을 죽이기 전에 가지고 논다.",
+				"고양이는 뒷덜미를 잡혔을 때 조용해지고 온순해지는 경향이 있다.",
+				"고양이는 무리 생활은 하지 않지만 서열에 따라 식사 순서를 지키는 등 서열 의식은 갖춰져 있다."
+			]
+		},
+		{
+			"species": "고슴도치",
+			"feeds": [
+				[
+					"달팽이",
+					"개미",
+					"빵"
+				],
+				[
+					"당근",
+					"바나나",
+					"거미"
+				],
+				[
+					"사과",
+					"개구리",
+					"고기"
+				],
+				[
+					"ant",
+					"apple",
+					"asparagus",
+					"banana",
+					"bread",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"carrot",
+					"frog",
+					"grapes",
+					"pear",
+					"pineapple",
+					"potato",
+					"snail",
+					"spider",
+					"steak",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"누워",
+				"웅크려"
+			],
+			"characteristics": [
+				"고슴도치의 가시는 사실 털이 변형된 것이다.",
+				"고슴도치는 겨울이 되면 가시갈이를 하고 겨울잠을 잔다.",
+				"고슴도치는 적을 만나면 공처럼 몸을 둥글게 하여, 등에 난 가시로 자신을 방어한다."
+			]
+		},
+		{
+			"species": "사슴",
+			"feeds": [
+				[
+					"잎",
+					"블루베리",
+					"당근"
+				],
+				[
+					"아스파라거스",
+					"사과",
+					"바나나"
+				],
+				[
+					"풀",
+					"브로콜리",
+					"감자"
+				],
+				[
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"bush",
+					"carrot",
+					"cake",
+					"donut",
+					"flower",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"pear",
+					"pineapple",
+					"potato",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"뿔",
+				"메리"
+			],
+			"characteristics": [
+				"사슴은 포식자를 감지하기 위해 먹이를 먹거나 쉴 때 항상 바람이 부는 쪽을 향한다.",
+				"사슴의 뿔은 주기적으로 떨어지고 다시 솟아나, \"생명의 나무\"를 상징한다.",
+				"사슴은 위험이 닥치면 궁둥이의 흰 털을 세워 다른 수컷에게 경고 신호를 보낸다."
+			]
+		},
+		{
+			"species": "코끼리",
+			"feeds": [
+				[
+					"풀",
+					"블루베리",
+					"바나나"
+				],
+				[
+					"브로콜리",
+					"사과",
+					"배"
+				],
+				[
+					"당근",
+					"수박",
+					"파인애플"
+				],
+				[
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"bush",
+					"cake",
+					"carrot",
+					"donut",
+					"flower",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"pear",
+					"pineapple",
+					"potato",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"파닥파닥",
+				"안녕"
+			],
+			"characteristics": [
+				"코끼리는 코로 숨도 쉬고, 물도 마시고, 나무잎도 뜯고, 동전도 집는다.",
+				"코끼리는 시각이 둔하고 색맹이지만, 청각은 예민하여 3km나 떨어진 곳에서 나는 소리도 들을 수 있다.",
+				"코끼리는 하루에 최대 300kg을 먹을 수 있고, 50Kg 정도를 배출한다."
+			]
+		},
+		{
+			"species": "사자",
+			"feeds": [
+				[
+					"고기",
+					"돼지",
+					"너구리"
+				],
+				[
+					"낙타",
+					"소",
+					"새"
+				],
+				[
+					"얼룩말",
+					"캥거루",
+					"악어"
+				],
+				[
+					"bird",
+					"cow",
+					"fish",
+					"horse",
+					"octopus",
+					"pig",
+					"steak",
+					"zebra",
+					"mouse",
+					"camel",
+					"duck",
+					"crocodile",
+					"flamingo",
+					"kangaroo",
+					"raccoon",
+					"parrot",
+					"swan",
+					"owl"
+				]
+			],
+			"commands": [
+				"앉아",
+				"엎드려",
+				"으르렁"
+			],
+			"characteristics": [
+				"수컷사자는 하루의 대부분을 자거나 쉬면서 보내는 반면, 암컷사자들은 하루 종일 사냥한다.",
+				"사자는 다른 고양이과 육식동물처럼, 낮보다 먹잇감을 기습하기 쉬운 밤에만 사냥한다.",
+				"사자는 보통 시속 50km로 달리고, 최고 속도는 시속 80km에 이른다."
+			]
+		},
+		{
+			"species": "기린",
+			"feeds": [
+				[
+					"잎",
+					"꽃",
+					"딸기"
+				],
+				[
+					"아스파라거스",
+					"바나나",
+					"당근"
+				],
+				[
+					"사과",
+					"수박",
+					"풀"
+				],
+				[
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bush",
+					"carrot",
+					"flower",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"pear",
+					"pineapple",
+					"potato",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"잘자",
+				"안녕"
+			],
+			"characteristics": [
+				"기린은 일반적으로 키는 4.5m가 넘고, 몸무게는 1톤 이상이다.",
+				"기린은 엄청난 힘으로 다리를 걷어찰 수 있기 때문에 사자에게 있어 매우 위험한 사냥감이다.",
+				"기린은 태어난 지 몇 시간 만에 생후 1주 된 기린과 비슷한 수준으로 달릴 수 있다."
+			]
+		},
+		{
+			"species": "거북이",
+			"feeds": [
+				[
+					"풀",
+					"아스파라거스",
+					"바나나"
+				],
+				[
+					"게",
+					"당근",
+					"개구리"
+				],
+				[
+					"브로콜리",
+					"문어",
+					"물고기"
+				],
+				[
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"bush",
+					"carrot",
+					"crab",
+					"fish",
+					"flower",
+					"frog",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"octopus",
+					"pear",
+					"pineapple",
+					"potato",
+					"steak",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"누워",
+				"빵야"
+			],
+			"characteristics": [
+				"거북은 폐호흡을 하기 때문에 바다 밑바닥에 숨어서 잠을 자다가 익사하는 경우도 있다.",
+				"모든 거북의 등딱지가 단단한 것은 아니다. 등딱지가 가죽처럼 부드럽고 유연한 종류도 있다.",
+				"거북은 두꺼운 피부와 등딱지 덕분에 해파리의 독이 파고들지 않아 해파리를 잡아먹는다."
+			]
+		},
+		{
+			"species": "펭귄",
+			"feeds": [
+				[
+					"물고기"
+				],
+				[
+					"문어",
+					"물고기"
+				],
+				[
+					"가재",
+					"문어",
+					"물고기"
+				],
+				[
+					"crab",
+					"fish",
+					"lobster",
+					"octopus",
+					"scorpion"
+				]
+			],
+			"commands": [
+				"앉아",
+				"엎드려",
+				"박수"
+			],
+			"characteristics": [
+				"펭귄은 암컷보다 수컷의 수가 더 적은 동물 중 하나이다.",
+				"펭귄은 새끼를 잃으면 슬픔을 달래기 위해 다른 어미의 새끼를 도둑질하는 것으로 알려져 있다.",
+				"펭귄은 인간보다 8배 강한 힘으로 항문에서 분비물을 발사한다."
+			]
+		},
+		{
+			"species": "양",
+			"feeds": [
+				[
+					"잎",
+					"블루베리",
+					"아스파라거스"
+				],
+				[
+					"풀",
+					"사과",
+					"브로콜리"
+				],
+				[
+					"감자",
+					"당근",
+					"수박"
+				],
+				[
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"bush",
+					"carrot",
+					"flower",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"pear",
+					"pineapple",
+					"potato",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"잘자",
+				"안녕"
+			],
+			"characteristics": [
+				"양은 온순한 인상과 다르게 실제로는 매우 억세고 사나운 동물이다.",
+				"오스트레일리아나 뉴질랜드에서는 양의 털을 주기적으로 깎아 주지 않으면 동물학대로 간주한다.",
+				"양은 포유류 중에서 몸집에 비해 뇌의 부피가 가장 크지만, 지능은 낮은 편에 속한다."
+			]
+		},
+		{
+			"species": "토끼",
+			"feeds": [
+				[
+					"잎",
+					"블루베리",
+					"포도"
+				],
+				[
+					"브로콜리",
+					"감자",
+					"바나나"
+				],
+				[
+					"풀",
+					"사과",
+					"딸기"
+				],
+				[
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bush",
+					"carrot",
+					"flower",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"pear",
+					"pineapple",
+					"potato",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"엎드려",
+				"점프점프"
+			],
+			"characteristics": [
+				"토끼는 똥을 두 번 나누어 싸는데, 처음 싼 똥은 영양분이 많아서 먹는다.",
+				"토끼는 후각으로 자기 새끼와 남의 새끼를 판별한다.",
+				"토끼는 그루밍을 통해 상대를 좋아하고 있음을 나타낸다."
+			]
+		},
+		{
+			"species": "원숭이",
+			"feeds": [
+				[
+					"개미",
+					"빵",
+					"사과"
+				],
+				[
+					"감자",
+					"쥐",
+					"당근"
+				],
+				[
+					"고기",
+					"바나나",
+					"케이크"
+				],
+				[
+					"ant",
+					"apple",
+					"asparagus",
+					"banana",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"bush",
+					"cake",
+					"carrot",
+					"donut",
+					"fish",
+					"flower",
+					"frog",
+					"garden",
+					"grapes",
+					"grass",
+					"leaf",
+					"mouse",
+					"pear",
+					"pineapple",
+					"potato",
+					"sandwich",
+					"snail",
+					"spider",
+					"steak",
+					"strawberry",
+					"watermelon"
+				]
+			],
+			"commands": [
+				"앉아",
+				"안녕",
+				"우끼끼"
+			],
+			"characteristics": [
+				"원숭이는 순우리말로 잔나비라고 부른다.",
+				"원숭이는 바나나를 좋아한다는 이미지가 있지만, 사실 자몽을 가장 좋아한다.",
+				"원숭이는 나뭇잎과 과일과 함께, 곤충이나 작은 설치류 등도 먹는다."
+			]
+		},
+		{
+			"species": "호랑이",
+			"feeds": [
+				[
+					"돼지",
+					"오리",
+					"쥐"
+				],
+				[
+					"고기",
+					"소",
+					"얼룩말"
+				],
+				[
+					"악어",
+					"새",
+					"너구리"
+				],
+				[
+					"bird",
+					"cow",
+					"fish",
+					"horse",
+					"octopus",
+					"pig",
+					"steak",
+					"zebra",
+					"mouse",
+					"camel",
+					"duck",
+					"crocodile",
+					"flamingo",
+					"kangaroo",
+					"raccoon",
+					"parrot",
+					"swan",
+					"owl"
+				]
+			],
+			"commands": [
+				"앉아",
+				"엎드려",
+				"점프"
+			],
+			"characteristics": [
+				"호랑이는 줄무늬가 사람의 지문처럼 각각 달라, 사육사들이 호랑이들의 눈 위 줄무늬로 구분한다.",
+				"수컷 호랑이는 짝짓기가 끝나면 떠나서, 암컷 호랑이가 홀로 육아를 담당한다.",
+				"호랑이는 우리나라에서 1946년도에 멸종되었다."
+			]
+		},
+		{
+			"species": "곰",
+			"feeds": [
+				[
+					"개미",
+					"블루베리",
+					"물고기"
+				],
+				[
+					"수박",
+					"풀",
+					"고기"
+				],
+				[
+					"사과",
+					"감자",
+					"돼지"
+				],
+				[
+					"ant",
+					"apple",
+					"asparagus",
+					"banana",
+					"bird",
+					"blueberry",
+					"blackberry",
+					"broccoli",
+					"bread",
+					"bush",
+					"cake",
+					"camel",
+					"carrot",
+					"cow",
+					"crab",
+					"crocodile",
+					"donut",
+					"duck",
+					"fish",
+					"flamingo",
+					"flower",
+					"frog",
+					"garden",
+					"grapes",
+					"grass",
+					"horse",
+					"kangaroo",
+					"leaf",
+					"mouse",
+					"owl",
+					"octopus",
+					"parrot",
+					"pear",
+					"pig",
+					"pineapple",
+					"potato",
+					"raccoon",
+					"sandwich",
+					"snail",
+					"spider",
+					"steak",
+					"strawberry",
+					"swan",
+					"watermelon",
+					"zebra"
+				]
+			],
+			"commands": [
+				"앉아",
+				"엎드려",
+				"안녕"
+			],
+			"characteristics": [
+				"곰은 사실 온건한 성격의 동물이라 충돌을 피하려고 하며, 위험할 때는 도망친다.",
+				"곰은 느리게 보이지만, 민첩하고 빠르게 달릴 수 있다. 북극곰은 시속 50km의 속도로 달릴 수 있다.",
+				"곰은 후각이 매우 뛰어나서 밀봉된 통조림에서 새어나오는 냄새로도 내용물을 판단할 수 있다."
+			]
+		},
+		{
+			"species": "용",
+			"feeds": [
+				[
+					"구름"
+				],
+				[
+					"구름"
+				],
+				[
+					"구름"
+				],
+				[
+					"cloud"
+				]
+			],
+			"commands": [
+				"날아라",
+				"물",
+				"불"
+			],
+			"characteristics": [
+				"용"
+			]
+		}
+	]
+}
