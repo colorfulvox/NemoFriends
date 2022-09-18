@@ -27,13 +27,46 @@ GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
 
 class StartAnimalView(APIView):
     def get(self,request):
-        response = FAIL
+        response = FAIL.copy()
         user = request.user
+
+        # 동물 추천 알고리즘 들어가는 부분 : 추천 동물은 꼭 15마리 전부일 필요는 없음
+        
+        # 닭
+        
+        # 개
+        
+        # 고양이
+        
+        # 고슴도치
+        
+        # 사슴
+        
+        # 코끼리
+        
+        # 사자
+        
+        # 기린
+        
+        # 거북이
+        
+        # 펭귄
+        
+        # 양
+        
+        # 토끼
+        
+        # 원숭이
+        
+        # 호랑이
+        
+        # 곰
+
         animal = get_object_or_404(Animal, id=1)
 
         user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0)
         user_animal.save()
-        response = SUCCESS
+        response = SUCCESS.copy()
         return Response(response)
 
 class LoadGameView(APIView):
