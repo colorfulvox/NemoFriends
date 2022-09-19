@@ -9,7 +9,7 @@ User = settings.AUTH_USER_MODEL
 class Animal(models.Model):
     species = models.TextField()
     feeds = models.JSONField(default=list)
-    characteristics = models.JSONField(default=list)
+    features = models.JSONField(default=list)
     commands = models.JSONField(default=list)
     
     def __str__(self):
@@ -23,11 +23,12 @@ class User_Animal(models.Model):
     exp = models.IntegerField(default=0)
     is_located = models.BooleanField(default=False)
     color_id = models.IntegerField(default=0)
-    talking_cnt = models.IntegerField(default=0)
-    playing_cnt = models.IntegerField(default=0)
+    talking_cnt = models.IntegerField(default=3)
+    playing_cnt = models.IntegerField(default=3)
     created_at = models.DateField(auto_now_add=True)
     last_eating_time = models.DateTimeField(default=datetime(2022, 9, 1, 0, 0, 0))
-    level = models.IntegerField(default=0)
+    level = models.IntegerField(default=1)
+    grade = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name

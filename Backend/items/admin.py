@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Decoration, User_Decoration, Color, User_Color
+from .models import Decoration, User_Decoration, Item, User_Item
 
 
 class DecorationAdmin(admin.ModelAdmin):
@@ -12,13 +12,13 @@ class UserDecorationAdmin(admin.ModelAdmin):
 admin.site.register(User_Decoration, UserDecorationAdmin)
 
 
-class ColorAdmin(admin.ModelAdmin):
+class ItemAdmin(admin.ModelAdmin):
     readonly_fields  = ['id']
-admin.site.register(Color, ColorAdmin) 
+admin.site.register(Item, ItemAdmin) 
 
 
-class UserColorAdmin(admin.ModelAdmin):
-    fields = ['user', 'color', 'cnt']
-admin.site.register(User_Color, UserColorAdmin)
+class UserItemAdmin(admin.ModelAdmin):
+    fields = ['user', 'item', 'cnt']
+admin.site.register(User_Item, UserItemAdmin)
 
 

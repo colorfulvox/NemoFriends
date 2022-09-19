@@ -22,11 +22,12 @@ urlpatterns = [
     path('google/callback/', views.google_callback, name='google_callback'),
     path('google/login/finish/', views.GoogleLogin.as_view(), name='google_login_todjango'),
     path('', include('dj_rest_auth.urls')),
-    path('', include('dj_rest_auth.registration.urls')),
+    path('signup/', include('dj_rest_auth.registration.urls')),
     path('', include('allauth.urls')),
     path('bgm/', views.ChangeBGMView.as_view(), name='change_bgm'),
     path('effect/', views.ChangeEffectView.as_view(), name='change_effect'),
     path('delete/', views.UserDeleteView.as_view(), name='account_delete'),
     path('gacha/', views.GachaView.as_view(), name='gacha'),
-    path('start/', views.StartAnimalView.as_view(), name='start_animal')
+    path('start/', views.StartAnimalView.as_view(), name='start_animal'),
+    path('loadgame/',views.LoadGameView.as_view(), name='load_game')
 ]
