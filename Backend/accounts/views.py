@@ -90,6 +90,7 @@ class LoadGameView(APIView):
             user_animal['created_at']=user_animal['created_at'].replace('-','/')
         # 리스트 패딩
         user_animals_data = user_animals_serializer.data.copy()
+        user_animals_data.insert(0,{})
         # 가구 정보 가공 : 보관함
         decorations = user.user_decoration_set.all()
         decoration_len = Decoration.objects.all()
@@ -98,6 +99,7 @@ class LoadGameView(APIView):
             if not decoration.decoration.is_rare and not decoration.is_located:
                 list[decoration.decoration.id] += 1
         decorations_ilst = []
+        decorations_ilst.append({})
         for i in range(0,len(list)):
             if list[i] != 0:
                 decorations_ilst.append({
@@ -106,6 +108,7 @@ class LoadGameView(APIView):
                 })
         # 가구 정보 가공 : 배치 가구
         located_decorations = []
+        located_decorations.append({})
         for decoration in decorations:
             if decoration.is_located:
                 located_decorations.append({
@@ -118,6 +121,7 @@ class LoadGameView(APIView):
         items = user.user_item_set.all()
         items_serializer = UserItemInfoSerializer(items, many=True)
         items_data = items_serializer.data
+        items_data.insert(0,{})
         # 유저 정보 Json
         user_info = {
             "name" : user.name,
@@ -143,11 +147,13 @@ class LoadGameView(APIView):
                 "three" : three_feed
             }
         animals_data = animals_serializer.data.copy()
+        animals_data.insert(0,{})
 
         # 게임 정보 - 상점 정보 가공
         shop = Decoration.objects.exclude(is_rare=True)
         shop_serializer = ShopInfoSerializer(shop, many=True)
         shop_data = shop_serializer.data.copy()
+        shop_data.insert(0,{})
         # 게임 정보 Json
         gameinfo = {
             "animal" : animals_data,
