@@ -27,13 +27,46 @@ GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
 
 class StartAnimalView(APIView):
     def get(self,request):
-        response = FAIL
+        response = FAIL.copy()
         user = request.user
+
+        # 동물 추천 알고리즘 들어가는 부분 : 추천 동물은 꼭 15마리 전부일 필요는 없음
+        
+        # 닭
+        
+        # 개
+        
+        # 고양이
+        
+        # 고슴도치
+        
+        # 사슴
+        
+        # 코끼리
+        
+        # 사자
+        
+        # 기린
+        
+        # 거북이
+        
+        # 펭귄
+        
+        # 양
+        
+        # 토끼
+        
+        # 원숭이
+        
+        # 호랑이
+        
+        # 곰
+
         animal = get_object_or_404(Animal, id=1)
 
         user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0)
         user_animal.save()
-        response = SUCCESS
+        response = SUCCESS.copy()
         return Response(response)
 
 class LoadGameView(APIView):
@@ -57,7 +90,6 @@ class LoadGameView(APIView):
             user_animal['created_at']=user_animal['created_at'].replace('-','/')
         # 리스트 패딩
         user_animals_data = user_animals_serializer.data.copy()
-        user_animals_data.insert(0,{})
         # 가구 정보 가공 : 보관함
         decorations = user.user_decoration_set.all()
         decoration_len = Decoration.objects.all()
@@ -66,7 +98,6 @@ class LoadGameView(APIView):
             if not decoration.decoration.is_rare and not decoration.is_located:
                 list[decoration.decoration.id] += 1
         decorations_ilst = []
-        decorations_ilst.append({})
         for i in range(0,len(list)):
             if list[i] != 0:
                 decorations_ilst.append({
@@ -75,7 +106,6 @@ class LoadGameView(APIView):
                 })
         # 가구 정보 가공 : 배치 가구
         located_decorations = []
-        located_decorations.append({})
         for decoration in decorations:
             if decoration.is_located:
                 located_decorations.append({
@@ -88,7 +118,6 @@ class LoadGameView(APIView):
         items = user.user_item_set.all()
         items_serializer = UserItemInfoSerializer(items, many=True)
         items_data = items_serializer.data
-        items_data.insert(0,{})
         # 유저 정보 Json
         user_info = {
             "name" : user.name,
@@ -105,9 +134,6 @@ class LoadGameView(APIView):
         animals = Animal.objects.all()
         animals_serializer = AnimalInfoSerializer(animals, many=True)
         for animal in animals_serializer.data:
-            animal['feeds'].insert(0,[])
-            animal['features'].insert(0,"")
-            animal['commands'].insert(0,"")
             one_feed = animal['feeds'][1]
             two_feed = animal['feeds'][2]
             three_feed = animal['feeds'][3]
@@ -117,13 +143,11 @@ class LoadGameView(APIView):
                 "three" : three_feed
             }
         animals_data = animals_serializer.data.copy()
-        animals_data.insert(0,{})
 
         # 게임 정보 - 상점 정보 가공
         shop = Decoration.objects.exclude(is_rare=True)
         shop_serializer = ShopInfoSerializer(shop, many=True)
         shop_data = shop_serializer.data.copy()
-        shop_data.insert(0,{})
         # 게임 정보 Json
         gameinfo = {
             "animal" : animals_data,
