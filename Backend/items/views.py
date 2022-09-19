@@ -25,7 +25,7 @@ class ItemsUpdateView(APIView):
 
         # 요청 보낸 사용자와 로그인 사용자 동일 여부 확인
         if request.user != user_decoration.user:
-            response = FAIL
+            response = FAIL.copy()
             response.update({"message": "요청을 보낸 사용자와 로그인한 사용자가 다릅니다."})
             return Response(response)
 
@@ -43,13 +43,13 @@ class ItemsBuyView(APIView):
 
         # 희귀 조경 확인
         if decoration.is_rare:
-            response = FAIL
+            response = FAIL.copy()
             response.update({"message": "희귀 조경은 구매할 수 없습니다."})
             return Response(response)
         
         # 보유 골드 확인
         if user.gold < decoration.cost:
-            response = FAIL
+            response = FAIL.copy()
             response.update({"message": "보유한 골드가 부족합니다."})
             return Response(response)
 
@@ -59,7 +59,7 @@ class ItemsBuyView(APIView):
         user.gold -= decoration.cost
         user.save()
 
-        response = SUCCESS
+        response = SUCCESS.copy()
         response.update({"id": user_decoration.id})
 
         return Response(response, status=status.HTTP_201_CREATED)
