@@ -8,7 +8,10 @@ admin.site.register(Decoration, DecorationAdmin)
 
 
 class UserDecorationAdmin(admin.ModelAdmin):
-    fields = ['user', 'decoration', 'is_located', 'location', 'angle']
+    fieldsets = [
+        ('FK',               {'fields': ['user','decoration']}),
+        ('상세 정보', {'fields': ['is_located', 'location', 'angle'],}),
+    ]
 admin.site.register(User_Decoration, UserDecorationAdmin)
 
 
@@ -18,7 +21,10 @@ admin.site.register(Item, ItemAdmin)
 
 
 class UserItemAdmin(admin.ModelAdmin):
-    fields = ['user', 'item', 'cnt']
+    fieldsets = [
+        ('FK',               {'fields': ['user','item']}),
+        ('상세 정보', {'fields': ['cnt'],}),
+    ]
 admin.site.register(User_Item, UserItemAdmin)
 
 

@@ -2,6 +2,9 @@ from django.db import models
 from django.conf import settings
 from datetime import datetime
 
+'''
+column에 수정 사항이 생기면, admin.py도 변경하기!!
+'''
 
 User = settings.AUTH_USER_MODEL
 
