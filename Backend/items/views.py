@@ -5,41 +5,14 @@ from rest_framework.decorators import APIView
 from rest_framework.response import Response
 
 from .models import User_Decoration, Decoration
-from .serializers import ItemsUpdateSerializer, ItemsCreateSerializer
+from .serializers import ItemsPlaceSerializer
 from utils import *
-
-
-# 조경 생성 테스트용
-class ItemsCreateView(APIView):
-    def post(self, request):
-        serializer = ItemsCreateSerializer(data=request.data)
-
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
-
-
-class ItemsUpdateView(APIView):
-    def put(self, request):
-        user_decoration = get_object_or_404(User_Decoration, id=request.data.get("id"))
-
-        # 요청 보낸 사용자와 로그인 사용자 동일 여부 확인
-        if request.user != user_decoration.user:
-            response = FAIL.copy()
-            response.update({"message": "요청을 보낸 사용자와 로그인한 사용자가 다릅니다."})
-            return Response(response)
-
-        serializer = ItemsUpdateSerializer(instance=user_decoration, data=request.data)
-        
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(SUCCESS)
 
 
 class ItemsBuyView(APIView):
     def post(self, request):
-        decoration = get_object_or_404(Decoration, id=request.data.get("id"))
         user = request.user
+        decoration = get_object_or_404(Decoration, id=request.data.get("id"))
 
         # 희귀 조경 확인
         if decoration.is_rare:
@@ -63,3 +36,82 @@ class ItemsBuyView(APIView):
         response.update({"id": user_decoration.id})
 
         return Response(response, status=status.HTTP_201_CREATED)
+
+
+class ItemsPlaceView(APIView):
+    def put(self, request):
+        user = request.user
+        data = request.data
+        decoration = get_object_or_404(Decoration, id=data.get("id"))
+        user_decoration_lst = User_Decoration.objects.filter(user=user, decoration=decoration).exclude(is_located=True)
+
+        # 배치 가능한 조경 있는지 확인
+        if len(user_decoration_lst) < 1:
+            response = FAIL.copy()
+            response.update({"message": "배치 가능한 조경이 없습니다."})
+            return Response(response)
+
+        user_decoration = user_decoration_lst[0]
+        user_decoration.is_located = True
+
+        serializer = ItemsPlaceSerializer(instance=user_decoration, data=data)
+        
+        if serializer.is_valid(raise_exception=True):
+            # location, angle 값 확인
+            location_lst = [user_decoration.location for user_decoration in User_Decoration.objects.filter(user=user).exclude(is_located=False)]
+
+            location = data["location"]
+
+            if not (1 <= location <= 100 and location not in location_lst and 1 <= data["angle"] <= 4):
+                response = FAIL.copy()
+                response.update({"message": "입력값이 잘못되었습니다."})
+                return Response(response)
+
+            response = SUCCESS.copy()
+            response.update({"id": user_decoration.id})
+            return Response(response)
+
+
+class ItemsUpdateView(APIView):
+    def put(self, request):
+        user = request.user
+        data = request.data
+        user_decoration = get_object_or_404(User_Decoration, id=data.get("id"))
+
+        # 사용자 동일 여부 확인
+        if user != user_decoration.user:
+            response = FAIL.copy()
+            response.update({"message": "요청을 보낸 사용자와 해당 조경을 보유한 사용자가 다릅니다."})
+            return Response(response)
+
+        serializer = ItemsPlaceSerializer(instance=user_decoration, data=data)
+        
+        if serializer.is_valid(raise_exception=True):
+            # location, angle 값 확인
+            location_lst = [user_decoration.location for user_decoration in User_Decoration.objects.filter(user=user).exclude(is_located=False)]
+
+            location = data["location"]
+
+            if (location != user_decoration.location and not (1 <= location <= 100 and location not in location_lst)) \
+                or not 1 <= data["angle"] <= 4:
+                    response = FAIL.copy()
+                    response.update({"message": "입력값이 잘못되었습니다."})
+                    return Response(response)
+
+            serializer.save()
+            return Response(SUCCESS)
+
+
+class ItemsCancelView(APIView):
+    def put(self, request):
+        user_decoration = get_object_or_404(User_Decoration, id=request.data.get("id"))
+
+        # 사용자 동일 여부 확인
+        if request.user != user_decoration.user:
+            response = FAIL.copy()
+            response.update({"message": "요청을 보낸 사용자와 해당 조경을 보유한 사용자가 다릅니다."})
+            return Response(response)
+
+        user_decoration.is_located = False
+        user_decoration.save()
+        return Response(SUCCESS)
