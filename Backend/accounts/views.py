@@ -1,4 +1,5 @@
 from datetime import datetime
+from os import access
 import re
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.conf import settings
@@ -13,54 +14,70 @@ from rest_framework import status
 from rest_framework.response import Response
 from json.decoder import JSONDecodeError
 from rest_framework.decorators import APIView
+from utils import *
 import requests, random
 
 from .models import User
 from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
 from animals.models import User_Animal, Animal
 from items.models import Item, Decoration, User_Item, User_Decoration
-from utils import *
+
 
 state = getattr(settings, 'STATE')
 BASE_URL = 'http://localhost:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
+
+
+def date_init():
+    # 매일 자정에 초기화 되는 컬럼 : 모두 부르기(User), 놀아주기 횟수, 대화하기 횟수(User_animal)
+    users = User.objects.all()
+    user_animals = User_Animal.objects.all()
+
+    users.update(is_called = False)
+    user_animals.update(talking_cnt=3, playing_cnt=3)
+
+    print("수정완료")
 
 class StartAnimalView(APIView):
     def get(self,request):
         response = FAIL.copy()
         user = request.user
 
-        # 동물 추천 알고리즘 들어가는 부분 : 추천 동물은 꼭 15마리 전부일 필요는 없음
         
-        # 닭
-        
-        # 개
-        
-        # 고양이
-        
-        # 고슴도치
-        
-        # 사슴
-        
-        # 코끼리
-        
-        # 사자
-        
-        # 기린
-        
-        # 거북이
-        
-        # 펭귄
-        
-        # 양
-        
-        # 토끼
-        
-        # 원숭이
-        
-        # 호랑이
-        
-        # 곰
+
+    # 동물 추천 알고리즘 들어가는 부분 : 추천 동물은 꼭 15마리 전부일 필요는 없음
+    
+    #ISTJ 거북이
+
+    #ISTP 곰
+
+    #ISFJ 사슴
+
+    #ISFP 고양이
+
+    #INTJ 호랑이
+
+    #INTP 닭
+
+    #INFJ 기린
+
+    #INFP 달팽이
+
+    #ESTJ 강아지
+
+    #ESTP 꿀벌
+
+    #ESFJ 양
+
+    #ESFP 토끼
+
+    #ENTJ 사자
+
+    #ENTP 원숭이
+
+    #ENFJ 코끼리
+
+    #ENFP 원숭이
 
         animal = get_object_or_404(Animal, id=1)
 
@@ -94,7 +111,7 @@ class LoadGameView(APIView):
         # 가구 정보 가공 : 보관함
         decorations = user.user_decoration_set.all()
         decoration_len = Decoration.objects.all()
-        list = [0 for i in range(0,decoration_len.count())]
+        list = [0 for i in range(0,decoration_len.count()+1)]
         for decoration in decorations:
             if not decoration.decoration.is_rare and not decoration.is_located:
                 list[decoration.decoration.id] += 1
@@ -169,10 +186,18 @@ class UserDeleteView(APIView):
     def delete(self,request):
         response = FAIL.copy()
 
-        user = request.user
-        user.delete()
-
-        response = SUCCESS
+        datas = {
+            'username' : request.data.get('username'),
+            'password' : request.data.get('password')
+        }
+        
+        url = "https://j7c201.p.ssafy.io/accounts/login/"
+        res = requests.post(url, data=datas).json()
+        if "access_token" in res and res['user']['username'] == request.user.username:
+            user = request.user
+            user.delete()
+            response = SUCCESS.copy()
+        
         return Response(response)
 
 class GachaView(APIView):
