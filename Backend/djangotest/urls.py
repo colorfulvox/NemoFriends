@@ -21,4 +21,5 @@ urlpatterns = [
     path('join/', views.TestView.as_view(), name='test'),
     path('array/', views.ArrayView.as_view(), name='array'),
     path('data_animals/', views.DataAnimals.as_view()),
+    path('audio/', views.AudioView.as_view()),
 ]
