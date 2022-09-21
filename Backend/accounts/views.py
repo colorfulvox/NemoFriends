@@ -17,7 +17,7 @@ from rest_framework.decorators import APIView
 from utils import *
 import requests, random
 
-from .models import User
+from .models import Mbti, User
 from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
 from animals.models import User_Animal, Animal
 from items.models import Item, Decoration, User_Item, User_Decoration
@@ -39,52 +39,186 @@ def date_init():
     print("수정완료")
 
 class StartAnimalView(APIView):
-    def get(self,request):
-        response = FAIL.copy()
+    def post(self, request):
+        # 동물 추천 알고리즘
+        answer = request.data.get('answer')
+        mbti_animals = Mbti.objects.all()
+        animal = 0
+        mbti = 0
+        # I
+        if answer[0] == 1:
+            # IS
+            if answer[1] == 1:
+                # IST
+                if answer[2] == 1:
+                    #ISTJ 1 거북이 1111
+                    if answer[3] == 1:
+                        animal = mbti_animals.get(mbti="ISTJ").animal
+                        mbti = 1
+                    #ISTP 2 곰 1112
+                    else:
+                        animal = mbti_animals.get(mbti="ISTP").animal
+                        mbti = 2
+                # ISF
+                else:
+                    #ISFJ 3 사슴 1121
+                    if answer[3] == 1:
+                        animal = mbti_animals.get(mbti="ISFJ").animal
+                        mbti = 3
+                    #ISFP 4 고양이 1122
+                    else:
+                        animal = mbti_animals.get(mbti="ISFP").animal
+                        mbti = 4
+            # IN
+            else:
+                # INT
+                if answer[2] == 1:
+                    #INTJ 5 호랑이 1211
+                    if answer[3] == 1:
+                        animal = mbti_animals.get(mbti="INTJ").animal
+                        mbti = 5
+                    #INTP 6 닭 1212
+                    else:
+                        animal = mbti_animals.get(mbti="INTP").animal
+                        mbti = 6
+                # INF
+                else:
+                    #INFJ 7 기린 1221
+                    if answer[3] == 1:
+                        animal = mbti_animals.get(mbti="INFJ").animal
+                        mbti = 7
+                    #INFP 8 토끼 1222
+                    else:
+                        animal = mbti_animals.get(mbti="INFP").animal
+                        mbti = 8
+        #E
+        else:
+            # ES
+            if answer[1] == 1:
+                # EST
+                if answer[2] == 1:
+                    #ESTJ 9 강아지 2111
+                    if answer[3] == 1:
+                        animal = mbti_animals.get(mbti="ESTJ").animal
+                        mbti = 9
+                    #ESTP 10 강아지 2112
+                    else:
+                        animal = mbti_animals.get(mbti="ESTP").animal
+                        mbti = 10
+                # ESF
+                else:
+                    #ESFJ 11 양 2121
+                    if answer[3] ==1:
+                        animal = mbti_animals.get(mbti="ESFJ").animal
+                        mbti = 11
+                    #ESFP 12 토끼 2122
+                    else:
+                        animal = mbti_animals.get(mbti="ESFP").animal
+                        mbti = 12
+            # EN
+            else:
+                # ENT
+                if answer[2] == 1:
+                    #ENTJ 13 사자 2211
+                    if answer[3]==1:
+                        animal = mbti_animals.get(mbti="ENTJ").animal
+                        mbti = 13
+                    #ENTP 14 원숭이 2212
+                    else:
+                        animal = mbti_animals.get(mbti="ENTP").animal
+                        mbti = 14
+                # ENF
+                else:
+                    #ENFJ 15 코끼리 2221
+                    if answer[3] == 1:
+                        animal = mbti_animals.get(mbti="ENFJ").animal
+                        mbti = 15
+                    #ENFP 16 원숭이 2222
+                    else:
+                        animal = mbti_animals.get(mbti="ENFP").animal
+                        mbti = 16
         user = request.user
-
-        
-
-    # 동물 추천 알고리즘 들어가는 부분 : 추천 동물은 꼭 15마리 전부일 필요는 없음
-    
-    #ISTJ 거북이
-
-    #ISTP 곰
-
-    #ISFJ 사슴
-
-    #ISFP 고양이
-
-    #INTJ 호랑이
-
-    #INTP 닭
-
-    #INFJ 기린
-
-    #INFP 달팽이
-
-    #ESTJ 강아지
-
-    #ESTP 꿀벌
-
-    #ESFJ 양
-
-    #ESFP 토끼
-
-    #ENTJ 사자
-
-    #ENTP 원숭이
-
-    #ENFJ 코끼리
-
-    #ENFP 원숭이
-
-        animal = get_object_or_404(Animal, id=1)
-
+        user_animals = user.user_animal_set.all()
+        user_animals_count = user_animals.count()
+        # 조작 이용자(튜토리얼로 강제 진입한 경우 등)
+        if user_animals_count != 0:
+            return Response({"success" : False})
         user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0)
         user_animal.save()
-        response = SUCCESS.copy()
+
+        animal.id
+        response = {
+            "animal_id" : animal.id,
+            "mbti_id" : mbti
+        }
         return Response(response)
+
+class QuestionView(APIView):
+    def get(self,request):
+        response = FAIL.copy()
+
+        questions = {
+            "IE" : [
+                {
+                    "question" : "꼭 이 두 가지 동물 중 하나가 되어야 한다면?",
+                    "ans1" : "나는야 고독한 맹수 호랑이. 나만의 길을 걷는다.",
+                    "ans2" : "사자 대가족의 일원, 다같이 살아가는 게 인생이지."
+                },
+                {
+                    "question" : "평화로운 휴일, 동네 친구 여우가 갑자기 놀러가자고 불러냈어요.",
+                    "ans1" : '"나 바빠" 사실 하나도 안 바쁘지만 바쁘다고 하고 집에서 쉰다.',
+                    "ans2" : '"당연히 가야지!" 한가했는데 마침 잘됐다.'
+                }
+            ],
+            "SN" : [
+                {
+                    "question" : "당신은 곰입니다. 좋아하는 꿀을 가지고 맛있는 요리를 할 수 있는 레시피를 구했어요.",
+                    "ans1" : '"레시피가 정답이야!" 레시피에 적힌대로 정확히 요리를 한다.',
+                    "ans2" : '"내 입맛에 맞아야지!" 내 감각을 믿고 눈대중, 손대중으로 양을 맞춘다.'
+                },
+                {
+                    "question" : "당신은 병아리입니다. 내일 다른 병아리들과 소풍을 떠나기로 했어요.",
+                    "ans1" : '"내일 재밌겠다! 빨리 자야지" 바로 잠에 든다.',
+                    "ans2" : '"내일 비오지는 않겠지? 누가 날 잡아먹으면 어떡해?" 걱정이 줄줄 이어진다.'
+                }
+            ],
+            "TF" : [
+                {
+                    "question" : "원숭이가 누군가 몰래 빼먹은 바나나를 보며 주저앉아 엉엉 울고있어요.",
+                    "ans1" : '"지금 이럴 때가 아니야! 빨리 범인을 찾아야지!" 범인을 찾으러 가자고 한다.',
+                    "ans2" : '"너무 슬프겠다... 정말 아끼는 바나나였잖아 ㅠㅠㅠ" 옆에서 같이 운다.'
+                },
+                {
+                    "question" : "친구 원숭이가 정말 어려운 공중제비를 성공했어요!",
+                    "ans1" : '"와 이걸 성공하네" 성공했다는 사실에 감탄한다.',
+                    "ans2" : '"얼마나 열심히 연습했을까... 고생했어." 그동안의 노력에 감탄한다.'
+                }
+            ],
+            "JP" : [
+                            {
+                    "question" : "당신은 다람쥐가 되었습니다. 집에 있는 먹을 것들은 어떤 모습인가요?",
+                    "ans1" : '해바라기 씨, 도토리, 아몬드, 호박씨.. 종류별로 깔끔하게 나뉘어 있다.',
+                    "ans2" : '한 구덩이에 뭉텅이로 모여있다.'
+                },
+                {
+                    "question" : "친구 거북이가 내일 약속시간을 바꿀 수 있냐고 물어봤어요.",
+                    "ans1" : '"시간이 바뀌면 내일 짜둔 계획이 틀어지는데..." 불편하다.',
+                    "ans2" : '"그래~ 혹시 시간 당겨진 건 아니지?" 별 생각 없다. 시간이 미뤄지면 왠지 기분이 좋다.'
+                }
+            ]
+        }
+        response = {
+            "mbti" : [
+                {},
+                questions["IE"][random.randint(0, 1)],
+                questions["SN"][random.randint(0, 1)],
+                questions["TF"][random.randint(0, 1)],
+                questions["JP"][random.randint(0, 1)],
+            ]
+        }
+
+        return Response(response)
+
 
 class LoadGameView(APIView):
     def get(self, request):
@@ -229,7 +363,7 @@ class GachaView(APIView):
         # 뽑힌 오브젝트의 타입 판별
             # 동물일 경우(animals.models.Animal)
             if type(obj) is Animal:
-                user_animal = User_Animal(user=user, animal=obj, name=obj.species, item_id=0)
+                user_animal = User_Animal(user=user, animal=obj, name=obj.species, color_id=0)
                 user_animal.save()
                 response.update({"result" : {"type" : "animal", "pk" : user_animal.id,"id" : obj.id}})
             # 조경일 경우

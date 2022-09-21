@@ -1,6 +1,9 @@
+from winsound import SND_ALIAS
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
+
+from animals.models import Animal
 
 # Create your models here.
 class User(AbstractUser):
@@ -22,3 +25,10 @@ class WordChain(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     score = models.IntegerField(default=0)
     words = models.JSONField()
+
+class Mbti(models.Model):
+    mbti = models.CharField(primary_key=True, max_length=4)
+    animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.mbti + ":" + self.animal.species
