@@ -1,4 +1,5 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.decorators import APIView
@@ -111,31 +112,77 @@ class AnimalsColorView(APIView):
         response["message"] = "유저 정보가 다릅니다."
         return Response(response)
 
+ALL_COMMANDS = ['얘들아', '모두']
+
+def speech_to_text(data=None):
+    if not data:
+        data = "노란아 앉아"
+    return data
 
 class AnimalsTalkView(APIView):
-    def recognize(data):
-        data = "노란아 앉아"
-        return data
+    # 전체 명령
+    def talk_to_all():
+        pass
+
+    # 특정 동물
+    def talk_to_one(animal, user, context):
+        action = 'talking_one'
+        level = animal.level
+        commands = animal.commands[:level+1]
+
+        for command in commands:
+            if command in context:
+                # 대화 보상 Ok
+                if animal.talking_cnt:
+                    animal = reward_exp(animal, user, action)
+                    animal.talking_cnt -= 1
+                    animal.save()
+                    user = reward_gold(user, action)
+                    user.save()
+                # 대화 보상 No
+                response = {'user_animal_id': animal.id, 'command': command}
+                response.update(SUCCESS)
+                return response
+
+        return FAIL
 
     def put(self, request):
-        user_animal_id = request.data.get('id')
-        print(user_animal_id)
-        user_animal = get_object_or_404(User_Animal, pk=user_animal_id)
-        print(request.user)
-        if request.user == user_animal.user:
-            result = self.recognize(request.data.get('voice'))
-            level = user_animal.level
-            commands = user_animal.animal.commands[:level+1]
-            print(request.user.animal_set.all())
-            if result in commands:
-                action = 'talking'
-                user_animal.playing_cnt += 1
-                user_animal = reward_exp(user_animal, request.user, action)
-                user_animal.save()
-                user = reward_gold(request.user, action)
-                user.save()
-                return Response(SUCCESS)
-            return Response(FAIL)
+        audio = request.data.get('voice')
+        context = speech_to_text(audio)
+        # print(context)
+
+        user = get_object_or_404(get_user_model(), username=request.user)
+        user_animals = get_list_or_404(User_Animal, user=user)
+        
+        for animal in user_animals:
+            if animal.name in context:
+                response = self.talk_to_one(animal, user, context)
+                return Response(response)
+        
+        response = self.talk_to_all(context)
+        return Response(response)
+
+        # print(request.__dir__())
+        # print(request.parsers)
+        # print(request.parser_context)
+        # user_animal_id = request.data.get('id')
+        # print(user_animal_id)
+        # user_animal = get_object_or_404(User_Animal, pk=user_animal_id)
+        # print(request.user)
+        # if request.user == user_animal.user:
+        #     result = self.recognize(request.data.get('voice'))
+        #     level = user_animal.level
+        #     commands = user_animal.animal.commands[:level+1]
+        #     print(request.user.animal_set.all())
+        #     if result in commands:
+        #         action = 'talking'
+        #         user_animal.playing_cnt += 1
+        #         user_animal = reward_exp(user_animal, request.user, action)
+        #         user_animal.save()
+        #         user = reward_gold(request.user, action)
+        #         user.save()
+        #         return Response(SUCCESS)
+
 
 
 
@@ -144,9 +191,9 @@ class AnimalsTalkView(APIView):
 #         pass
 
 
-# class AnimalsPlayWordChainView(APIView):
-#     def put(self, request):
-#         pass
+class AnimalsPlayWordChainView(APIView):
+    def put(self, request):
+        pass
 
 
 # class AnimalsTestView(APIView):
@@ -168,3 +215,5 @@ class AnimalsTalkView(APIView):
 #         print(commands.keys())
 #         print('먹이', type(feed[order_id]), feed[order_id])
 #         return Response(serializer.data)
+
+print('view 내부')
