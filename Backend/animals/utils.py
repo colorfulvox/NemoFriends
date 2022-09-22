@@ -3,7 +3,7 @@ date_format_slash = f'%y/%m/%d/%H/%M/%S'
 
 
 # 전체 명령어 리스트
-ALL_COMMANDS = ['얘들아']
+ALL_COMMANDS = ['', '얘들아']
 
 
 # STT
