@@ -1,4 +1,5 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.decorators import APIView
@@ -6,9 +7,10 @@ from rest_framework.response import Response
 
 from .models import Animal, User_Animal
 from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer, UserAnimalSerializer
+from .utils import *
 from animals import serializers
 from items.models import User_Item
-from utils import *
+from utils import SUCCESS, FAIL
 
 import random
 from datetime import datetime, timedelta
@@ -23,7 +25,7 @@ class DepthTestView(APIView):
 
 
 class AnimalsEatView(APIView):
-    def put(self, request):
+    def post(self, request):
         id = request.data.get('id')
         result = request.data.get('result')
         user_animal = get_object_or_404(User_Animal, pk=id)
@@ -67,7 +69,7 @@ class AnimalsEatView(APIView):
 
 
 class AnimalsRenameView(APIView):
-    def put(self, request):
+    def post(self, request):
         id = request.data.get('id')
         user_animal = get_object_or_404(User_Animal, pk=id)
         
@@ -81,7 +83,7 @@ class AnimalsRenameView(APIView):
 
 
 class AnimalsColorView(APIView):
-    def put(self, request):
+    def post(self, request):
         response = FAIL.copy() # response: 실패 응답이 담길 dict 
 
         user_item_id = request.data.get('user_item_id')
@@ -113,57 +115,65 @@ class AnimalsColorView(APIView):
 
 
 class AnimalsTalkView(APIView):
-    def recognize(data):
-        data = "노란아 앉아"
-        return data
+    # 전체 동물 대화
+    def talk_to_all(context, user):
+        for command in ALL_COMMANDS:
+            if command in context:
+                if not user.is_called:
+                    user = reward_gold(user, 'talking_all')
+                    user.is_called = True
+                    user.save()
+                response = {'command': command}
+                response.update(SUCCESS)
 
-    def put(self, request):
-        user_animal_id = request.data.get('id')
-        print(user_animal_id)
-        user_animal = get_object_or_404(User_Animal, pk=user_animal_id)
-        print(request.user)
-        if request.user == user_animal.user:
-            result = self.recognize(request.data.get('voice'))
-            level = user_animal.level
-            commands = user_animal.animal.commands[:level+1]
-            print(request.user.animal_set.all())
-            if result in commands:
-                action = 'talking'
-                user_animal.playing_cnt += 1
-                user_animal = reward_exp(user_animal, request.user, action)
-                user_animal.save()
-                user = reward_gold(request.user, action)
-                user.save()
-                return Response(SUCCESS)
-            return Response(FAIL)
+                return response
+        return FAIL
+
+    # 특정 동물 대화
+    def talk_to_one(animal, user, context):
+        action = 'talking_one'
+        grade = animal.grade
+        commands = animal.commands[:grade+1]
+
+        for command in commands:
+            if command in context:
+                # 대화 보상 Ok
+                if animal.talking_cnt:
+                    animal = reward_exp(animal, user, action)
+                    animal.talking_cnt -= 1
+                    animal.save()
+                    user = reward_gold(user, action)
+                    user.save()
+                # 대화 보상 No
+                response = {'user_animal_id': animal.id, 'command': command}
+                response.update(SUCCESS)
+                return response
+
+        return FAIL
+
+    def post(self, request):
+        audio = request.data.get('voice')
+        context = speech_to_text(audio)
+        # print(context)
+
+        user = get_object_or_404(get_user_model(), username=request.user)
+        user_animals = get_list_or_404(User_Animal, user=user)
+        
+        for animal in user_animals:
+            if animal.name in context:
+                response = self.talk_to_one(animal, user, context)
+                return Response(response)
+        
+        response = self.talk_to_all(context, user)
+        return Response(response)
 
 
-# class AnimalsPlayNewGame(APIView):
-#     def put(self, request):
-#         pass
+class AnimalPlayMaze(APIView):
+    def post(self, request):
+        pass
 
 
-# class AnimalsPlayWordChainView(APIView):
-#     def put(self, request):
-#         pass
+class AnimalsPlayWordChainView(APIView):
+    def post(self, request):
+        pass
 
-
-# class AnimalsTestView(APIView):
-#     def get(self, request, animal_id, order_id):
-#         print(request)
-#         print(order_id, type(order_id))
-#         animals = get_list_or_404(Animal)
-#         animal = get_object_or_404(Animal, id=animal_id)
-#         print(animals)
-#         # serializer = AnimalsTestSerializer(animals, many=True)
-#         serializer = AnimalsTestSerializer(animal)
-#         print(animal)
-#         space = animal.species
-#         feed = animal.feeds
-#         character = animal.characteristics
-#         commands = animal.commands
-#         print(f'space: {space}\ncharacter: {character}\ncommands: {commands}\nfeed: {feed}')
-#         # print('명령', commands[str(order_id)])
-#         print(commands.keys())
-#         print('먹이', type(feed[order_id]), feed[order_id])
-#         return Response(serializer.data)
