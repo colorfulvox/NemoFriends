@@ -14,7 +14,7 @@ def speech_to_text(data=None):
 
 
 # gold 보상 처리
-def reward_gold(user, action, score=None):
+def reward_gold(user, action, score=0):
     reward = {'eatting': 100, 'level_up': 777, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score}
     user.gold += reward[action]
     return user
