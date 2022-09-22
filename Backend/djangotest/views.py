@@ -31,11 +31,12 @@ class DataAnimals(APIView):
             print(type(data))
 
 class AudioView(APIView):
-    def put(self, request):
-        audio = request.FILES["audio"]
-
+    def post(self, request):
+        audio = request.FILES.get("audio")
+        print(audio, type(audio))
         # multipart/form-data로 받은 file을 테스트를 위해 bytes로 변환한 후
         # bytes를 wav 파일로 저장
+
         with open('media/copy.wav', mode='bx') as f:
             f.write(audio.file.read())
 
@@ -48,5 +49,5 @@ class AudioView(APIView):
 
         # file 삭제
         fs.delete(filename)
-        
+        fs.delete('copy.wav')
         return Response(SUCCESS)
