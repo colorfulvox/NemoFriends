@@ -19,6 +19,6 @@ class User(AbstractUser):
         return self.username
         
 class WordChain(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
     score = models.IntegerField(default=0)
     words = models.JSONField()
