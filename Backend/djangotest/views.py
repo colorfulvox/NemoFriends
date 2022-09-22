@@ -33,7 +33,8 @@ class DataAnimals(APIView):
 
 class AudioView(APIView):
     def post(self, request):
-        audio = request.FILES.get("audio")
+        print(request.FILES)
+        audio = request.FILES["audio"]
 
 
         # multipart/form-data로 받은 file을 테스트를 위해 bytes로 변환한 후
