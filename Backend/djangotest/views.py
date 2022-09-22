@@ -32,7 +32,7 @@ class DataAnimals(APIView):
             print(type(data))
 
 class AudioView(APIView):
-    def post(self, request):
+    def put(self, request):
         print(request.FILES)
         audio = request.FILES["audio"]
 
