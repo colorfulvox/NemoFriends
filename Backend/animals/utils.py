@@ -14,18 +14,18 @@ def speech_to_text(data=None):
 
 
 # gold 보상 처리
-def reward_gold(user, action):
-    reward = {'eatting': 100, 'level_up': 777, 'talking_one': 100, 'talking_all': 100}
+def reward_gold(user, action, score=0):
+    reward = {'eatting': 100, 'level_up': 777, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score}
     user.gold += reward[action]
     return user
 
 
 # exp 보상 처리
-def reward_exp(animal, user, action):
+def reward_exp(animal, user, action, score=None):
     lookup_grade = [1, 1, 1, 2, 2, 3]  # lookup_grade[level] = grade
     levelup_exp = [0, 0, 100, 200, 300, 400, float('inf')]
-    reward = {'eatting': 80, 'talking_one': 50}
-
+    reward = {'eatting': 80, 'talking_one': 50, 'playing': 5 * score}
+    
     exp = animal.exp + reward[action]
     next_level = animal.level + 1
 
