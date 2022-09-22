@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from .serializers import TestSerializer, ArraySerializer
