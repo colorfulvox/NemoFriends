@@ -7,6 +7,7 @@ import json
 from utils import *
 from django.core.files.storage import FileSystemStorage
 
+from django.conf import settings
 class TestView(APIView):
     def post(self,request):
         test_serializer = TestSerializer(data=request.data)
@@ -49,5 +50,5 @@ class AudioView(APIView):
 
         # file 삭제
         fs.delete(filename)
-        fs.delete('copy.wav')
+        fs.delete(settings.BASE_DIR + '/copy.wav')
         return Response(SUCCESS)
