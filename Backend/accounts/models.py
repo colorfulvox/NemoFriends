@@ -14,7 +14,7 @@ class User(AbstractUser):
     bgm = models.IntegerField(default=50)
     effect = models.IntegerField(default=50)
     is_called = models.BooleanField(default=False)
-
+    # exp_cnt = models.IntegerField(default=0)
     def __str__(self):
         return self.username
         

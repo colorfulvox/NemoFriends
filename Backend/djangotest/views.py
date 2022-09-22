@@ -33,24 +33,28 @@ class DataAnimals(APIView):
 
 class AudioView(APIView):
     def post(self, request):
-        print(request.FILES)
         audio = request.FILES["audio"]
 
 
         # multipart/form-data로 받은 file을 테스트를 위해 bytes로 변환한 후
         # bytes를 wav 파일로 저장
 
-        with open('media/copy.wav', mode='bx') as f:
-            f.write(audio.file.read())
+        # with open('media/copy.wav', mode='bx') as f:
+            # f.write(audio.file.read())
 
         # 서버에 file 저장
         fs = FileSystemStorage()
-        filename = fs.save(audio.name, audio)
+        filename = fs.save(request.user.username +'.wav', audio)
+        # print(audio.name)
 
+        # filename = fs.save(request.user, audio)
+
+        # filename = fs.save(audio.name, audio)
+        # print(filename, type(filename))
         # file의 경로
         uploaded_file_path = fs.path(filename)
 
         # file 삭제
-        fs.delete(filename)
-        fs.delete(settings.MEDIA_ROOT + '/copy.wav')
+        # fs.delete(filename)
+        # fs.delete(settings.MEDIA_ROOT + '/copy.wav')
         return Response(SUCCESS)
