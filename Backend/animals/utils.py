@@ -6,6 +6,16 @@ date_format_slash = f'%y/%m/%d/%H/%M/%S'
 ALL_COMMANDS = ['', '얘들아']
 
 
+# 음성 파일 임시 저장
+def save_audio(audio):
+    fs = FileSystemStorage()
+    filename = fs.save(request.user.username +'.wav', audio)
+
+# 음성 파일 삭제
+def delete_audio():
+    pass
+
+
 # STT
 def speech_to_text(data=None):
     if not data:
