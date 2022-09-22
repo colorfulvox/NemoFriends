@@ -25,7 +25,7 @@ class DepthTestView(APIView):
 
 
 class AnimalsEatView(APIView):
-    def put(self, request):
+    def post(self, request):
         id = request.data.get('id')
         result = request.data.get('result')
         user_animal = get_object_or_404(User_Animal, pk=id)
@@ -69,7 +69,7 @@ class AnimalsEatView(APIView):
 
 
 class AnimalsRenameView(APIView):
-    def put(self, request):
+    def post(self, request):
         id = request.data.get('id')
         user_animal = get_object_or_404(User_Animal, pk=id)
         
@@ -83,7 +83,7 @@ class AnimalsRenameView(APIView):
 
 
 class AnimalsColorView(APIView):
-    def put(self, request):
+    def post(self, request):
         response = FAIL.copy() # response: 실패 응답이 담길 dict 
 
         user_item_id = request.data.get('user_item_id')
@@ -169,11 +169,11 @@ class AnimalsTalkView(APIView):
 
 
 class AnimalPlayMaze(APIView):
-    def put(self, request):
+    def post(self, request):
         pass
 
 
 class AnimalsPlayWordChainView(APIView):
-    def put(self, request):
+    def post(self, request):
         pass
 
