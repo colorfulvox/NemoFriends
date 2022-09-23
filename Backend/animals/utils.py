@@ -6,12 +6,10 @@ import json
 import requests
 import time
 import os
+import pickle
 
 # date 포맷 형식
 date_format_slash = f'%y/%m/%d/%H/%M/%S'
-
-# 전체 명령어 리스트
-ALL_COMMANDS = ['', '얘들아']
 
 # STT
 VITO_URL = 'https://openapi.vito.ai/v1/'
@@ -78,7 +76,6 @@ def speech_to_text(data=None):
     return data
 
 
-# 음성 임시 저장 -> STT -> 삭제
 def recongize(username, audio):
     fs = FileSystemStorage()
     filename = fs.save(f'{username}.wav', audio)
@@ -87,18 +84,16 @@ def recongize(username, audio):
     print('STT 결과입니다.', context)
 
     fs.delete(filename)
-    fs.delete(settings.MEDIA_ROOT + f'/{filename}.wav')
+    fs.delete(settings.MEDIA_ROOT + f'/{filename}')
     return context
 
 
-# gold 보상 처리
 def reward_gold(user, action, score=0):
     reward = {'eatting': 100, 'level_up': 777, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score}
     user.gold += reward[action]
     return user
 
 
-# exp 보상 처리
 def reward_exp(animal, user, action, score=0):
     lookup_grade = [1, 1, 1, 2, 2, 3]  # lookup_grade[level] = grade
     levelup_exp = [0, 0, 100, 200, 300, 400, float('inf')]
@@ -117,6 +112,8 @@ def reward_exp(animal, user, action, score=0):
     animal.exp = exp
     return animal
 
+# 전체 명령어 리스트
+ALL_COMMANDS = ['', '얘들아']
 
 # 끝말잇기
 # 두음 법칙 경우의 수
@@ -137,7 +134,14 @@ convert_dict = {
     "리":"이", "니":"이", "린":"인", "닌":"인", "릴":"일", "닐":"일", "림":"임", "님":"임", "립":"입", "닙":"입", "릿":"잇", "닛":"잇", "링":"잉", "닝":"잉" 
     }
 
+# 전처리한 끝말잇기용 단어 목록
+with open('noun_dictionary.pickle', 'rb') as f:
+    noun_dictionary = pickle.load(f)
+
 # 시작 단어로 쓰기 안 좋은 단어 확인
 blacklist = ['즘', '틱', '늄', '슘', '퓸', '늬', '뺌', '섯', '숍', '튼', '름', '늠', '쁨']
 
-print('여기는 animals의 utils.py입니다.')
+start_words = []
+for word in noun_dictionary:
+    if word[0] not in blacklist:
+        start_words.append(word)

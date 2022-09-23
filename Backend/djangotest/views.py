@@ -190,16 +190,17 @@ class PlayWordchainNextView(APIView):
         return response
 
     def post(self, request):
-        audio = request.FILES['audio']
-        fss = FileSystemStorage()
-        filename = fss.save(request.user.username +'.wav', audio)
-        filepath = fss.path(filename)
+        # audio = request.FILES['audio']
+        # fss = FileSystemStorage()
+        # filename = fss.save(request.user.username +'.wav', audio)
+        # filepath = fss.path(filename)
 
-        # 음성 인식
-        # request_word = recognize(filepath)
-        request_word = '단어'
+        # # 음성 인식
+        # # request_word = recognize(filepath)
+        # request_word = '단어'
 
-        fss.delete(settings.MEDIA_ROOT + f'/{filename}.wav')
+        # fss.delete(settings.MEDIA_ROOT + f'/{filename}.wav')
+        request_word = recongize(request.user.username, request.FILES['audio'])
         wordchain = WordChain.objects.get(user_id=request.user)
         words = wordchain.words
         score = wordchain.score
