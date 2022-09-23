@@ -178,7 +178,7 @@ class PlayWordchainStartView(APIView):
         wordchain.save()
 
         response = SUCCESS.copy()
-        response.update({'word': response_word})
+        response.update({'response_word': response_word})
 
         return Response(response)
 
