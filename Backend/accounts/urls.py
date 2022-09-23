@@ -29,5 +29,6 @@ urlpatterns = [
     path('delete/', views.UserDeleteView.as_view(), name='account_delete'),
     path('gacha/', views.GachaView.as_view(), name='gacha'),
     path('start/', views.StartAnimalView.as_view(), name='start_animal'),
+    path('question/', views.QuestionView.as_view(), name='get_question'),
     path('loadgame/',views.LoadGameView.as_view(), name='load_game')
 ]
