@@ -268,18 +268,13 @@ class LoadGameView(APIView):
                     "decoration_id" : decoration.decoration.id,
                     "angle" : decoration.angle,
                 })
-        # 아이템 정보 가공
-        items = user.user_item_set.all()
-        items_serializer = UserItemInfoSerializer(items, many=True)
-        items_data = items_serializer.data
-        items_data.insert(0,{})
         # 유저 정보 Json
         user_info = {
             "name" : user.name,
             "gold" : user.gold,
             "decorations" : decorations_ilst,
             "located_decorations": located_decorations,
-            "items" : items_data,
+            "exp_cnt" : user.exp_cnt,
             "is_called" : user.is_called,
             "bgm" : user.bgm,
             "effect" : user.effect
@@ -345,18 +340,15 @@ class GachaView(APIView):
             random_box = []
             own_animals = [i.animal for i in User_Animal.objects.filter(user=user)]
             all_animals = Animal.objects.all()
-            items = Item.objects.all()
             decos = Decoration.objects.filter(is_rare=True)
             for animal in all_animals:
                 random_box.append(animal)
-
             for check_animal in random_box[:]:
                 if check_animal in own_animals:
                     random_box.remove(check_animal)
-            for item in  items:
-                random_box.append(item)
             for deco in decos:
                 random_box.append(deco)
+            random_box.append("item")
         # 랜덤 함수로 번호 선정
             number = random.randint(0, len(random_box)-1)
             obj = random_box[number]
@@ -372,23 +364,11 @@ class GachaView(APIView):
                 user_decoration.save()
                 response.update({"result" : {"type" : "decoration", "pk" : user_decoration.id,"id" : obj.id}})
 
-            # 염색약일 경우
-            elif type(obj) is Item:
-                user_items = user.user_item_set.all()
-                check = False
-                id = ""
-                for user_item in user_items:
-                    if user_item.item == obj:
-                        check = True
-                        user_item.cnt += 1
-                        user_item.save()
-                        id = user_item.id
-                        break;
-                if not check:
-                    user_item = User_Item(user=user, item=obj)
-                    user_item.save()
-                    id = user_item.id
-                response.update({"result" : {"type" : "item", "pk" : id,"id" : obj.id}})
+            # 경험치약일 경우
+            elif obj is "item":
+                user.exp_cnt += 1
+                user.save()
+                response.update({"result" : {"type" : "exp"}})
             # 타입별로 DB에 저장이 완료되었다면 골드 차감
             user.gold -= 300
             user.save()
