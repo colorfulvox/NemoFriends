@@ -8,10 +8,11 @@ from rest_framework.decorators import APIView
 from rest_framework.response import Response
 
 from .models import Animal, User_Animal
-from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer, UserAnimalSerializer
-from .utils import *
-from animals import serializers
 from items.models import User_Item
+from accounts.models import WordChain
+from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer, UserAnimalSerializer
+from . import serializers
+from .utils import *
 from utils import SUCCESS, FAIL
 
 import random
@@ -168,12 +169,113 @@ class AnimalsTalkView(APIView):
         return Response(response)
 
 
-class AnimalPlayMaze(APIView):
+class AnimalsPlayWordchainStartView(APIView):
     def post(self, request):
-        pass
+        user = request.user
+        animal_id = request.data.get('animal_id')
+        animal = get_object_or_404(Animal, pk=animal_id)
+        user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
+
+        if user_animal.playing_cnt < 1:
+            response = FAIL.copy()
+            response.update({'message': '오늘은 더 이상 놀아줄 수 없습니다.'})
+            return Response(response)
+
+        response_word = random.choice(start_words)
+
+        # 삭제되지 않은 게임 기록 확인
+        check = WordChain.objects.filter(user=user)
+        if check:
+            for wordchain in check:
+                wordchain.delete()
+            
+        wordchain = WordChain(user=user, score=0, words=[response_word])
+        wordchain.save()
+
+        response = SUCCESS.copy()
+        response.update({'response_word': response_word})
+
+        return Response(response)
 
 
-class AnimalsPlayWordChainView(APIView):
+class AnimalsPlayWordchainNextView(APIView):
+    # 게임 종료
+    def finish(self, msg, score, request_word):
+        response = FAIL.copy()
+        response.update({'message': msg, 'request_word': request_word, 'score': score})
+        return response
+
     def post(self, request):
-        pass
+        request_word = recongize(request.user.username, request.FILES['audio'])
 
+        wordchain = WordChain.objects.get(user_id=request.user)
+        words = wordchain.words
+        score = wordchain.score
+        
+        # 사용자의 단어가 사전에 존재하는 단어인지 확인
+        if request_word not in noun_dictionary:
+            response = self.finish('사전에 존재하지 않는 단어입니다.', score, request_word)
+            return Response(response)
+
+        # 사용자의 단어가 이미 사용한 단어인지 확인
+        if request_word in words:
+            response = self.finish('이미 사용한 단어입니다.', score, request_word)
+            return Response(response)
+
+        # 사용자의 단어가 실제로 이어지는 단어인지 확인(두음 법칙 적용)
+        ends = [words[-1][-1]]
+        if ends[0] in convert_dict.keys():
+            ends.append(convert_dict[ends[0]])
+
+        if request_word[0] not in ends:
+            response = self.finish('이어지지 않는 단어입니다.', score, request_word)
+            return Response(response)
+        
+        # 시작 글자로 쓸 수 있는 글자들 확인(두음 법칙 적용)
+        starts = [request_word[-1]]
+        if starts[0] in convert_dict.keys():
+            starts.append(convert_dict[starts[0]])
+        
+        # 다음 단어 선택
+        response_words = []
+        for word in noun_dictionary:
+            if word[0] in starts and word not in words:
+                response_words.append(word)
+        
+        response_word = random.choice(response_words)
+        
+        # WordChain 테이블 갱신
+        wordchain.score += 1
+        wordchain.words.append(request_word)
+        wordchain.words.append(response_word)
+        wordchain.save()
+
+        response = SUCCESS.copy()
+        response.update({'request_word': request_word, 'response_word': response_word, 'score': wordchain.score})
+        return Response(response)
+
+class AnimalsPlayWordchainFinishView(APIView):
+    def post(self, request):
+        user = request.user
+        wordchain = WordChain.objects.get(user=user)
+        score = wordchain.score
+        animal_id = request.data.get('animal_id')
+        animal = get_object_or_404(Animal, pk=animal_id)
+        user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
+        action = 'playing'
+
+        # 골드 증가
+        user = reward_gold(user, action, score)
+        user.save()
+
+        # 놀이 횟수 차감
+        user_animal.playing_cnt -= 1
+
+        # 해당 동물 경험치 증가
+        user_animal = reward_exp(user_animal, user, action, score)
+        user_animal.save()
+
+        # wordchain에서 행 삭제
+        wordchain.delete()
+
+        return Response(SUCCESS)
