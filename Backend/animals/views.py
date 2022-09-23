@@ -1,5 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.decorators import APIView
@@ -116,52 +118,50 @@ class AnimalsColorView(APIView):
 
 class AnimalsTalkView(APIView):
     # 전체 동물 대화
-    def talk_to_all(context, user):
-        for command in ALL_COMMANDS:
-            if command in context:
+    def talk_to_all(self, context, user):
+        for i in range(1, len(ALL_COMMANDS)):
+            if ALL_COMMANDS[i] in context:
                 if not user.is_called:
                     user = reward_gold(user, 'talking_all')
                     user.is_called = True
                     user.save()
-                response = {'command': command}
+                response = {'animal_id': -1, 'cmd': i}
                 response.update(SUCCESS)
-
                 return response
         return FAIL
 
     # 특정 동물 대화
-    def talk_to_one(animal, user, context):
+    def talk_to_one(self, user_animal, user, context):
         action = 'talking_one'
-        grade = animal.grade
-        commands = animal.commands[:grade+1]
+        grade = user_animal.grade
+        commands = user_animal.animal.commands[:grade+1]
 
-        for command in commands:
-            if command in context:
+        for i in range(1, len(commands)):
+            if commands[i] in context:
+
                 # 대화 보상 Ok
-                if animal.talking_cnt:
-                    animal = reward_exp(animal, user, action)
-                    animal.talking_cnt -= 1
-                    animal.save()
+                if user_animal.talking_cnt:
+                    user_animal = reward_exp(user_animal, user, action)
+                    user_animal.talking_cnt -= 1
+                    user_animal.save()
                     user = reward_gold(user, action)
                     user.save()
+
                 # 대화 보상 No
-                response = {'user_animal_id': animal.id, 'command': command}
+                response = {'animal_id': user_animal.animal_id, 'cmd': i}
                 response.update(SUCCESS)
                 return response
-
         return FAIL
 
     def post(self, request):
-        audio = request.data.get('voice')
-        context = speech_to_text(audio)
-        # print(context)
+        context = recongize(request.user.username, request.FILES["audio"])
 
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
         
-        for animal in user_animals:
-            if animal.name in context:
-                response = self.talk_to_one(animal, user, context)
+        for user_animal in user_animals:
+            if user_animal.name in context:
+                response = self.talk_to_one(user_animal, user, context)
                 return Response(response)
         
         response = self.talk_to_all(context, user)

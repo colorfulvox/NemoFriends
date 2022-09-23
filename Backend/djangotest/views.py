@@ -66,11 +66,18 @@ class ArrayView(APIView):
 
 class DataAnimals(APIView):
     def post(self, request):
+        # 전체 데이터 생성
+        # with open('animals.json', encoding='utf-8') as json_file:
+        #     data = json.load(json_file)['results']
+        #     for animal in data:
+        #         Animal.objects.update(**animal)
+        #     print(type(data))
+
+        # 데이터 수정
         with open('animals.json', encoding='utf-8') as json_file:
             data = json.load(json_file)['results']
-            for animal in data:
-                Animal.objects.create(**animal)
-            print(type(data))
+            for i in range(len(data)):
+                print(Animal.objects.filter(id=i+1).update(**data[i]))
 
 
 class AudioView(APIView):
