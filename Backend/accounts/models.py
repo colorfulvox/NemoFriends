@@ -1,4 +1,3 @@
-from winsound import SND_ALIAS
 from django.db import models
 
 from django.contrib.auth.models import AbstractUser
