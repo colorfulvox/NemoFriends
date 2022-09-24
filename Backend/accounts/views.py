@@ -335,12 +335,12 @@ class GachaView(APIView):
         response = FAIL.copy()
         user = request.user
         # 돈이 있는지 체크
-        if user.gold >= 300:
+        if user.gold >= 500:
         # 돈이 있다면 동물 목록(가지고 있지 않은), 염색약 목록, 희귀조경 목록을 가져와 하나의 리스트에 저장
             random_box = []
             own_animals = [i.animal for i in User_Animal.objects.filter(user=user)]
             all_animals = Animal.objects.all()
-            decos = Decoration.objects.filter(is_rare=True)
+            decos = Decoration.objects.all()
             for animal in all_animals:
                 random_box.append(animal)
             for check_animal in random_box[:]:
@@ -348,6 +348,10 @@ class GachaView(APIView):
                     random_box.remove(check_animal)
             for deco in decos:
                 random_box.append(deco)
+            random_box.append("item")
+            random_box.append("item")
+            random_box.append("item")
+            random_box.append("item")
             random_box.append("item")
         # 랜덤 함수로 번호 선정
             number = random.randint(0, len(random_box)-1)
@@ -357,26 +361,26 @@ class GachaView(APIView):
             if type(obj) is Animal:
                 user_animal = User_Animal(user=user, animal=obj, name=obj.species, color_id=0)
                 user_animal.save()
-                response.update({"result" : {"type" : "animal", "pk" : user_animal.id,"id" : obj.id}})
+                response.update({"type" : "animal", "pk" : user_animal.id,"id" : obj.id})
             # 조경일 경우
             elif type(obj) is Decoration:
                 user_decoration = User_Decoration(user=user, decoration=obj, is_located=False, location=-1, angle=-1)
                 user_decoration.save()
-                response.update({"result" : {"type" : "decoration", "pk" : user_decoration.id,"id" : obj.id}})
+                response.update({"type" : "decoration", "pk" : user_decoration.id,"id" : obj.id})
 
             # 경험치약일 경우
-            elif obj is "item":
+            elif obj == "item":
                 user.exp_cnt += 1
                 user.save()
-                response.update({"result" : {"type" : "exp"}})
+                response.update({"type" : "exp"})
             # 타입별로 DB에 저장이 완료되었다면 골드 차감
-            user.gold -= 300
+            user.gold -= 500
             user.save()
             # 성공메시지 반환
             response["success"] = True
             res.data = response
             return res
-        elif user.gold < 300:
+        elif user.gold < 500:
             response = FAIL
             res.data = response
             return res
