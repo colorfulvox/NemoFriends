@@ -74,9 +74,13 @@ def google_stt_api(filename):
 
 def speech_to_text(data=None):
     try:
+        # data = vito_stt_api(data)
         data = google_stt_api(data)
+        print('구글임')
     except:
+        # data = google_stt_api(data)
         data = vito_stt_api(data)
+        print('vito임')
     return data
 
 
@@ -86,7 +90,7 @@ def recongize(username, audio):
 
     context = speech_to_text(filename)
     print('STT 결과입니다.', context)
-
+    
     fs.delete(filename)
     fs.delete(settings.MEDIA_ROOT + f'/{filename}')
     return context
