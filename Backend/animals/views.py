@@ -266,8 +266,7 @@ class AnimalsMazeView(APIView):
 class AnimalsExpUpView(APIView):
     def post(self, request):
         user = request.user
-        id = request.data.get('id')
-        user_animal = get_object_or_404(User_Animal, id=id)
+        user_animal = get_object_or_404(User_Animal, id=request.data.get('id'))
         response = FAIL.copy()
 
         if user == user_animal.user:
@@ -285,36 +284,36 @@ class AnimalsExpUpView(APIView):
         return Response(response)
 
 
-class AnimalsColorView(APIView):
-    def post(self, request):
-        response = FAIL.copy() # response: 실패 응답이 담길 dict 
+# class AnimalsColorView(APIView):
+#     def post(self, request):
+#         response = FAIL.copy() # response: 실패 응답이 담길 dict 
 
-        user_item_id = request.data.get('user_item_id')
+#         user_item_id = request.data.get('user_item_id')
 
-        if user_item_id == 1:
-            response["message"] = "경험치 물약을 보냈습니다."
-            return Response(response)
+#         if user_item_id == 1:
+#             response["message"] = "경험치 물약을 보냈습니다."
+#             return Response(response)
 
-        user_animal_id = request.data.get('user_animal_id')
-        user_animal = get_object_or_404(User_Animal, pk=user_animal_id)
-        user_item = get_object_or_404(User_Item, pk=user_item_id)
+#         user_animal_id = request.data.get('user_animal_id')
+#         user_animal = get_object_or_404(User_Animal, pk=user_animal_id)
+#         user_item = get_object_or_404(User_Item, pk=user_item_id)
 
-        # 염색 Ok
-        if request.user == user_animal.user == user_item.user:
-            if 1 <= user_item.cnt:
-                # user_animal 정보
-                user_animal.color_id = user_item_id
-                user_animal.save()
-                # user_color 정보
-                user_item.cnt -= 1
-                user_item.save()
-                return Response(SUCCESS)
-        # 염색 No
-            response["message"] = "보유한 염색약이 없습니다."
-            return Response(response)
+#         # 염색 Ok
+#         if request.user == user_animal.user == user_item.user:
+#             if 1 <= user_item.cnt:
+#                 # user_animal 정보
+#                 user_animal.color_id = user_item_id
+#                 user_animal.save()
+#                 # user_color 정보
+#                 user_item.cnt -= 1
+#                 user_item.save()
+#                 return Response(SUCCESS)
+#         # 염색 No
+#             response["message"] = "보유한 염색약이 없습니다."
+#             return Response(response)
 
-        response["message"] = "유저 정보가 다릅니다."
-        return Response(response)
+#         response["message"] = "유저 정보가 다릅니다."
+#         return Response(response)
 
 
 class DepthTestView(APIView):
