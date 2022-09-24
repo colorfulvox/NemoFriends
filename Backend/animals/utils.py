@@ -90,14 +90,14 @@ def recongize(username, audio):
 
     context = speech_to_text(filename)
     print('STT 결과입니다.', context)
-    
+
     fs.delete(filename)
     fs.delete(settings.MEDIA_ROOT + f'/{filename}')
     return context
 
 
 def reward_gold(user, action, score=0):
-    reward = {'eatting': 100, 'level_up': 3 * score, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score, 'playing_maze': score * (20220) // 2022}
+    reward = {'eatting': 100, 'level_up': 3 * score, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score, 'playing_maze': score}
     print('얼마 보상?', reward[action])
     user.gold += reward[action]
     return user
