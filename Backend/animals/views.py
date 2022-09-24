@@ -254,6 +254,7 @@ class AnimalsPlayWordchainNextView(APIView):
         response.update({'request_word': request_word, 'response_word': response_word, 'score': wordchain.score})
         return Response(response)
 
+
 class AnimalsPlayWordchainFinishView(APIView):
     def post(self, request):
         user = request.user
@@ -279,3 +280,15 @@ class AnimalsPlayWordchainFinishView(APIView):
         wordchain.delete()
 
         return Response(SUCCESS)
+
+
+class AnimalsPlaceView(APIView):
+    def post(self, request):
+        id = request.data.get('id')
+        user_animal = get_object_or_404(User_Animal, id=id)
+
+        if request.user == user_animal.user:
+            user_animal.is_located = user_animal.is_located ^ 1
+            user_animal.save()
+            return Response(SUCCESS)
+        return Response(FAIL)
