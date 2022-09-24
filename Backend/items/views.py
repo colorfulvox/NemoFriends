@@ -60,9 +60,10 @@ class ItemsPlaceView(APIView):
             # location, angle 값 확인
             location_lst = [user_decoration.location for user_decoration in User_Decoration.objects.filter(user=user).exclude(is_located=False)]
 
-            location = data["location"]
+            location = int(data["location"])
+            angle = int(data["angle"])
 
-            if not (1 <= location <= 100 and location not in location_lst and 1 <= data["angle"] <= 4):
+            if not (1 <= location <= 100 and location not in location_lst and 1 <= angle <= 4):
                 response = FAIL.copy()
                 response.update({"message": "입력값이 잘못되었습니다."})
                 return Response(response)
