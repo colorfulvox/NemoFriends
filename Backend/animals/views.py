@@ -74,7 +74,7 @@ class AnimalsEatView(APIView):
 class AnimalsRenameView(APIView):
     def post(self, request):
         id = request.data.get('id')
-        user_animal = get_object_or_404(User_Animal, pk=id)
+        user_animal = get_object_or_404(User_Animal, id=id)
         
         if request.user == user_animal.user:
             serializer = AnimalsRenameSerializer(instance=user_animal, data=request.data)
