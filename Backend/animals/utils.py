@@ -74,9 +74,13 @@ def google_stt_api(filename):
 
 def speech_to_text(data=None):
     try:
+        # data = vito_stt_api(data)
         data = google_stt_api(data)
+        print('구글임')
     except:
+        # data = google_stt_api(data)
         data = vito_stt_api(data)
+        print('vito임')
     return data
 
 
@@ -93,7 +97,7 @@ def recongize(username, audio):
 
 
 def reward_gold(user, action, score=0):
-    reward = {'eatting': 100, 'level_up': 3 * score, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score, 'playing_maze': score * (20220) // 2022}
+    reward = {'eatting': 100, 'level_up': 3 * score, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score, 'playing_maze': score}
     print('얼마 보상?', reward[action])
     user.gold += reward[action]
     return user
