@@ -93,7 +93,7 @@ def recongize(username, audio):
 
 
 def reward_gold(user, action, score=0):
-    reward = {'eatting': 100, 'level_up': 777, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score, 'playing_maze': score * (20220) // 2022}
+    reward = {'eatting': 100, 'level_up': 3 * score, 'talking_one': 100, 'talking_all': 100, 'playing': 50 * score, 'playing_maze': score * (20220) // 2022}
     print('얼마 보상?', reward[action])
     user.gold += reward[action]
     return user
@@ -108,7 +108,7 @@ def reward_exp(animal, user, action, score=0):
     next_level = animal.level + 1
 
     if levelup_exp[next_level] <= exp:
-        user = reward_gold(user, 'level_up')
+        user = reward_gold(user, 'level_up', levelup_exp[next_level])
         user.save()
         exp -= levelup_exp[next_level]
         animal.level = next_level
