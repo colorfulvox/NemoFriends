@@ -39,7 +39,7 @@ class ItemsBuyView(APIView):
 
 
 class ItemsPlaceView(APIView):
-    def put(self, request):
+    def post(self, request):
         user = request.user
         data = request.data
         decoration = get_object_or_404(Decoration, id=data.get("id"))
@@ -73,7 +73,7 @@ class ItemsPlaceView(APIView):
 
 
 class ItemsUpdateView(APIView):
-    def put(self, request):
+    def post(self, request):
         user = request.user
         data = request.data
         user_decoration = get_object_or_404(User_Decoration, id=data.get("id"))
@@ -103,7 +103,7 @@ class ItemsUpdateView(APIView):
 
 
 class ItemsCancelView(APIView):
-    def put(self, request):
+    def post(self, request):
         user_decoration = get_object_or_404(User_Decoration, id=request.data.get("id"))
 
         # 사용자 동일 여부 확인
