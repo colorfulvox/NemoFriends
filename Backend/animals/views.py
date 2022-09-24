@@ -20,13 +20,6 @@ from datetime import datetime, timedelta
 from time import strftime, strptime
 
 
-class DepthTestView(APIView):
-    def get(self, request, id):
-        user_animal = get_object_or_404(User_Animal, pk=id)
-        serializers = UserAnimalSerializer(instance=user_animal)
-        return Response(serializers.data)
-
-
 class AnimalsEatView(APIView):
     def post(self, request):
         id = request.data.get('id')
@@ -85,38 +78,6 @@ class AnimalsRenameView(APIView):
             return Response(FAIL)
 
 
-class AnimalsColorView(APIView):
-    def post(self, request):
-        response = FAIL.copy() # response: 실패 응답이 담길 dict 
-
-        user_item_id = request.data.get('user_item_id')
-
-        if user_item_id == 1:
-            response["message"] = "경험치 물약을 보냈습니다."
-            return Response(response)
-
-        user_animal_id = request.data.get('user_animal_id')
-        user_animal = get_object_or_404(User_Animal, pk=user_animal_id)
-        user_item = get_object_or_404(User_Item, pk=user_item_id)
-
-        # 염색 Ok
-        if request.user == user_animal.user == user_item.user:
-            if 1 <= user_item.cnt:
-                # user_animal 정보
-                user_animal.color_id = user_item_id
-                user_animal.save()
-                # user_color 정보
-                user_item.cnt -= 1
-                user_item.save()
-                return Response(SUCCESS)
-        # 염색 No
-            response["message"] = "보유한 염색약이 없습니다."
-            return Response(response)
-
-        response["message"] = "유저 정보가 다릅니다."
-        return Response(response)
-
-
 class AnimalsTalkView(APIView):
     # 전체 동물 대화
     def talk_to_all(self, context, user):
@@ -156,7 +117,7 @@ class AnimalsTalkView(APIView):
 
     def post(self, request):
         context = recongize(request.user.username, request.FILES["audio"])
-
+        context = '추희원 앉아'
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
         
@@ -292,3 +253,39 @@ class AnimalsPlaceView(APIView):
             user_animal.save()
             return Response(SUCCESS)
         return Response(FAIL)
+
+
+class AnimalsMazeView(APIView):
+    def post(self, request):
+        score = int(request.data.get('score'))
+        user = reward_gold(request.user, 'playing_maze', score)
+        user.save()
+        return Response(SUCCESS)
+
+
+class AnimalsExpUpView(APIView):
+    def post(self, request):
+        user = request.user
+        user_animal = get_object_or_404(User_Animal, id=request.data.get('id'))
+        response = FAIL.copy()
+
+        if user == user_animal.user:
+            if 0 < user.exp_cnt:
+                user_animal = reward_exp(user_animal, user, 'exp_up')
+                user_animal.save()
+                user.exp_cnt -= 1
+                user.save()
+                return Response(SUCCESS)
+
+            response['msg'] = '경험치 물약이 부족합니다.'
+            return Response(response)
+
+        response['msg'] = '요청을 보낸 사용자와 해당 동물을 보유한 사용자가 다릅니다.'
+        return Response(response)
+
+
+class DepthTestView(APIView):
+    def get(self, request, id):
+        user_animal = get_object_or_404(User_Animal, pk=id)
+        serializers = UserAnimalSerializer(instance=user_animal)
+        return Response(serializers.data)
