@@ -361,7 +361,8 @@ class GachaView(APIView):
             if type(obj) is Animal:
                 user_animal = User_Animal(user=user, animal=obj, name=obj.species, color_id=0)
                 user_animal.save()
-                response.update({"type" : "animal", "pk" : user_animal.id,"id" : obj.id})
+                user_animals_serializer = UserAnimalInfoSerializer(user_animal)
+                response.update({"type" : "animal", "pk" : user_animal.id,"id" : obj.id,"animal" : user_animals_serializer.data})
             # 조경일 경우
             elif type(obj) is Decoration:
                 user_decoration = User_Decoration(user=user, decoration=obj, is_located=False, location=-1, angle=-1)
