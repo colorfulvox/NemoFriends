@@ -42,19 +42,20 @@ def date_init():
 
 class StartAnimalView(APIView):
     def post(self, request):
+        
         # 동물 추천 알고리즘
         answer = request.data.get('answer')
         mbti_animals = Mbti.objects.all()
         animal = 0
         mbti = 0
         # I
-        if answer[0] == 1:
+        if answer[0] == "1":
             # IS
-            if answer[1] == 1:
+            if answer[1] == "1":
                 # IST
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #ISTJ 1 거북이 1111
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ISTJ").animal
                         mbti = 1
                     #ISTP 2 곰 1112
@@ -64,7 +65,7 @@ class StartAnimalView(APIView):
                 # ISF
                 else:
                     #ISFJ 3 사슴 1121
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ISFJ").animal
                         mbti = 3
                     #ISFP 4 고양이 1122
@@ -74,9 +75,9 @@ class StartAnimalView(APIView):
             # IN
             else:
                 # INT
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #INTJ 5 호랑이 1211
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="INTJ").animal
                         mbti = 5
                     #INTP 6 닭 1212
@@ -86,7 +87,7 @@ class StartAnimalView(APIView):
                 # INF
                 else:
                     #INFJ 7 기린 1221
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="INFJ").animal
                         mbti = 7
                     #INFP 8 토끼 1222
@@ -96,11 +97,11 @@ class StartAnimalView(APIView):
         #E
         else:
             # ES
-            if answer[1] == 1:
+            if answer[1] == "1":
                 # EST
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #ESTJ 9 강아지 2111
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ESTJ").animal
                         mbti = 9
                     #ESTP 10 강아지 2112
@@ -110,7 +111,7 @@ class StartAnimalView(APIView):
                 # ESF
                 else:
                     #ESFJ 11 양 2121
-                    if answer[3] ==1:
+                    if answer[3] =="1":
                         animal = mbti_animals.get(mbti="ESFJ").animal
                         mbti = 11
                     #ESFP 12 토끼 2122
@@ -120,7 +121,7 @@ class StartAnimalView(APIView):
             # EN
             else:
                 # ENT
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #ENTJ 13 사자 2211
                     if answer[3]==1:
                         animal = mbti_animals.get(mbti="ENTJ").animal
@@ -132,7 +133,7 @@ class StartAnimalView(APIView):
                 # ENF
                 else:
                     #ENFJ 15 코끼리 2221
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ENFJ").animal
                         mbti = 15
                     #ENFP 16 원숭이 2222
