@@ -224,7 +224,7 @@ class AnimalsPlayWordchainNextView(APIView):
 class AnimalsPlayWordchainFinishView(APIView):
     def post(self, request):
         user = request.user
-        wordchain = WordChain.objects.get(user=user)
+        wordchain = get_object_or_404(WordChain, user=user)
         score = wordchain.score
         animal_id = request.data.get('animal_id')
         animal = get_object_or_404(Animal, pk=animal_id)
