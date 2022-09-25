@@ -43,8 +43,11 @@ def date_init():
 class RefreshTokenView(APIView):
     def post(self, request):
         refresh_token = request.data.get('refresh');
+        datas = {"refresh" : refresh_token}
+        url = "https://j7c201.p.ssafy.io/accounts/token/refresh/"
+        res = requests.post(url, data=datas).json()
         
-        
+        return Response({"access_token" : res['access']})
 
 class StartAnimalView(APIView):
     def post(self, request):
