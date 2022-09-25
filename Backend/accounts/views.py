@@ -322,7 +322,7 @@ class UserDeleteView(APIView):
             'password' : request.data.get('password')
         }
         
-        url = "https://j7c201.p.ssafy.io/accounts/login/"
+        url = "http://127.0.0.1:8000/accounts/login/"
         res = requests.post(url, data=datas).json()
         if "access_token" in res and res['user']['username'] == request.user.username:
             user = request.user
