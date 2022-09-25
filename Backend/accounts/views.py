@@ -317,18 +317,11 @@ class UserDeleteView(APIView):
     def post(self,request):
         response = FAIL.copy()
 
-        datas = {
-            'username' : request.data.get('username'),
-            'password' : request.data.get('password')
-        }
-        
-        url = "http://127.0.0.1:8000/accounts/login/"
-        res = requests.post(url, data=datas).json()
-        if "access_token" in res and res['user']['username'] == request.user.username:
+        if request.data.get('username') == request.user.username:
             user = request.user
             user.delete()
             response = SUCCESS.copy()
-        
+
         return Response(response)
 
 class GachaView(APIView):
