@@ -147,10 +147,10 @@ class StartAnimalView(APIView):
             return Response({"success" : False})
         user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0, is_located=True)
         user_animal.save()
+        user_animals_serializer = UserAnimalInfoSerializer(user_animal)
 
-        animal.id
         response = {
-            "animal_id" : animal.id,
+            "animal" : user_animals_serializer.data,
             "mbti_id" : mbti
         }
         return Response(response)
