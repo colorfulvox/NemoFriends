@@ -8,7 +8,9 @@ from rest_framework.response import Response
 from .models import User_Decoration, Decoration
 from .serializers import ItemsPlaceSerializer
 from utils import *
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ItemsBuyView(APIView):
     def post(self, request):

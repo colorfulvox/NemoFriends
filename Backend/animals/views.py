@@ -14,11 +14,13 @@ from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer, UserAni
 from . import serializers
 from .utils import *
 from utils import SUCCESS, FAIL
+import logging
 
 import random
 from datetime import datetime, timedelta
 from time import strftime, strptime
 
+logger = logging.getLogger(__name__)
 
 class AnimalsEatView(APIView):
     def post(self, request):

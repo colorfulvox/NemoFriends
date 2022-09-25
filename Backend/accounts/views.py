@@ -21,7 +21,9 @@ from .models import Mbti, User
 from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
 from animals.models import User_Animal, Animal
 from items.models import Item, Decoration, User_Item, User_Decoration
+import logging
 
+logger = logging.getLogger(__name__)
 
 state = getattr(settings, 'STATE')
 BASE_URL = 'http://localhost:8000/'
