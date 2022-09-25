@@ -145,7 +145,7 @@ class StartAnimalView(APIView):
         # 조작 이용자(튜토리얼로 강제 진입한 경우 등)
         if user_animals_count != 0:
             return Response({"success" : False})
-        user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0)
+        user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0, is_located=True)
         user_animal.save()
 
         animal.id
