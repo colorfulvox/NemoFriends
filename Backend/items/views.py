@@ -1,3 +1,4 @@
+from re import S
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
@@ -7,7 +8,9 @@ from rest_framework.response import Response
 from .models import User_Decoration, Decoration
 from .serializers import ItemsPlaceSerializer
 from utils import *
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ItemsBuyView(APIView):
     def post(self, request):
@@ -39,7 +42,7 @@ class ItemsBuyView(APIView):
 
 
 class ItemsPlaceView(APIView):
-    def put(self, request):
+    def post(self, request):
         user = request.user
         data = request.data
         decoration = get_object_or_404(Decoration, id=data.get("id"))
@@ -53,27 +56,28 @@ class ItemsPlaceView(APIView):
 
         user_decoration = user_decoration_lst[0]
         user_decoration.is_located = True
-
         serializer = ItemsPlaceSerializer(instance=user_decoration, data=data)
-        
+
+        location = int(data["location"])
+        angle = int(data["angle"])
+
         if serializer.is_valid(raise_exception=True):
             # location, angle 값 확인
             location_lst = [user_decoration.location for user_decoration in User_Decoration.objects.filter(user=user).exclude(is_located=False)]
 
-            location = data["location"]
-
-            if not (1 <= location <= 100 and location not in location_lst and 1 <= data["angle"] <= 4):
+            if not (1 <= location <= 100 and location not in location_lst and 1 <= angle <= 4):
                 response = FAIL.copy()
                 response.update({"message": "입력값이 잘못되었습니다."})
                 return Response(response)
 
             response = SUCCESS.copy()
+            user_decoration.save()
             response.update({"id": user_decoration.id})
             return Response(response)
 
 
 class ItemsUpdateView(APIView):
-    def put(self, request):
+    def post(self, request):
         user = request.user
         data = request.data
         user_decoration = get_object_or_404(User_Decoration, id=data.get("id"))
@@ -85,15 +89,16 @@ class ItemsUpdateView(APIView):
             return Response(response)
 
         serializer = ItemsPlaceSerializer(instance=user_decoration, data=data)
+
+        location = int(data["location"])
+        angle = int(data["angle"])
         
         if serializer.is_valid(raise_exception=True):
             # location, angle 값 확인
             location_lst = [user_decoration.location for user_decoration in User_Decoration.objects.filter(user=user).exclude(is_located=False)]
 
-            location = data["location"]
-
             if (location != user_decoration.location and not (1 <= location <= 100 and location not in location_lst)) \
-                or not 1 <= data["angle"] <= 4:
+                or not 1 <= angle <= 4:
                     response = FAIL.copy()
                     response.update({"message": "입력값이 잘못되었습니다."})
                     return Response(response)
@@ -103,7 +108,7 @@ class ItemsUpdateView(APIView):
 
 
 class ItemsCancelView(APIView):
-    def put(self, request):
+    def post(self, request):
         user_decoration = get_object_or_404(User_Decoration, id=request.data.get("id"))
 
         # 사용자 동일 여부 확인

@@ -81,6 +81,7 @@ REST_FRAMEWORK = {
     #     'rest_framework.permissions.IsAuthenticated'
     # ],
 }
+
 STATE = env('STATE')
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 ACCOUNT_USERNAME_REQUIRED = True
@@ -178,6 +179,8 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -185,3 +188,71 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media')
+
+
+# Logging
+# https://wikidocs.net/77522
+# https://devlink.tistory.com/355
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    # 포맷터 (텍스트의 포맷 형식 정의, 여러 포맷 정의 가능)
+    'formatters': {
+        'format1': {
+            'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s',
+            'datefmt': "%Y-%m-%d %H:%M:%S"
+        },
+        'format2': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    # 핸들러 (로그 레코드로 무슨 작업을 할 것인지 정의, 여러 핸들러 정의 가능)
+    'handlers': {
+        # 로그 파일을 만들어 텍스트로 로그레코드 저장
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'files/log/logfile.log'),
+            'encoding': 'UTF-8',
+            'maxBytes': 1024 * 1024 * 5,  # 5 MB
+            'backupCount': 5,
+            'formatter': 'format1',
+        },
+        # 콘솔(터미널)에 출력
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'format2',
+        }
+    },
+    'loggers': {
+        # 로거 종류
+        'django': {
+            'handlers': ['file'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers':['file'],
+            'propagate': True,
+            'level':'INFO',
+        },
+        # 사용자 APP 지정
+        'animals': {
+            'handlers': ['file'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'accounts': {
+            'handlers': ['file'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+        'items': {
+            'handlers': ['file'],
+            'propagate': True,
+            'level': 'DEBUG',
+        },
+    },
+}
