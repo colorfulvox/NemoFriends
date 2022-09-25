@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 from . import views
+from .serializers import MyTokenRefreshView
 
 urlpatterns = [
     path('', include('dj_rest_auth.urls')),
     path('signup/', include('dj_rest_auth.registration.urls')),
     path('', include('allauth.urls')),
-    path('refresh/', views.RefreshTokenView.as_view(), name='refresh_token'),
+    path('refresh/', MyTokenRefreshView.as_view(), name='refresh_token'),
     path('bgm/', views.ChangeBGMView.as_view(), name='change_bgm'),
     path('effect/', views.ChangeEffectView.as_view(), name='change_effect'),
     path('delete/', views.UserDeleteView.as_view(), name='account_delete'),

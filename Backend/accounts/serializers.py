@@ -1,9 +1,14 @@
 from dataclasses import fields
 
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from items.models import User_Item, Decoration
 from . import models
 from rest_framework import serializers
 from animals.models import User_Animal, Animal
+from django.conf import settings
+import jwt
+
 class UserChangeBGMSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
@@ -34,3 +39,22 @@ class ShopInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Decoration
         fields = ('id', 'cost')
+        
+        
+class MyTokenRefreshSerializer(TokenRefreshSerializer):
+        # response 커스텀 
+    default_error_messages = {
+        'no_active_account': {'message':'username or password is incorrect!',
+                              'success': False,
+                              'status' : 401}
+    }
+    # 유효성 검사
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        data['access_token'] = data['access']
+
+        return data
+
+class MyTokenRefreshView(TokenRefreshView):
+    serializer_class = MyTokenRefreshSerializer
