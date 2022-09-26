@@ -221,7 +221,7 @@ LOGGING = {
         },
         # 콘솔(터미널)에 출력
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'format2',
         }
@@ -242,17 +242,17 @@ LOGGING = {
         'animals': {
             'handlers': ['file'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'accounts': {
             'handlers': ['file'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'items': {
             'handlers': ['file'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
     },
 }
