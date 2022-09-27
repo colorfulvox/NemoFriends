@@ -81,22 +81,8 @@ class AnimalsRenameView(APIView):
 
 
 class AnimalsTalkView(APIView):
-    # 전체 동물 대화
-    def talk_to_all(self, context, user):
-        for i in range(1, len(ALL_COMMANDS)):
-            if ALL_COMMANDS[i] in context:
-                if not user.is_called:
-                    user = reward_gold(user, 'talking_all')
-                    user.is_called = True
-                    user.save()
-                response = {'animal_id': -1, 'cmd': i}
-                response.update(SUCCESS)
-                return response
-        return FAIL
-
-    # 특정 동물 대화
-    def talk_to_one(self, user_animal, user, context):
-        action = 'talking_one'
+    def talk(self, user_animal, user, context):
+        action = 'talking'
         grade = user_animal.grade
         commands = user_animal.animal.commands[:grade+1]
 
@@ -128,11 +114,9 @@ class AnimalsTalkView(APIView):
         
         for user_animal in user_animals:
             if user_animal.name in context:
-                response = self.talk_to_one(user_animal, user, context)
+                response = self.talk(user_animal, user, context)
                 return Response(response)
-        
-        response = self.talk_to_all(context, user)
-        return Response(response)
+        return Response(FAIL)
 
 
 class AnimalsPlayWordchainStartView(APIView):
@@ -277,10 +261,15 @@ class AnimalsPlaceView(APIView):
 
 class AnimalsMazeView(APIView):
     def post(self, request):
-        score = int(request.data.get('score'))
-        user = reward_gold(request.user, 'playing_maze', score)
-        user.save()
-        return Response(SUCCESS)
+        user = request.user
+        user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
+
+        if user == user_animal.user:
+            score = int(request.data.get('score'))
+            user = reward_gold(request.user, 'playing_maze', score*user_animal.level)
+            user.save()
+            return Response(SUCCESS)
+        return Response(FAIL)
 
 
 class AnimalsExpUpView(APIView):
