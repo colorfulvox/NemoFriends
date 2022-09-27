@@ -277,10 +277,15 @@ class AnimalsPlaceView(APIView):
 
 class AnimalsMazeView(APIView):
     def post(self, request):
-        score = int(request.data.get('score'))
-        user = reward_gold(request.user, 'playing_maze', score)
-        user.save()
-        return Response(SUCCESS)
+        user = request.user
+        user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
+        
+        if user == user_animal.user:
+            score = int(request.data.get('score'))
+            user = reward_gold(request.user, 'playing_maze', score*user_animal.level)
+            user.save()
+            return Response(SUCCESS)
+        return Response(FAIL)
 
 
 class AnimalsExpUpView(APIView):
