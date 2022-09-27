@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 """
 Django settings for project project.
 
@@ -281,7 +280,7 @@ LOGGING = {
         },
     },
 }
-=======
+
 """
 Django settings for project project.
 
