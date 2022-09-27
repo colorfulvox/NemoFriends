@@ -149,10 +149,14 @@ convert_dict = {
 with open('noun_dictionary.pickle', 'rb') as f:
     noun_dictionary = pickle.load(f)
 
+# 전처리한 끝말잇기용 단어 목록(자주 쓰이는 단어들)
+with open('noun_dictionary_freq.pickle', 'rb') as f:
+    noun_dictionary_freq = pickle.load(f)
+
 # 시작 단어로 쓰기 안 좋은 단어 확인
-blacklist = ['즘', '틱', '늄', '슘', '퓸', '늬', '뺌', '섯', '숍', '튼', '름', '늠', '쁨']
+blacklist = ['즘', '틱', '늄', '슘', '퓸', '늬', '뺌', '섯', '숍', '튼', '름', '늠', '쁨', '녘', '꾼']
 
 start_words = []
-for word in noun_dictionary:
-    if word[0] not in blacklist:
+for word in noun_dictionary_freq:
+    if word[-1] not in blacklist:
         start_words.append(word)
