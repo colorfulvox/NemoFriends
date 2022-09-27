@@ -1,7 +1,8 @@
+from email.policy import default
 from django.db import models
 from django.conf import settings
 from datetime import datetime
-
+from utils import default
 '''
 column에 수정 사항이 생기면, admin.py도 변경하기!!
 '''
@@ -26,8 +27,8 @@ class User_Animal(models.Model):
     exp = models.IntegerField(default=0)
     is_located = models.BooleanField(default=False)
     color_id = models.IntegerField(default=0)
-    talking_cnt = models.IntegerField(default=3)
-    playing_cnt = models.IntegerField(default=3)
+    talking_cnt = models.IntegerField(default=default['talking_cnt'])
+    playing_cnt = models.IntegerField(default=default['playing_cnt'])
     created_at = models.DateField(auto_now_add=True)
     last_eating_time = models.DateTimeField(default=datetime(2022, 9, 1, 0, 0, 0))
     level = models.IntegerField(default=1)

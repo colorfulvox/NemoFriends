@@ -35,8 +35,8 @@ def date_init():
     users = User.objects.all()
     user_animals = User_Animal.objects.all()
 
-    users.update(is_called = False)
-    user_animals.update(talking_cnt=3, playing_cnt=3)
+    users.update(is_called = default.get('is_called'))
+    user_animals.update(talking_cnt=default.get('talking_cnt'), playing_cnt=default.get('playing_cnt'))
 
     print("수정완료")
 
