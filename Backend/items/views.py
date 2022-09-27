@@ -94,14 +94,14 @@ class ItemsUpdateView(APIView):
         angle = int(data["angle"])
         
         if serializer.is_valid(raise_exception=True):
-            # # location, angle 값 확인
-            # location_lst = [user_decoration.location for user_decoration in User_Decoration.objects.filter(user=user).exclude(is_located=False)]
+            # location, angle 값 확인
+            location_lst = [user_decoration.location for user_decoration in User_Decoration.objects.filter(user=user).exclude(is_located=False)]
 
-            # if (location != user_decoration.location and not (1 <= location <= 100 and location not in location_lst)) \
-            #     or not 1 <= angle <= 4:
-            #         response = FAIL.copy()
-            #         response.update({"message": "입력값이 잘못되었습니다."})
-            #         return Response(response)
+            if (location != user_decoration.location and not (1 <= location <= 100 and location not in location_lst)) \
+                or not 1 <= angle <= 4:
+                    response = FAIL.copy()
+                    response.update({"message": "입력값이 잘못되었습니다."})
+                    return Response(response)
 
             serializer.save()
             return Response(SUCCESS)
