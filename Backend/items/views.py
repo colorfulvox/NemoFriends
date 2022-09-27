@@ -8,7 +8,9 @@ from rest_framework.response import Response
 from .models import User_Decoration, Decoration
 from .serializers import ItemsPlaceSerializer
 from utils import *
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ItemsBuyView(APIView):
     def post(self, request):
@@ -69,7 +71,7 @@ class ItemsPlaceView(APIView):
                 return Response(response)
 
             response = SUCCESS.copy()
-            user_decoration.save()
+            serializer.save()
             response.update({"id": user_decoration.id})
             return Response(response)
 

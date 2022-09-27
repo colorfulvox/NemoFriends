@@ -21,7 +21,9 @@ from .models import Mbti, User
 from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
 from animals.models import User_Animal, Animal
 from items.models import Item, Decoration, User_Item, User_Decoration
+import logging
 
+logger = logging.getLogger(__name__)
 
 state = getattr(settings, 'STATE')
 BASE_URL = 'http://localhost:8000/'
@@ -40,19 +42,20 @@ def date_init():
 
 class StartAnimalView(APIView):
     def post(self, request):
+        
         # 동물 추천 알고리즘
         answer = request.data.get('answer')
         mbti_animals = Mbti.objects.all()
         animal = 0
         mbti = 0
         # I
-        if answer[0] == 1:
+        if answer[0] == "1":
             # IS
-            if answer[1] == 1:
+            if answer[1] == "1":
                 # IST
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #ISTJ 1 거북이 1111
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ISTJ").animal
                         mbti = 1
                     #ISTP 2 곰 1112
@@ -62,7 +65,7 @@ class StartAnimalView(APIView):
                 # ISF
                 else:
                     #ISFJ 3 사슴 1121
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ISFJ").animal
                         mbti = 3
                     #ISFP 4 고양이 1122
@@ -72,9 +75,9 @@ class StartAnimalView(APIView):
             # IN
             else:
                 # INT
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #INTJ 5 호랑이 1211
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="INTJ").animal
                         mbti = 5
                     #INTP 6 닭 1212
@@ -84,7 +87,7 @@ class StartAnimalView(APIView):
                 # INF
                 else:
                     #INFJ 7 기린 1221
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="INFJ").animal
                         mbti = 7
                     #INFP 8 토끼 1222
@@ -94,11 +97,11 @@ class StartAnimalView(APIView):
         #E
         else:
             # ES
-            if answer[1] == 1:
+            if answer[1] == "1":
                 # EST
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #ESTJ 9 강아지 2111
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ESTJ").animal
                         mbti = 9
                     #ESTP 10 강아지 2112
@@ -108,7 +111,7 @@ class StartAnimalView(APIView):
                 # ESF
                 else:
                     #ESFJ 11 양 2121
-                    if answer[3] ==1:
+                    if answer[3] =="1":
                         animal = mbti_animals.get(mbti="ESFJ").animal
                         mbti = 11
                     #ESFP 12 토끼 2122
@@ -118,7 +121,7 @@ class StartAnimalView(APIView):
             # EN
             else:
                 # ENT
-                if answer[2] == 1:
+                if answer[2] == "1":
                     #ENTJ 13 사자 2211
                     if answer[3]==1:
                         animal = mbti_animals.get(mbti="ENTJ").animal
@@ -130,7 +133,7 @@ class StartAnimalView(APIView):
                 # ENF
                 else:
                     #ENFJ 15 코끼리 2221
-                    if answer[3] == 1:
+                    if answer[3] == "1":
                         animal = mbti_animals.get(mbti="ENFJ").animal
                         mbti = 15
                     #ENFP 16 원숭이 2222
@@ -143,12 +146,12 @@ class StartAnimalView(APIView):
         # 조작 이용자(튜토리얼로 강제 진입한 경우 등)
         if user_animals_count != 0:
             return Response({"success" : False})
-        user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0)
+        user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0, is_located=True)
         user_animal.save()
+        user_animals_serializer = UserAnimalInfoSerializer(user_animal)
 
-        animal.id
         response = {
-            "animal_id" : animal.id,
+            "animal" : user_animals_serializer.data,
             "mbti_id" : mbti
         }
         return Response(response)
@@ -312,21 +315,14 @@ class LoadGameView(APIView):
         }
         return response
 class UserDeleteView(APIView):
-    def delete(self,request):
+    def post(self,request):
         response = FAIL.copy()
 
-        datas = {
-            'username' : request.data.get('username'),
-            'password' : request.data.get('password')
-        }
-        
-        url = "https://j7c201.p.ssafy.io/accounts/login/"
-        res = requests.post(url, data=datas).json()
-        if "access_token" in res and res['user']['username'] == request.user.username:
+        if request.data.get('username') == request.user.username:
             user = request.user
             user.delete()
             response = SUCCESS.copy()
-        
+
         return Response(response)
 
 class GachaView(APIView):
@@ -406,66 +402,3 @@ class ChangeEffectView(APIView):
             serializers.save()
         response = SUCCESS
         return Response(response)
-
-
-def google_callback(request):
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
-    code = request.GET.get('code')
-    """
-    Access Token Request
-    """
-    token_req = requests.post(
-        f"https://oauth2.googleapis.com/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state={state}")
-    token_req_json = token_req.json()
-    error = token_req_json.get("error")
-    if error is not None:
-        raise JSONDecodeError(error)
-    access_token = token_req_json.get('access_token')
-    """
-    Email Request
-    """
-    email_req = requests.get(
-        f"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={access_token}")
-    email_req_status = email_req.status_code
-    if email_req_status != 200:
-        return JsonResponse({'err_msg': 'failed to get email'}, status=status.HTTP_400_BAD_REQUEST)
-    email_req_json = email_req.json()
-    email = email_req_json.get('email')
-    """
-    Signup or Signin Request
-    """
-    try:
-        user = User.objects.get(email=email)
-        # 기존에 가입된 유저의 Provider가 google이 아니면 에러 발생, 맞으면 로그인
-        # 다른 SNS로 가입된 유저
-        social_user = SocialAccount.objects.get(user=user)
-        if social_user is None:
-            return JsonResponse({'err_msg': 'email exists but not social user'}, status=status.HTTP_400_BAD_REQUEST)
-        if social_user.provider != 'google':
-            return JsonResponse({'err_msg': 'no matching social type'}, status=status.HTTP_400_BAD_REQUEST)
-        # 기존에 Google로 가입된 유저
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"{BASE_URL}accounts/google/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signin'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-        return JsonResponse(accept_json)
-    except User.DoesNotExist:
-        # 기존에 가입된 유저가 없으면 새로 가입
-        data = {'access_token': access_token, 'code': code}
-        accept = requests.post(
-            f"{BASE_URL}accounts/google/login/finish/", data=data)
-        accept_status = accept.status_code
-        if accept_status != 200:
-            return JsonResponse({'err_msg': 'failed to signup'}, status=accept_status)
-        accept_json = accept.json()
-        accept_json.pop('user', None)
-        return JsonResponse(accept_json)
-class GoogleLogin(SocialLoginView):
-    adapter_class = google_view.GoogleOAuth2Adapter
-    callback_url = GOOGLE_CALLBACK_URI
-    client_class = OAuth2Client
