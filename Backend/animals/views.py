@@ -172,9 +172,11 @@ class AnimalsPlayWordchainNextView(APIView):
         return response
 
     def post(self, request):
-        request_word = recongize(request.user.username, request.FILES['audio'])
+        user = request.user
 
-        wordchain = WordChain.objects.get(user_id=request.user)
+        request_word = recongize(user.username, request.FILES['audio'])
+
+        wordchain = get_object_or_404(WordChain, user=user)
         words = wordchain.words
         score = wordchain.score
         
@@ -196,24 +198,37 @@ class AnimalsPlayWordchainNextView(APIView):
         if request_word[0] not in ends:
             response = self.finish('이어지지 않는 단어입니다.', score, request_word)
             return Response(response)
+
+        # 사용자의 단어 사용 가능
+        words.append(request_word)
         
         # 시작 글자로 쓸 수 있는 글자들 확인(두음 법칙 적용)
         starts = [request_word[-1]]
         if starts[0] in convert_dict.keys():
             starts.append(convert_dict[starts[0]])
-        
+
         # 다음 단어 선택
         response_words = []
-        for word in noun_dictionary:
+        for word in noun_dictionary_freq:
             if word[0] in starts and word not in words:
                 response_words.append(word)
+        
+        # 선택할 수 있는 다음 단어가 없는 경우 사용자의 승리
+        if len(response_words) < 1:
+            score += 1
+            score *= 2
+            wordchain.score = score
+            wordchain.save()
+            response = self.finish('사용자가 이겼습니다.', score, request_word)
+            return Response(response)
         
         response_word = random.choice(response_words)
         
         # WordChain 테이블 갱신
-        wordchain.score += 1
-        wordchain.words.append(request_word)
-        wordchain.words.append(response_word)
+        score += 1
+        words.append(response_word)
+        wordchain.score = score
+        wordchain.words = words
         wordchain.save()
 
         response = SUCCESS.copy()
