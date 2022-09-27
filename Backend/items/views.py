@@ -71,7 +71,7 @@ class ItemsPlaceView(APIView):
                 return Response(response)
 
             response = SUCCESS.copy()
-            user_decoration.save()
+            serializer.save()
             response.update({"id": user_decoration.id})
             return Response(response)
 
