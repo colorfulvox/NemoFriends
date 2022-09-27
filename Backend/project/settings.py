@@ -206,12 +206,26 @@ LOGGING = {
         'format2': {
             'format': '%(levelname)s %(message)s'
         },
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
     },
     # 핸들러 (로그 레코드로 무슨 작업을 할 것인지 정의, 여러 핸들러 정의 가능)
     'handlers': {
         # 로그 파일을 만들어 텍스트로 로그레코드 저장
         'file': {
             'level': 'INFO',
+            'filters': ['require_debug_false', 'require_debug_true'],
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, 'files/log/logfile.log'),
             'encoding': 'UTF-8',
@@ -219,13 +233,18 @@ LOGGING = {
             'backupCount': 5,
             'formatter': 'format1',
         },
+        'django.server': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
         # 콘솔(터미널)에 출력
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'format2',
         }
-        },
+    },
     'loggers': {
         # 로거 종류
         'django': {
@@ -238,21 +257,26 @@ LOGGING = {
             'propagate': True,
             'level':'INFO',
         },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': 'INFO',
+            'propagate': False,
+        },
         # 사용자 APP 지정
         'animals': {
             'handlers': ['file'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'accounts': {
             'handlers': ['file'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
         'items': {
             'handlers': ['file'],
             'propagate': True,
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
     },
 }
