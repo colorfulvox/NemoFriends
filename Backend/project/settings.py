@@ -48,9 +48,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_apscheduler',
-    # DRF auth
-    'dj_rest_auth',
-    'dj_rest_
 
     # DRF auth
     'dj_rest_auth',
