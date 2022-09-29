@@ -19,11 +19,7 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.username
-        
-class WordChain(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
-    score = models.IntegerField(default=0)
-    words = models.JSONField()
+
 
 class Mbti(models.Model):
     mbti = models.CharField(primary_key=True, max_length=4)
