@@ -16,7 +16,7 @@ class UserAnimalAdmin(admin.ModelAdmin):
     fieldsets = [
         ('FK',               {'fields': ['user','animal']}),
         ('USER ANIMAL INFO', {'fields': ['name', 'level', 'grade', 'exp'],}),
-        ('DETAIL', {'fields': ['color_id','is_located', 'talking_cnt', 'playing_cnt', 'last_eating_time']}), 
+        ('DETAIL', {'fields': ['is_located', 'talking_cnt', 'playing_cnt', 'last_eating_time']}), 
     ]
     def get_user_animal_id(self, obj):
         return obj.id

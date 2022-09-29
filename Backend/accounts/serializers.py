@@ -22,7 +22,7 @@ class UserChangeEffectSerializer(serializers.ModelSerializer):
 class UserAnimalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Animal
-        fields = ('id', 'name', 'animal_id', 'grade', 'level', 'exp', 'color_id',
+        fields = ('id', 'name', 'animal_id', 'grade', 'level', 'exp', 
                   'last_eating_time', 'playing_cnt', 'talking_cnt',
                   'created_at','is_located')
 class UserItemInfoSerializer(serializers.ModelSerializer):

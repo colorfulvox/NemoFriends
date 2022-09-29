@@ -74,7 +74,7 @@ class StartAnimalView(APIView):
         mbti = get_object_or_404(Mbti, mbti=MBTI_STATIC[answer][1])
         animal = mbti.animal
         user = request.user
-        user_animal = User_Animal(user=user, animal=animal, name=animal.species, color_id=0, is_located=True)
+        user_animal = User_Animal(user=user, animal=animal, name=animal.species, is_located=True)
         user_animal.save()
         user_animals_serializer = UserAnimalInfoSerializer(user_animal)
 
@@ -283,7 +283,7 @@ class GachaView(APIView):
         # 뽑힌 오브젝트의 타입 판별
             # 동물일 경우(animals.models.Animal)
             if type(obj) is Animal:
-                user_animal = User_Animal(user=user, animal=obj, name=obj.species, color_id=0)
+                user_animal = User_Animal(user=user, animal=obj, name=obj.species)
                 user_animal.save()
                 user_animals_serializer = UserAnimalInfoSerializer(user_animal)
                 response.update({"type" : "animal", "pk" : user_animal.id,"id" : obj.id,"animal" : user_animals_serializer.data})
