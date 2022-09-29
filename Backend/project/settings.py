@@ -83,7 +83,7 @@ REST_FRAMEWORK = {
     # ],
 }
 
-STATE = env('STATE')
+
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD= 'username'
@@ -226,7 +226,8 @@ LOGGING = {
         # 로그 파일을 만들어 텍스트로 로그레코드 저장
         'file': {
             'level': 'INFO',
-            'filters': ['require_debug_false', 'require_debug_true'],
+            # 'filters': ['require_debug_false', 'require_debug_true'],
+            'filters': ['require_debug_true'],
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, 'files/log/logfile.log'),
             'encoding': 'UTF-8',

@@ -25,9 +25,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-state = getattr(settings, 'STATE')
-BASE_URL = 'http://localhost:8000/'
-GOOGLE_CALLBACK_URI = BASE_URL + 'accounts/google/callback/'
+
 
 
 def date_init():
