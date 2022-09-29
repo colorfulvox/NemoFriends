@@ -153,8 +153,9 @@ class AnimalsPlayWordchainNextView(APIView):
 
     def post(self, request):
         user = request.user
+        username = user.username
 
-        request_word = recongize(user.username, request.data.get("audio"))
+        request_word = recongize(username, request.data.get("audio"))
 
         words = cache.get(username)
 
