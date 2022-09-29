@@ -11,7 +11,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
-    name = models.CharField(max_length=16, default=" ")
     gold = models.IntegerField(default=0)
     bgm = models.IntegerField(default=50)
     effect = models.IntegerField(default=50)
