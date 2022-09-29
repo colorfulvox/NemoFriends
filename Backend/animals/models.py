@@ -26,7 +26,6 @@ class User_Animal(models.Model):
     name = models.CharField(max_length=64)
     exp = models.IntegerField(default=0)
     is_located = models.BooleanField(default=False)
-    color_id = models.IntegerField(default=0)
     talking_cnt = models.IntegerField(default=default['talking_cnt'])
     playing_cnt = models.IntegerField(default=default['playing_cnt'])
     created_at = models.DateField(auto_now_add=True)
