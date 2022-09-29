@@ -6,15 +6,15 @@
 
 본 글은 Django, Nginx를 이용하여 CICD 무중단 배포를 구축하는 방법에 대해 경험을 기반으로 작성한 글입니다.
 
-![image](./images/1.jpg)
+![image](./images/1.jpg) 1.jpg 이미지 수정 필요
 
 위 사진이 구축하고자 하는 그림입니다. 작동 방식은 다음과 같습니다.
 
 1. Gitlab Push Event가 일어나면
 2. Jenkins에서 WebHook을 통해 자동으로 빌드를 실행
-3. Jenkins에서 각각의 React(Nginx), Django 프로젝트 내부의 DockerFile를 이용하여 Dockerimage 생성(tar 압축파일)
+3. Jenkins에서 Django 프로젝트 내부의 DockerFile를 이용하여 Dockerimage 생성(tar 압축파일)
 4. Jenkins에서 SSH 연결을 통해 AWS에 DockerContainer 생성
-5. 외부에서 접속 : 도커 컨테이너에 올라간 Nginx에서 React와 Django를 각각 '/', '/api'로 구분지어 연결
+5. 외부에서 접속 : AWS에 설치된 Nginx에서 Django 컨테이너를 '/'로 연결
 
 ## 목차
 
@@ -316,15 +316,11 @@ services:
 
 이제, 젠킨스에서 프로젝트를 생성하고, 깃랩과 WebHook으로 연결하여 자동으로 빌드를 진행하는 것을 테스트하겠습니다.
 
-#### :point_right: 깃랩 Repo 생성
+#### :point_right: 깃랩 Repo
 
-깃랩 레포지토리 생성 부분은 모두 잘 알고 있을 거라고 생각하여 스킵하고, 제가 구성한 레포지토리가 어떻게 되어있는지 간단하게 설명만 하겠습니다.
+![image](./images/43.jpg) 43.jpg 사진 변경 필요
 
-![image](./images/43.jpg)
-
-여기서는 Django와 React를 이용하여 배포를 진행할 것이기 때문에 폴더로 구분지어 각각 Django, React 프로젝트를 설치해두었습니다.
-
-`testproject`는 Django 프로젝트, `testproject_react`는 React 프로젝트입니다.
+여기서는 Backend 폴더에 Django 프로젝트가 들어있습니다. `project`는 Django 프로젝트의 프로젝트 명입니다.
 
 #### :point_right: 젠킨스 프로젝트 생성
 
@@ -351,7 +347,7 @@ services:
 ![image](./images/46.jpg)
 
 - Username : 싸피깃 아이디
-- Password : 싸피킷 비밀번호
+- Password : 싸피깃 비밀번호
 - ID : Credential 구별할 아무 텍스트 입력하면 됩니다.
 
 위 내용 입력하고 `Add` 버튼 클릭합니다.
@@ -398,7 +394,7 @@ services:
 
 배포할 프로젝트가 있는 깃랩 `Repository`에서 밑줄친 위치로 `WebHooks` 페이지로 이동합니다.
 
-![image](./images/56.jpg)
+![image](./images/56.jpg) 56.jpg 사진 변경 필요
 
 URL에는 `http://배포서버공인IP:9090/project/생성한jenkins프로젝트이름/`을 입력해줍니다.
 
@@ -408,7 +404,7 @@ Secret token에는 아까 위에서 젠킨스 프로젝트를 생성할 때 저�
 
 완료했다면 Add Webhook 버튼을 눌러 webhook을 생성합니다.
 
-![image](./images/57.jpg)
+![image](./images/57.jpg) 57.jpg 사진 변경 필ㅇ
 
 WebHook을 생성하고 나면 빌드 테스트를 위해 생성된 WebHook에서 test를 누르고, Push events를 선택해줍니다.
 
@@ -487,56 +483,26 @@ apt install docker-ce docker-ce-cli containerd.io docker-compose
 
 Django Project DockerFile
 ```
-FROM python:3.9.5
-WORKDIR /var/jenkins_home/workspace/deploytest/testproject
+FROM python:3.10.5
+WORKDIR /var/jenkins_home/workspace/deploy/Backend
 COPY requirements.txt ./
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 COPY . .
-CMD ["gunicorn", "testproject.wsgi", "--bind", "0.0.0.0:8080"]
+CMD ["gunicorn", "project.wsgi", "--bind", "0.0.0.0:8000"]
 ```
 
-`Django DockerFile`에서는 `Python 3.9.5` 이미지를 베이스 이미지로 두고, `Requirements`를 통해 pip 패키지를 설치한 후, 프로젝트 폴더를 이미지에 복사, 그후 `CMD`를 통해 컨테이너를 실행하도록 하였습니다.
+`Django DockerFile`에서는 `Python 3.10.5` 이미지를 베이스 이미지로 두고, `Requirements`를 통해 pip 패키지를 설치한 후, 프로젝트 폴더를 이미지에 복사, 그후 `CMD`를 통해 컨테이너를 실행하도록 하였습니다.
 
-:sparkles: Spring의 경우 Spring 빌드 프로세스를 따라 DockerFile을 작성해주시면 됩니다!
-
-React Project DockerFile
-```
-FROM node:16.15.0 as build-stage
-WORKDIR /var/jenkins_home/workspace/deploytest/testproject_react
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-FROM nginx:stable-alpine as production-stage
-
-COPY --from=build-stage /var/jenkins_home/workspace/deploytest/testproject_react/build /usr/share/nginx/html
-#COPY --from=build-stage /var/jenkins_home/workspace/deploytest/testproject_react/deploy_conf/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g","daemon off;"]
-```
 간단 명령어 설명
 - FROM : 베이스 이미지를 지정
 - WORKDIR : 작업 디렉토리 설정
 - COPY : 파일 복사 <Host 파일 경로> <Docker 이미지 파일 경로>
 - RUN : 명령 실행
 - CMD 컨테이너 실행 명령
-- EXPORT : 포트 익스포트
 
-`React DockerFile`에서는 먼저 `node:16.15.0` 이미지를 베이스 이미지로 둡니다. as `build-stage`는 이미지를 지칭하는 별명을 말합니다.
-
-그 후 `package*.json`에 등록되어있는 라이브러리들을 `npm install`으로 설치하고, 프로젝트 폴더를 이미지에 복사, `npm run build`를 통해 build폴더에 빌드한 프로젝트(static 파일)가 저장됩니다.
-
-실제 컨테이너로 생성되는 건 다음 이미지인데요, `nginx:stable-alpine` 이미지를 베이스로 설정하고, COPY의 옵션으로 `--from=build-stage` 를 통해 아까 빌드했던 파일들을 nginx의 서비스 폴더인 `/usr/share/nginx/html`으로 복사합니다.
-
-그 후 80포트로 익스포팅 하고 CMD를 통해 nginx를 백그라운드에서 실행하는 컨테이너를 실행하도록 하였습니다.
-
-:sparkles: Vue.js의 경우 npm run build를 했을 때 생성되는 폴더가 build가 아닌 dist이므로 폴더명에 주의해주시면 됩니다!
-
-React 도커파일에서 #으로 주석처리한 부분은 nginx 설정에 사용되는 부분입니다. 뒤에서 nginx 설정할 때 설명하겠습니다.
-
-프로젝트의 도커 파일 설정은 이제 완료되었습니다! 다음은 젠킨스에서 이 도커파일을 이용해서 이미지를 생성하도록 해보겠습니다.
+해당 레포지토리에 도커파일은 이미 저장되어있습니다. 다음은 젠킨스에서 이 도커파일을 이용해서 이미지를 생성하도록 해보겠습니다.
 
 #### :point_right: 젠킨스에서 DockerFile 이용 도커 이미지 생성
 
@@ -551,11 +517,7 @@ React 도커파일에서 #으로 주석처리한 부분은 nginx 설정에 사�
 ```
 docker image prune -a --force
 mkdir -p /var/jenkins_home/images_tar
-cd /var/jenkins_home/workspace/deploytest/testproject_react/
-docker build -t react .
-docker save react > /var/jenkins_home/images_tar/react.tar
-
-cd /var/jenkins_home/workspace/deploytest/testproject/
+cd /var/jenkins_home/workspace/deploytest/Backend/
 docker build -t django .
 docker save django > /var/jenkins_home/images_tar/django.tar
 
@@ -566,10 +528,7 @@ ls /var/jenkins_home/images_tar
 
 - docker image prune -a --force : 사용하지 않는 이미지 삭제
 - mkdir -p /var/jenkins_home/images_tar : 도커 이미지 압축파일을 저장할 폴더 생성
-- cd /var/jenkins_home/workspace/deploytest/testproject_react : 해당 경로로 이동(react 프로젝트 폴더)
-- docker build -t react . : 도커 이미지 빌드(React 프로젝트)
-- docker save react > /var/jenkins_home/images_tar/react.tar : 도커 이미지를 react.tar로 압축하여 위에서 생성한 폴더에 저장
-- cd /var/jenkins_home/workspace/deploytest/testproject/ : 해당 경로로 이동(django 프로젝트 폴더)
+- cd /var/jenkins_home/workspace/deploytest/Backend/ : 해당 경로로 이동(django 프로젝트 폴더)
 - docker build -t django . : 도커 이미지 빌드(Django 프로젝트)
 - docker save django > /var/jenkins_home/images_tar/django.tar : 도커 이미지를 django.tar로 압축하여 위에서 생성한 폴더에 저장
 - ls /var/jenkins_home/images_tar : 해당 폴더에 있는 파일 목록 출력(잘 압축되어 저장되었는지 확인)
@@ -592,7 +551,7 @@ ls /var/jenkins_home/images_tar
 
 빌드에 성공했다는 메시지입니다.
 
-![image](./images/68.jpg)
+![image](./images/68.jpg) 68.jpg 사진 변경 필요
 
 이 글 초반부의 젠킨스 컨테이너 생성할 때의 `docker-compose.yml` 파일이 기억 나시나요? 그 때 공유 폴더로 aws의 `/jenkins`와  `/var/jenkins_home`를 연결했었습니다.
 
@@ -625,7 +584,7 @@ ls /var/jenkins_home/images_tar
 
 위 내용을 작성하고 고급 버튼을 클릭해줍니다.
 
-![image](./images/72.jpg)
+![image](./images/72.jpg) 72.jpg 사진 변경 필요
 
 다른 건 건드리지 않고, `Use password authentication, or use different key` 체크박스를 체크해줍니다.
 
@@ -633,11 +592,11 @@ ls /var/jenkins_home/images_tar
 
 ![image](./images/73.jpg)
 
-내가 EC2에서 생성했던 키 페어 pem 파일(싸피에서 받았을 경우 싸피에서 받은 pem 파일)을 VSCode로 오픈해주겠습니다.
+EC2에서 생성한 키 페어 pem 파일을 VSCode로 오픈해주겠습니다.
 
 ![image](./images/74.jpg)
 
-Pem 파일은 다음과 같은 구성으로 되어있습니다. 이 텍스트 내용을 전체 복사해줍니다.
+pem 파일은 다음과 같은 구성으로 되어있습니다. 이 텍스트 내용을 전체 복사해줍니다.
 
 ![image](./images/75.jpg)
 
@@ -687,31 +646,27 @@ SSH 연결이 완료되었습니다. 저장 버튼을 눌러 저장해주겠습�
 
 젠킨스 프로젝트 페이지에서, 다시 구성 버튼을 클릭합니다.
 
-![image](./images/82.jpg)
+![image](./images/82.jpg) 82.jpg 사진 변경 필요
 
 빌드 후 조치 탭에서, 빌드 후 조치 추가를 클릭, `Send build artifacts over SSH`를 선택합니다.
 
-![image](./images/83.jpg)
+![image](./images/83.jpg) 83.jpg 사진 변경 필요
 
 `Source files`는 컨테이너에서 aws로 파일을 전송하는 부분인데, 의미가 없는데도 필수 입력 사항이기 때문에 적당히 아무거나 적어줍니다. 중요한 부분은 `Exec command`부분에 아래 명령어를 복사 붙여넣기 해줍니다.
 
 ```
-sudo docker load < /jenkins/images_tar/react.tar
 sudo docker load < /jenkins/images_tar/django.tar
 
-if (sudo docker ps | grep "react then sudo docker stop react; fi
 if (sudo docker ps | grep "django"); then sudo docker stop django; fi
 
-sudo docker run -it -d --rm -p 80:80 -p 443:443 --name react react
-echo "Run testproject_react"
-sudo docker run -it -d --rm -p 8080:8080  --name django django
-echo "Run testproject"
+sudo docker run -it -d --rm -p 8000:8000 -v /home/ubuntu/log:/var/jenkins_home/workspace/deploytest/Backend/files/log  --name django django
+
 ```
 
 명령어 간단 설명 (django와 중복되는 명령어는 한 개만 설명)
-- sudo docker load < /jenkins/images_tar/react.tar : react.tar을 압축 해제하여 docker 이미지로 등록
-- if (sudo docker ps | grep "react then sudo docker stop react; fi : react 컨테이너가 만약 동작중이면 stop 시키기
-- sudo docker run -it -d --rm -p 80:80 -p 443:443 --name react react : 컨테이너 생성하기 80, 443 포트로 연결, 컨테이너 이름은 react로
+- sudo docker load < /jenkins/images_tar/django.tar : django0.tar을 압축 해제하여 docker 이미지로 등록
+- if (sudo docker ps | grep "django then sudo docker stop django; fi : django 컨테이너가 만약 동작중이면 stop 시키기
+- sudo docker run -it -d --rm -p 8000:8000 -v /home/ubuntu/log:/var/jenkins_home/workspace/deploytest/Backend/files/log  --name django django : 컨테이너 생성하기 8000 포트로 연결, 컨테이너 이름은 django로, log 파일 저장을 위한 컨테이너와 aws에 volume 연결
 
 이후 저장 버튼을 눌러줍니다.
 
@@ -723,167 +678,346 @@ echo "Run testproject"
 
 콘솔에서 결과를 확인할 수 있고.
 
-![image](./images/86.jpg)
-
-서버의 80포트(HTTP)에는 React를
-
 ![image](./images/87.jpg)
 
-8080포트에는 Django를 서비스하게 됩니다.
+8000포트에는 Django를 서비스하게 됩니다.
 
 :satisfied: 여기까지 도커 젠킨스를 이용한 CICD 자동배포가 완료되었습니다!
 
 1. Gitlab Push Event가 일어나면
 2. Jenkins에서 WebHook을 통해 자동으로 빌드를 실행
-3. Jenkins에서 각각의 React(Nginx), Django 프로젝트 내부의 DockerFile를 이용하여 Dockerimage 생성(tar 압축파일)
+3. Jenkins에서 Django 프로젝트 내부의 DockerFile를 이용하여 Dockerimage 생성(tar 압축파일)
 4. Jenkins에서 SSH 연결을 통해 AWS에 DockerContainer 생성
-5. 외부에서 접속 : 도커 컨테이너에 올라간 Nginx에서 React와 Django를 각각 '/', '/api'로 구분지어 연결
+5. 외부에서 접속 : AWS에 설치된 Nginx에서 Django 컨테이너를 '/'로 연결
 
 처음 설명했던 작동방식 1~5중에서 4번까지 완료되었습니다. 다음은 정말 마지막 설정인 Nginx Proxy 설정입니다.
 
-## Nginx를 통해 React와 Django 경로 설정
+## Nginx를 통한 Django 경로 설정 및 Https 적용
 
-이 작업을 굳이 해야할까? 싶은 사람들도 있을 거라고 생각합니다. nginx 설정을 하지 않아도 서버는 잘 서비스 되고 있기 때문이죠.
+구성도에 따라 nginx는 aws EC2에 설치하도록 하겠습니다.
 
-하지만 이 과정을 해놓지 않으면 Https 설정을 할 때 높은 확률로 번거로운 작업이 추가로 생길 것이고, 만약 프론트는 Https에 성공했는데 백엔드가 Https 적용에 실패한다면 Https -> http의 크로스 도메인 오류 때문에 백엔드 API를 불러올 수 없는 치명적인 오류도 생기게 됩니다.
+#### nginx 설치
 
-따라서 하나의 도메인, 한 개의 Port에서 두 서비스를 구분 짓는 부분이 필요하다고 생각합니다.
+먼저 우분투 환경(EC2)에 Nginx를 설치해보겠습니다.
 
-마지막 Nginx 설정 부분입니다. 이 과정은, 기존 리액트와 포트가 분리되어 8080 포트를 이용해야 접속 가능한 백엔드 서비스를 80 포트를 통해 접속할 수 있도록 변경시켜주는 작업입니다.
-
-
-#### :point_right: nginx.conf 파일 생성
-
-EC2 Ubuntu 콘솔에서 `cd /jenkins/workspace/deploytest/testproject_react` 명령으로 디렉토리를 이동합니다. 이후 `sudo mkdir deploy_conf` 명령어로 디렉토리를 생성하고 `cd deploy_conf`를 이용해 이동해줍니다. 그 후 `sudo vim nginx.conf` 명령어로 `nginx.conf` 파일을 생성하고 편집기로 이동합니다.
-
-nginx.conf 파일
 ```
-upstream backend{
-	ip_hash;
-	server 172.31.62.140:8080;
+sudo apt update
+sudo apt upgrade
+sudo apt install nginx
+```
+
+위 명령어를 입력하여 실행하면 nginx는 설치가 완료됩니다.
+
+#### ret's encrypt 이용하여 nginx에 TLS 인증서 적용하기
+
+```
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx
+```
+
+위 명령어를 입력하여 EC2에 certbot을 설치합니다.
+
+```
+sudo certbot --nginx
+```
+
+그 다음 위 명령어를 입력하여 인증서 발급을 시작합니다.
+
+```
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator nginx, Installer nginx
+Enter email address (used for urgent renewal and security notices) (Enter 'c' to
+cancel): emailsample@naver.com
+```
+그러면 위와 같은 창이 나타널 것입니다. email 주소를 적어주세요.
+
+```
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.3-September-21-2022.pdf. You must
+agree in order to register with the ACME server at
+https://acme-v02.api.letsencrypt.org/directory
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(A)gree/(C)ancel: A
+```
+
+약관동의에 관한 안내문입니다. 약관에 동의해야 진행이 가능하니 A를 입력하고 엔터해주시면 됩니다.
+
+```
+Would you be willing to share your email address with the Electronic Frontier
+Foundation, a founding partner of the Let's Encrypt project and the non-profit
+organization that develops Certbot? We'd like to send you email about our work
+encrypting the web, EFF news, campaigns, and ways to support digital freedom.
+```
+
+관련 정보를 이메일로 받을 지 설명하는 부분입니다. 이메일 수신 동의 시 Y 또는 Yes를 입력합니다.
+
+```
+No names were found in your configuration files. Please enter in your domain
+name(s) (comma and/or space separated)  (Enter 'c' to cancel): j7c201.p.ssafy.io
+```
+
+https를 설정할 domain name를 입력해달라는 요청입니다. TLS 인증서를 적용할 domain name을 입력해줍니다.
+
+여기까지 진행했다면 nginx에 TLS 인증서 반영이 성공하였습니다.
+
+다음으로, nginx의 설정파일을 수정하여 docker 컨테이너와 연결해보겠습니다.
+
+```
+sudo vim /etc/nginx/sites-available/default
+```
+
+해당 명령어를 통해 default 파일을 편집기로 오픈합니다.
+
+```
+##
+# You should look at the following URL's in order to grasp a solid understanding
+# of Nginx configuration files in order to fully unleash the power of Nginx.
+# https://www.nginx.com/resources/wiki/start/
+# https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/
+# https://wiki.debian.org/Nginx/DirectoryStructure
+#
+# In most cases, administrators will remove this file from sites-enabled/ and
+# leave it as reference inside of sites-available where it will continue to be
+# updated by the nginx packaging team.
+#
+# This file will automatically load configuration files provided by other
+# applications, such as Drupal or Wordpress. These applications will be made
+# available underneath a path with that package name, such as /drupal8.
+#
+# Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
+##
+
+# Default server configuration
+#
+upstream backend {
+   server 172.26.14.134:8000;
+}
+
+map $http_upgrade $connection_upgrade {
+   default upgrade;
+   ''      close;
 }
 
 server {
-    listen       80;
-    listen  [::]:80;
-    server_name  localhost;
+  ##
+  # You should look at the following URL's in order to grasp a solid understanding
+  # of Nginx configuration files in order to fully unleash the power of Nginx.
+  # https://www.nginx.com/resources/wiki/start/
+  # https://www.nginx.com/resources/wiki/start/topics/tutorials/config_pitfalls/
+  # https://wiki.debian.org/Nginx/DirectoryStructure
+  #
+  # In most cases, administrators will remove this file from sites-enabled/ and
+  # leave it as reference inside of sites-available where it will continue to be
+  # updated by the nginx packaging team.
+  #
+  # This file will automatically load configuration files provided by other
+  # applications, such as Drupal or Wordpress. These applications will be made
+  # available underneath a path with that package name, such as /drupal8.
+  #
+  # Please see /usr/share/doc/nginx-doc/examples/ for more detailed examples.
+  ##
 
-    #access_log  /var/log/nginx/host.access.log  main;
+  # Default server configuration
+  #
+  upstream backend {
+     server 172.26.14.134:8000;
+  }
 
-    location / {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
+  map $http_upgrade $connection_upgrade {
+     default upgrade;
+     ''      close;
+  }
+  server {
+          listen 80 default_server;
+          listen [::]:80 default_server;
+
+          # SSL configuration
+          #
+          # listen 443 ssl default_server;
+          # listen [::]:443 ssl default_server;
+          #
+          # Note: You should disable gzip for SSL traffic.
+          # See: https://bugs.debian.org/773332
+          #
+          # Read up on ssl_ciphers to ensure a secure configuration.
+          # See: https://bugs.debian.org/765782
+          #
+          # Self signed certs generated by the ssl-cert package
+          # Don't use them in a production server!
+          #
+          # include snippets/snakeoil.conf;
+
+          root /var/www/html;
+
+          # Add index.php to the list if you are using PHP
+          index index.html index.htm index.nginx-debian.html;
+
+          server_name _;
+
+          location / {
+                  # First attempt to serve request as file, then  
+                  # as directory, then fall back to displaying a 404.
+                  try_files $uri $uri/ =404;
+          }
+
+          # pass PHP scripts to FastCGI server
+          #
+          #location ~ \.php$ {
+          #       include snippets/fastcgi-php.conf;
+          #
+          #       # With php-fpm (or other unix sockets):
+          #       fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+          #       # With php-cgi (or other tcp sockets):
+          #       fastcgi_pass 127.0.0.1:9000;
+          #}
+
+          # deny access to .htaccess files, if Apache's document root
+          # concurs with nginx's one
+          #
+          #location ~ /\.ht {
+          #       deny all;
+          #}
+  }
+
+
+  # Virtual Host configuration for example.com
+  #
+  # You can move that to a different file under sites-available/ and symlink that
+  # to sites-enabled/ to enable it.
+  #                        
+  #server {
+  #       listen 80;
+  #       listen [::]:80;
+  #
+  #       server_name example.com;
+  #
+  #       root /var/www/example.com;
+  #       index index.html;
+  #
+  #       location / {
+  #               try_files $uri $uri/ =404;
+  #       }
+  #}
+
+  server {
+          client_max_body_size 10M;
+          # SSL configuration
+          #
+          # listen 443 ssl default_server;
+          # listen [::]:443 ssl default_server;
+          #
+          # Note: You should disable gzip for SSL traffic.
+          # See: https://bugs.debian.org/773332
+          #
+          # Read up on ssl_ciphers to ensure a secure configuration.
+          # See: https://bugs.debian.org/765782
+          #
+          # Self signed certs generated by the ssl-cert package
+          # Don't use them in a production server!
+          #
+          # include snippets/snakeoil.conf;
+
+          root /var/www/html;
+
+          # Add index.php to the list if you are using PHP
+          index index.html index.htm index.nginx-debian.html;
+      server_name j7c201.p.ssafy.io; # managed by Certbot
+
+          location / {
+                  proxy_pass http://backend/;
+                  proxy_redirect off;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection $connection_upgrade;
+                  proxy_set_header Host $http_host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_set_header X-Nginx-Proxy true;
+          }
+
+          location /static/ {
+                  alias /jenkins/workspace/deploy/Backend/static/;
+          }
+
+          # pass PHP scripts to FastCGI server
+          #
+          #location ~ \.php$ {
+            #       include snippets/fastcgi-php.conf;
+            #
+            #       # With php-fpm (or other unix sockets):
+            #       fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+            #       # With php-cgi (or other tcp sockets):
+            #       fastcgi_pass 127.0.0.1:9000;
+            #}
+
+            # deny access to .htaccess files, if Apache's document root
+            # concurs with nginx's one
+            #
+            #location ~ /\.ht {
+            #       deny all;
+            #}
+
+
+        liste [::]:443 ssl ipv6only=on; # managed by Certbot
+        listen 443 ssl; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/j7c201.p.ssafy.io/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/j7c201.p.ssafy.io/privkey.pem; # managed by Certbot
+        include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+        ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
     }
+    server {
+        if ($host = j7c201.p.ssafy.io) {
+            return 301 https://$host$request_uri;
+        } # managed by Certbot
 
-	location /api {
-        proxy_pass http://backend/;
-        proxy_redirect     off;
-        proxy_set_header   Host $host;
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
 
-    #error_page  404              /404.html;
+                listen 80 ;
+                listen [::]:80 ;
+            server_name j7c201.p.ssafy.io;
+            return 404; # managed by Certbot  
+      }
+```
 
-    # redirect server error pages to the static page /50x.html
-    #
-    error_page   500 502 503 504  /50x.html;
-    location = /50x.html {
-        root   /usr/share/nginx/html;
-    }
+default 파일이 certbot에 의해 변동이 많이 생겼습니다. 이 중 도커 컨테이너로 서비스 되고 있는 django와 연결하는 부분을 살펴보겠습니다.
 
-    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
-    #
-    #location ~ \.php$ {
-    #    proxy_pass   http://127.0.0.1;
-    #}
-
-    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
-    #
-    #location ~ \.php$ {
-    #    root           html;
-    #    fastcgi_pass   127.0.0.1:9000;
-    #    fastcgi_index  index.php;
-    #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
-    #    include        fastcgi_params;
-    #}
-
-    # deny access to .htaccess files, if Apache's document root
-    # concurs with nginx's one
-    #
-    #location ~ /\.ht {
-    #    deny  all;
-    #}
+```
+upstream backend {
+   server 172.26.14.134:8000;
 }
 ```
 
-:sparkles: 위에서부터 3번째 줄, 172.31.62.140 ip 주소는 EC2 인스턴스의 Private ip 주소입니다.
-
-파일에는 다음 내용을 복사 붙여넣기 해줍니다.
-
-nginx 설정 파일에 대해 간략하게 설명하면,
-
-upstream 을 통해서 backend를 로컬 ip:8080 주소와 연결시키고,
-
-해당 주소를 location /api 에 연결시켰습니다.
-
-기존 리액트 프로젝트는 location / 에 연결됩니다.
-
-결과적으로 공인 ip주소/api로 요청을 하게 되면 Nginx에서 장고서버로 연결을 시켜주게됩니다.
-
-nginx와 장고 서버사이의 통신은 로컬에서 이루어지기 때문에 공인 IP를 등록할 필요가 없습니다.
-
-따라서 가장 처음에에 EC2에 접근 허용했던 8080포트를 막아버리면, 외부에서 장고 서버로는 직접 접속을 못하게 되고, nginx(80포트)를 통해서만 접속할 수 있게됩니다.
-
-`nginx.conf` 파일 작성을 마쳤다면 `esc, :wq` 를 통해 파일을 저장해줍니다.
-
-#### :point_right: DockerFIle 수정
+먼저 upstream backend입니다. 172.26.14.134의 ip 주소는, 해당 EC2의 private ip로써, 같은 네트워크 환경이기 때문에 private로 접속가능한 점을 이용하여 설정해주었습니다.
 
 ```
-FROM node:16.15.0 as build-stage
-WORKDIR /var/jenkins_home/workspace/deploytest/testproject_react
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-FROM nginx:stable-alpine as production-stage
-
-COPY --from=build-stage /var/jenkins_home/workspace/deploytest/testproject_react/build /usr/share/nginx/html
-COPY --from=build-stage /var/jenkins_home/workspace/deploytest/testproject_react/deploy_conf/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
-CMD ["nginx", "-g","daemon off;"]
+location / {
+        proxy_pass http://backend/;
+        proxy_redirect off;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Nginx-Proxy true;
+}
 ```
 
-앞서 DockerFile 만들 때, #으로 주석처리 했던 부분을 해제해줍니다. 이 부분은 방금 생성한 nginx 설정 파일을 nginx 이미지로 옮기는 명령어였습니다.
+`location /` 부분입니다. proxy_pass에 위에서 설정한 upstream의 name인 backend를 입력하여 연결해주는 부분이고, 그 아래는 리버스프록시 적용하는 헤더 설정부분입니다. 자세한 내용은 알지 못합니다.
 
-#### :point_right: 최종 빌드 테스트
+```
+location /static/ {
+        alias /jenkins/workspace/deploy/Backend/static/;
+}
+```
 
-도커파일이 수정사항을 반영시키려면, gitlab에 Push 해주어야합니다! 최종적으로 모든 기능이 잘 작동하는지 테스트 할 수 있는 기회가 되겠네요.
+`location /static/` 부분입니다. 장고에서 사용하는 static 파일들이 모이는 static 폴더를 /static/으로 연결하여 장고에서 나타나는 페이지들에 정적파일을 적용시켰습니다.
 
-![image](./images/88.jpg)
+설정파일을 수정한 부분은 설명을 다 드린 것 같습니다. 이제 nginx를 재시작 하면 공인ip로 접속을 했을 때, nginx 리버스 프록시를 통해 도커 컨테이너에서 서비스 중인 django로 연결이 되게 됩니다.
 
-수정사항을 `master Branch`에 `Push`합니다.
-
-![image](./images/89.jpg)
-
-`jenkins`에서 `push trigger`를 받아 `build`를 수행합니다.
-
-![image](./images/90.jpg)
-
-일하고 있는 할아버지 :cry:
-
-![image](./images/91.jpg)
-
-빌드가 완료된 후, `http://공인ip/` 로 접속하면 React가
-
-![image](./images/92.jpg)
-
-`http://공인ip/api` 로 접속하면 Django가 실행되는 걸 확인할 수 있습니다.
-
-![image](./images/92.jpg)
-
-EC2 인바운드규칙에서 8080포트 접속을 차단했습니다. `http://공인ip:8080` 더이상 8080포트로는 접속이 되지 않네요.
-
-이로써 모든 기능 구현이 완료되었습니다! 도메인 name이 없어서 https 적용은 진행 하지 못했습니다. letsencrypt이용한 https 적용 관련해서는 [이 링크](https://sinawi.tistory.com/410?category=879243)를 한 번 참고해 보세요!
+`sudo service nginx restart`
 
 이상 CICD 배포 매뉴얼이었습니다.
