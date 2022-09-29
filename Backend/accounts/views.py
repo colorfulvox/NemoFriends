@@ -44,20 +44,20 @@ class StartAnimalView(APIView):
         MBTI_STATIC = { 
             '1111': [1, 'ISTJ'],
             '1112': [2, 'ISTP'],
-            '1121': [3,'ISFJ'],
-            '1122': [4,'ISFP'],
-            '1211': [5,'INTJ'],
-            '1212': [6,'INTP'],
-            '1221': [7,'INFJ'],
-            '1222': [8,'INFP'],
-            '2111': [9,'ESTJ'],
-            '2112': [10,'ESTP'], 
-            '2121': [11,'ESFJ'],
-            '2122': [12,'ESFP'],
-            '2211': [13,'ENTJ'],
-            '2212': [14,'ENTP'],
-            '2221': [15,'ENFJ'],
-            '2222': [16,'ENFP'],
+            '1121': [3, 'ISFJ'],
+            '1122': [4, 'ISFP'],
+            '1211': [5, 'INTJ'],
+            '1212': [6, 'INTP'],
+            '1221': [7, 'INFJ'],
+            '1222': [8, 'INFP'],
+            '2111': [9, 'ESTJ'],
+            '2112': [10, 'ESTP'],
+            '2121': [11, 'ESFJ'],
+            '2122': [12, 'ESFP'],
+            '2211': [13, 'ENTJ'],
+            '2212': [14, 'ENTP'],
+            '2221': [15, 'ENFJ'],
+            '2222': [16, 'ENFP'],
         }
         # 동물 추천 알고리즘
         user = request.user
@@ -73,7 +73,7 @@ class StartAnimalView(APIView):
         answer = request.data.get('answer')
         mbti = get_object_or_404(Mbti, mbti=MBTI_STATIC[answer][1])
         animal = mbti.animal
-        user = request.user
+        # user = request.user  63번 라인과 같아서 주석해둬여 혹시 이유가 있으면 다시 풀어주세요!
         user_animal = User_Animal(user=user, animal=animal, name=animal.species, is_located=True)
         user_animal.save()
         user_animals_serializer = UserAnimalInfoSerializer(user_animal)
@@ -201,7 +201,7 @@ class LoadGameView(APIView):
                 })
         # 유저 정보 Json
         user_info = {
-            "name" : user.name,
+            # "name" : user.name
             "gold" : user.gold,
             "decorations" : decorations_ilst,
             "located_decorations": located_decorations,

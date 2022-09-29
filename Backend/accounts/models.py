@@ -11,7 +11,6 @@ class User(AbstractUser):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
-    name = models.CharField(max_length=16, default=" ")
     gold = models.IntegerField(default=0)
     bgm = models.IntegerField(default=50)
     effect = models.IntegerField(default=50)
@@ -20,11 +19,7 @@ class User(AbstractUser):
     
     def __str__(self):
         return self.username
-        
-class WordChain(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
-    score = models.IntegerField(default=0)
-    words = models.JSONField()
+
 
 class Mbti(models.Model):
     mbti = models.CharField(primary_key=True, max_length=4)
