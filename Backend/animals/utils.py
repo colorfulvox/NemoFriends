@@ -144,6 +144,12 @@ def reward_exp(animal, user, action, score=0):
     animal.exp = exp
     return animal
 
+# 명령 허용 단어
+allowance_commands = [
+    '앉자', '안자', '안아'
+]
+
+
 
 # 끝말잇기
 # 두음 법칙 경우의 수
