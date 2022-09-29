@@ -21,9 +21,9 @@ urlpatterns = [
     path('join/', views.TestView.as_view(), name='test'),
     path('array/', views.ArrayView.as_view(), name='array'),
     path('data_animals/', views.DataAnimals.as_view()),
-    path('audio/', views.AudioView.as_view()),
-    path('play/wordchain/start/', views.PlayWordchainStartView.as_view()),
-    path('play/wordchain/next/', views.PlayWordchainNextView.as_view()),
-    path('play/wordchain/finish/', views.PlayWordchainFinishView.as_view()),
+    # path('audio/', views.AudioView.as_view()),
+    # path('play/wordchain/start/', views.PlayWordchainStartView.as_view()),
+    # path('play/wordchain/next/', views.PlayWordchainNextView.as_view()),
+    # path('play/wordchain/finish/', views.PlayWordchainFinishView.as_view()),
     path('cache/', views.CacheView.as_view()),
 ]

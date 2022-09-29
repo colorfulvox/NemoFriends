@@ -2,7 +2,6 @@ from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from .serializers import TestSerializer, ArraySerializer
 from animals.models import Animal, User_Animal
-from accounts.models import WordChain
 import json
 
 from django.conf import settings
@@ -10,10 +9,8 @@ from django.conf import settings
 import pickle
 from utils import *
 from animals.utils import *
-from django.core.files.storage import FileSystemStorage
-import random
-from django.shortcuts import get_object_or_404
 from django.shortcuts import get_list_or_404, get_object_or_404
+
 # 전처리한 끝말잇기용 단어 목록
 with open('noun_dictionary.pickle', 'rb') as f:
     noun_dictionary = pickle.load(f)
@@ -80,198 +77,198 @@ class DataAnimals(APIView):
                 print(Animal.objects.filter(id=i+1).update(**data[i]))
 
 
-class AudioView(APIView):
-    # 전체 동물 대화
-    def talk_to_all(self, context, user):
-        print('길이', len(ALL_COMMANDS))
-        for i in range(1, len(ALL_COMMANDS)):
-            if ALL_COMMANDS[i] in context:
-                if not user.is_called:
-                    user = reward_gold(user, 'talking_all')
-                    user.is_called = True
-                    user.save()
-                response = {'animal_id': -1, 'cmd': i}
-                response.update(SUCCESS)
-                return response
-        return FAIL
+# class AudioView(APIView):
+#     # 전체 동물 대화
+#     def talk_to_all(self, context, user):
+#         print('길이', len(ALL_COMMANDS))
+#         for i in range(1, len(ALL_COMMANDS)):
+#             if ALL_COMMANDS[i] in context:
+#                 if not user.is_called:
+#                     user = reward_gold(user, 'talking_all')
+#                     user.is_called = True
+#                     user.save()
+#                 response = {'animal_id': -1, 'cmd': i}
+#                 response.update(SUCCESS)
+#                 return response
+#         return FAIL
 
-    # 특정 동물 대화
-    def talk_to_one(self, animal, user, context):
-        action = 'talking_one'
-        grade = animal.grade
-        commands = animal.animal.commands[:grade+1]
+#     # 특정 동물 대화
+#     def talk_to_one(self, animal, user, context):
+#         action = 'talking_one'
+#         grade = animal.grade
+#         commands = animal.animal.commands[:grade+1]
 
-        for i in range(1, len(commands)):
-            if commands[i] in context:
-                # 대화 보상 Ok
-                if animal.talking_cnt:
-                    animal = reward_exp(animal, user, action)
-                    animal.talking_cnt -= 1
-                    animal.save()
-                    user = reward_gold(user, action)
-                    user.save()
-                # 대화 보상 No
-                response = {'animal_id': animal.animal_id, 'cmd': i}
-                response.update(SUCCESS)
-                return response
-        return FAIL
+#         for i in range(1, len(commands)):
+#             if commands[i] in context:
+#                 # 대화 보상 Ok
+#                 if animal.talking_cnt:
+#                     animal = reward_exp(animal, user, action)
+#                     animal.talking_cnt -= 1
+#                     animal.save()
+#                     user = reward_gold(user, action)
+#                     user.save()
+#                 # 대화 보상 No
+#                 response = {'animal_id': animal.animal_id, 'cmd': i}
+#                 response.update(SUCCESS)
+#                 return response
+#         return FAIL
 
-    def post(self, request):
-        audio = request.FILES["audio"]
+#     def post(self, request):
+#         audio = request.FILES["audio"]
         
-        # multipart/form-data로 받은 file을 테스트를 위해 bytes로 변환한 후
-        # bytes를 wav 파일로 저장
+#         # multipart/form-data로 받은 file을 테스트를 위해 bytes로 변환한 후
+#         # bytes를 wav 파일로 저장
 
-        # with open('media/copy.wav', mode='bx') as f:
-            # f.write(audio.file.read())
+#         # with open('media/copy.wav', mode='bx') as f:
+#             # f.write(audio.file.read())
 
-        # 서버에 file 저장
-        fs = FileSystemStorage()
-        filename = fs.save(request.user.username +'.wav', audio)
-        # filename = fs.save(request.user, audio)
-        # filename = fs.save(audio.name, audio)
+#         # 서버에 file 저장
+#         fs = FileSystemStorage()
+#         filename = fs.save(request.user.username +'.wav', audio)
+#         # filename = fs.save(request.user, audio)
+#         # filename = fs.save(audio.name, audio)
 
-        # 로직        
-        context = '꼬꼬 앉아'
-        # file의 경로
-        uploaded_file_path = fs.path(filename)
+#         # 로직        
+#         context = '꼬꼬 앉아'
+#         # file의 경로
+#         uploaded_file_path = fs.path(filename)
 
-        # file 삭제
-        fs.delete(filename)
-        fs.delete(settings.MEDIA_ROOT + f'/{filename}.wav')
+#         # file 삭제
+#         fs.delete(filename)
+#         fs.delete(settings.MEDIA_ROOT + f'/{filename}.wav')
 
-        user = get_object_or_404(get_user_model(), username=request.user)
-        user_animals = get_list_or_404(User_Animal, user=user)
+#         user = get_object_or_404(get_user_model(), username=request.user)
+#         user_animals = get_list_or_404(User_Animal, user=user)
 
-        for animal in user_animals:
-            if animal.name in context:
-                print('animal', animal, 'animla.name', animal.name, '?', context)
-                response = self.talk_to_one(animal, user, context)
-                return Response(response)
+#         for animal in user_animals:
+#             if animal.name in context:
+#                 print('animal', animal, 'animla.name', animal.name, '?', context)
+#                 response = self.talk_to_one(animal, user, context)
+#                 return Response(response)
 
-        print("TEST", context, user)
-        response = self.talk_to_all(context, user)
-        return Response(response)
+#         print("TEST", context, user)
+#         response = self.talk_to_all(context, user)
+#         return Response(response)
 
 
-class PlayWordchainStartView(APIView):
-    def post(self, request):
-        user = request.user
-        animal_id = request.data.get('animal_id')
-        animal = get_object_or_404(Animal, pk=animal_id)
-        user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
+# class PlayWordchainStartView(APIView):
+#     def post(self, request):
+#         user = request.user
+#         animal_id = request.data.get('animal_id')
+#         animal = get_object_or_404(Animal, pk=animal_id)
+#         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
 
-        if user_animal.playing_cnt < 1:
-            response = FAIL.copy()
-            response.update({'message': '오늘은 더 이상 놀아줄 수 없습니다.'})
-            return Response(response)
+#         if user_animal.playing_cnt < 1:
+#             response = FAIL.copy()
+#             response.update({'message': '오늘은 더 이상 놀아줄 수 없습니다.'})
+#             return Response(response)
 
-        response_word = random.choice(start_words)
+#         response_word = random.choice(start_words)
 
-        # 삭제되지 않은 게임 기록 확인
-        check = WordChain.objects.filter(user=user)
-        if check:
-            for wordchain in check:
-                wordchain.delete()
+#         # 삭제되지 않은 게임 기록 확인
+#         check = WordChain.objects.filter(user=user)
+#         if check:
+#             for wordchain in check:
+#                 wordchain.delete()
             
-        wordchain = WordChain(user=user, score=0, words=[response_word])
-        wordchain.save()
+#         wordchain = WordChain(user=user, score=0, words=[response_word])
+#         wordchain.save()
 
-        response = SUCCESS.copy()
-        response.update({'response_word': response_word})
+#         response = SUCCESS.copy()
+#         response.update({'response_word': response_word})
 
-        return Response(response)
+#         return Response(response)
 
-class PlayWordchainNextView(APIView):
-    # 게임 종료
-    def finish(self, msg, score, request_word):
-        response = FAIL.copy()
-        response.update({'message': msg, 'request_word': request_word, 'score': score})
-        return response
+# class PlayWordchainNextView(APIView):
+#     # 게임 종료
+#     def finish(self, msg, score, request_word):
+#         response = FAIL.copy()
+#         response.update({'message': msg, 'request_word': request_word, 'score': score})
+#         return response
 
-    def post(self, request):
-        # audio = request.FILES['audio']
-        # fss = FileSystemStorage()
-        # filename = fss.save(request.user.username +'.wav', audio)
-        # filepath = fss.path(filename)
+#     def post(self, request):
+#         # audio = request.FILES['audio']
+#         # fss = FileSystemStorage()
+#         # filename = fss.save(request.user.username +'.wav', audio)
+#         # filepath = fss.path(filename)
 
-        # # 음성 인식
-        # # request_word = recognize(filepath)
-        # request_word = '단어'
+#         # # 음성 인식
+#         # # request_word = recognize(filepath)
+#         # request_word = '단어'
 
-        # fss.delete(settings.MEDIA_ROOT + f'/{filename}.wav')
-        request_word = recongize(request.user.username, request.FILES['audio'])
-        wordchain = WordChain.objects.get(user_id=request.user)
-        words = wordchain.words
-        score = wordchain.score
+#         # fss.delete(settings.MEDIA_ROOT + f'/{filename}.wav')
+#         request_word = recongize(request.user.username, request.FILES['audio'])
+#         wordchain = WordChain.objects.get(user_id=request.user)
+#         words = wordchain.words
+#         score = wordchain.score
         
-        # 사용자의 단어가 사전에 존재하는 단어인지 확인
-        if request_word not in noun_dictionary:
-            response = self.finish('사전에 존재하지 않는 단어입니다.', score, request_word)
-            return Response(response)
+#         # 사용자의 단어가 사전에 존재하는 단어인지 확인
+#         if request_word not in noun_dictionary:
+#             response = self.finish('사전에 존재하지 않는 단어입니다.', score, request_word)
+#             return Response(response)
 
-        # 사용자의 단어가 이미 사용한 단어인지 확인
-        if request_word in words:
-            response = self.finish('이미 사용한 단어입니다.', score, request_word)
-            return Response(response)
+#         # 사용자의 단어가 이미 사용한 단어인지 확인
+#         if request_word in words:
+#             response = self.finish('이미 사용한 단어입니다.', score, request_word)
+#             return Response(response)
 
-        # 사용자의 단어가 실제로 이어지는 단어인지 확인(두음 법칙 적용)
-        ends = [words[-1][-1]]
-        if ends[0] in convert_dict.keys():
-            ends.append(convert_dict[ends[0]])
+#         # 사용자의 단어가 실제로 이어지는 단어인지 확인(두음 법칙 적용)
+#         ends = [words[-1][-1]]
+#         if ends[0] in convert_dict.keys():
+#             ends.append(convert_dict[ends[0]])
 
-        if request_word[0] not in ends:
-            response = self.finish('이어지지 않는 단어입니다.', score, request_word)
-            return Response(response)
+#         if request_word[0] not in ends:
+#             response = self.finish('이어지지 않는 단어입니다.', score, request_word)
+#             return Response(response)
         
-        # 시작 글자로 쓸 수 있는 글자들 확인(두음 법칙 적용)
-        starts = [request_word[-1]]
-        if starts[0] in convert_dict.keys():
-            starts.append(convert_dict[starts[0]])
+#         # 시작 글자로 쓸 수 있는 글자들 확인(두음 법칙 적용)
+#         starts = [request_word[-1]]
+#         if starts[0] in convert_dict.keys():
+#             starts.append(convert_dict[starts[0]])
         
-        # 다음 단어 선택
-        response_words = []
-        for word in noun_dictionary:
-            if word[0] in starts and word not in words:
-                response_words.append(word)
+#         # 다음 단어 선택
+#         response_words = []
+#         for word in noun_dictionary:
+#             if word[0] in starts and word not in words:
+#                 response_words.append(word)
         
-        response_word = random.choice(response_words)
+#         response_word = random.choice(response_words)
         
-        # WordChain 테이블 갱신
-        wordchain.score += 1
-        wordchain.words.append(request_word)
-        wordchain.words.append(response_word)
-        wordchain.save()
+#         # WordChain 테이블 갱신
+#         wordchain.score += 1
+#         wordchain.words.append(request_word)
+#         wordchain.words.append(response_word)
+#         wordchain.save()
 
-        response = SUCCESS.copy()
-        response.update({'request_word': request_word, 'response_word': response_word, 'score': wordchain.score})
-        return Response(response)
+#         response = SUCCESS.copy()
+#         response.update({'request_word': request_word, 'response_word': response_word, 'score': wordchain.score})
+#         return Response(response)
 
-class PlayWordchainFinishView(APIView):
-    def post(self, request):
-        user = request.user
-        wordchain = WordChain.objects.get(user=user)
-        score = wordchain.score
-        animal_id = request.data.get('animal_id')
-        animal = get_object_or_404(Animal, pk=animal_id)
-        user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
-        action = 'playing'
+# class PlayWordchainFinishView(APIView):
+#     def post(self, request):
+#         user = request.user
+#         wordchain = WordChain.objects.get(user=user)
+#         score = wordchain.score
+#         animal_id = request.data.get('animal_id')
+#         animal = get_object_or_404(Animal, pk=animal_id)
+#         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
+#         action = 'playing'
 
-        # 골드 증가
-        user = reward_gold(user, action, score)
-        user.save()
+#         # 골드 증가
+#         user = reward_gold(user, action, score)
+#         user.save()
 
-        # 놀이 횟수 차감
-        user_animal.playing_cnt -= 1
+#         # 놀이 횟수 차감
+#         user_animal.playing_cnt -= 1
 
-        # 해당 동물 경험치 증가
-        user_animal = reward_exp(user_animal, user, action, score)
-        user_animal.save()
+#         # 해당 동물 경험치 증가
+#         user_animal = reward_exp(user_animal, user, action, score)
+#         user_animal.save()
 
-        # wordchain에서 행 삭제
-        wordchain.delete()
+#         # wordchain에서 행 삭제
+#         wordchain.delete()
 
-        return Response(SUCCESS)
+#         return Response(SUCCESS)
 
 
 from django.core.cache import cache
