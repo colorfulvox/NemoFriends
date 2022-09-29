@@ -15,39 +15,46 @@ date_format_slash = f'%y/%m/%d/%H/%M/%S'
 
 # STT
 VITO_URL = 'https://openapi.vito.ai/v1/'
-data={'client_id': os.environ.get('VITO_CLIENT_ID'),
-        'client_secret': os.environ.get('VITO_CLIENT_SECRET')}
-
-resp = requests.post(VITO_URL+'authenticate', data=data)
-resp.raise_for_status()
-
-vito_access_token = resp.json().get('access_token')
-vito_refresh_token = resp.json().get('refresh_token')
-
-
-def vito_stt_api(filename):
-    config = {
-    "diarization": {
+vito_access_token = ''
+data={
+    'client_id': os.environ.get('VITO_CLIENT_ID'),
+    'client_secret': os.environ.get('VITO_CLIENT_SECRET')
+    }
+config = {
+    'diarization': {
         "use_ars": False,
         "use_verification": False
-    },
+        },
     "use_multi_channel": False
     }
+
+
+def vito_authenticate():
+    global vito_access_token
+    resp = requests.post(VITO_URL+'authenticate', data=data)
+    vito_access_token = resp.json().get('access_token')
+    return
+
+
+def vito_create(filename):
     resp = requests.post(
         VITO_URL+'transcribe',
         headers={'Authorization': 'bearer '+ vito_access_token},
         data={'config': json.dumps(config)},
         files={'file': open(f'{settings.MEDIA_ROOT}/{filename}', 'rb')}
     )
-    resp.raise_for_status()
-    id = resp.json().get('id')
+    return resp
 
+
+def vito_get(id):
     while True:
         resp = requests.get(
         VITO_URL + 'transcribe/' + id,
         headers={'Authorization': 'bearer '+ vito_access_token},
         )
-        resp.raise_for_status()
+
+        if resp.status_code == 401:
+            vito_authenticate()
 
         if resp.json().get('status') == 'completed':
             break
@@ -59,6 +66,22 @@ def vito_stt_api(filename):
         result = result + msg.get('msg')
 
     return result
+
+    
+def vito_stt_api(filename):
+    resp = vito_create(filename)
+
+    if resp.status_code == 401:
+        vito_authenticate()
+        vito_create(filename)
+
+    elif resp.status_code == 200:
+        result = vito_get(resp.json().get('id'))
+        return result
+    
+    else:
+        print('오류...', resp.json)
+        return resp.json()
 
 
 def google_stt_api(filename):
@@ -73,14 +96,14 @@ def google_stt_api(filename):
 
 
 def speech_to_text(data=None):
-    try:
-        # data = vito_stt_api(data)
-        data = google_stt_api(data)
-        print('구글임')
-    except:
-        # data = google_stt_api(data)
-        data = vito_stt_api(data)
-        print('vito임')
+    # try:
+    #     # data = vito_stt_api(data)
+    #     data = google_stt_api(data)
+    #     print('구글임')
+    # except:
+    #     # data = google_stt_api(data)
+    data = vito_stt_api(data)
+    print('vito임')
     return data
 
 
@@ -88,7 +111,7 @@ def recongize(username, audio):
     fs = FileSystemStorage()
     filename = fs.save(f'{username}.wav', audio)
 
-    context = speech_to_text(filename)
+    context = speech_to_text(filename).replace(" " , "")
     print('STT 결과입니다.', context)
 
     fs.delete(filename)
@@ -97,7 +120,7 @@ def recongize(username, audio):
 
 
 def reward_gold(user, action, score=0):
-    reward = {'eatting': 100, 'level_up': 3 * score, 'talking': 100, 'playing': 50 * score, 'playing_maze': score}
+    reward = {'eatting': 100, 'level_up': 5 * score, 'talking': 100, 'playing_wordchain': 50 * score, 'playing_maze': score}
     print('얼마 보상?', reward[action])
     user.gold += reward[action]
     return user
@@ -106,7 +129,7 @@ def reward_gold(user, action, score=0):
 def reward_exp(animal, user, action, score=0):
     lookup_grade = [1, 1, 1, 2, 2, 3]  # lookup_grade[level] = grade
     levelup_exp = [0, 0, 100, 200, 300, 400, float('inf')]
-    reward = {'eatting': 50, 'talking': 50, 'playing': 5 * score, 'exp_up': 50}
+    reward = {'eatting': 50, 'talking': 50, 'playing_wordchain': 5 * score, 'exp_up': 50}
     
     exp = animal.exp + reward[action]
     next_level = animal.level + 1
@@ -156,3 +179,8 @@ start_words = []
 for word in noun_dictionary_freq:
     if word[-1] not in blacklist:
         start_words.append(word)
+
+
+
+if __name__ == 'animals.utils':
+    vito_authenticate()
