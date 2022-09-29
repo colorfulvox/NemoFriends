@@ -1,18 +1,13 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.contrib.auth import get_user_model
-from django.core.files.storage import FileSystemStorage
 from django.core.cache import cache
 from django.conf import settings
 
-from rest_framework import status
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 
 from .models import Animal, User_Animal
-from items.models import User_Item
-from accounts.models import WordChain
-from .serializers import AnimalsRenameSerializer, AnimalsTestSerializer, UserAnimalSerializer
-from . import serializers
+from .serializers import AnimalsRenameSerializer
 from .utils import *
 from utils import SUCCESS, FAIL
 import logging
