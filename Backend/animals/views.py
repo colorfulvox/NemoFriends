@@ -158,7 +158,7 @@ class AnimalsPlayWordchainNextView(APIView):
     def post(self, request):
         user = request.user
 
-        request_word = recongize(user.username, request.FILES['audio'])
+        request_word = recongize(user.username, request.data.get("audio"))
 
         wordchain = get_object_or_404(WordChain, user=user)
         words = wordchain.words
@@ -228,7 +228,7 @@ class AnimalsPlayWordchainFinishView(APIView):
         animal_id = request.data.get('animal_id')
         animal = get_object_or_404(Animal, pk=animal_id)
         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
-        action = 'playing'
+        action = 'playing_wordchain'
 
         # 골드 증가
         user = reward_gold(user, action, score)
@@ -275,7 +275,7 @@ class AnimalsMazeView(APIView):
 class AnimalsExpUpView(APIView):
     def post(self, request):
         user = request.user
-        user_animal = get_object_or_404(User_Animal, id=request.data.get('id'))
+        user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
         response = FAIL.copy()
 
         if user == user_animal.user:
@@ -286,8 +286,8 @@ class AnimalsExpUpView(APIView):
                 user.save()
                 return Response(SUCCESS)
 
-            response['msg'] = '경험치 물약이 부족합니다.'
+            response['message'] = '경험치 물약이 부족합니다.'
             return Response(response)
 
-        response['msg'] = '요청을 보낸 사용자와 해당 동물을 보유한 사용자가 다릅니다.'
+        response['message'] = '요청을 보낸 사용자와 해당 동물을 보유한 사용자가 다릅니다.'
         return Response(response)
