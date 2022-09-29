@@ -291,10 +291,3 @@ class AnimalsExpUpView(APIView):
 
         response['msg'] = '요청을 보낸 사용자와 해당 동물을 보유한 사용자가 다릅니다.'
         return Response(response)
-
-
-class DepthTestView(APIView):
-    def get(self, request, id):
-        user_animal = get_object_or_404(User_Animal, pk=id)
-        serializers = UserAnimalSerializer(instance=user_animal)
-        return Response(serializers.data)
