@@ -86,10 +86,10 @@ class AnimalsTalkView(APIView):
         action = 'talking'
         grade = user_animal.grade
         commands = user_animal.animal.commands[:grade+1]
+        commands.extend(allowance_commands)
 
         for i in range(1, len(commands)):
             if commands[i] in context:
-
                 # 대화 보상 Ok
                 if user_animal.talking_cnt:
                     user_animal = reward_exp(user_animal, user, action)
@@ -110,7 +110,7 @@ class AnimalsTalkView(APIView):
         # except:
         #     context = '추희원 앉아!'
         print(datetime.now())
-            
+        response = {}
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
         
