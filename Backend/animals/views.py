@@ -1,6 +1,7 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.core.files.storage import FileSystemStorage
+from django.core.cache import cache
 from django.conf import settings
 
 from rest_framework import status
@@ -104,10 +105,11 @@ class AnimalsTalkView(APIView):
         return FAIL
 
     def post(self, request):
-        try:
-            context = recongize(request.user.username, request.data.get("audio"))
-        except:
-            context = '추희원 앉아!'
+        # try:
+        context = recongize(request.user.username, request.data.get("audio"))
+        # except:
+        #     context = '추희원 앉아!'
+        print(datetime.now())
             
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
@@ -133,14 +135,8 @@ class AnimalsPlayWordchainStartView(APIView):
 
         response_word = random.choice(start_words)
 
-        # 삭제되지 않은 게임 기록 확인
-        check = WordChain.objects.filter(user=user)
-        if check:
-            for wordchain in check:
-                wordchain.delete()
-            
-        wordchain = WordChain(user=user, score=0, words=[response_word])
-        wordchain.save()
+        # 게임 기록 초기화
+        cache.set(user.username, [0, response_word], 60 * 60)
 
         response = SUCCESS.copy()
         response.update({'response_word': response_word})
@@ -157,12 +153,18 @@ class AnimalsPlayWordchainNextView(APIView):
 
     def post(self, request):
         user = request.user
+        username = user.username
 
-        request_word = recongize(user.username, request.FILES['audio'])
+        request_word = recongize(username, request.FILES['audio'])
 
-        wordchain = get_object_or_404(WordChain, user=user)
-        words = wordchain.words
-        score = wordchain.score
+        words = cache.get(username)
+
+        # 게임을 시작했는지 확인
+        if words is None:
+            response = self.finish('게임이 시작되지 않았습니다.', 0, request_word)
+            return Response(response)
+
+        score = words[0]
         
         # 사용자의 단어가 사전에 존재하는 단어인지 확인
         if request_word not in noun_dictionary:
@@ -199,32 +201,34 @@ class AnimalsPlayWordchainNextView(APIView):
         
         # 선택할 수 있는 다음 단어가 없는 경우 사용자의 승리
         if len(response_words) < 1:
-            score += 1
-            score *= 2
-            wordchain.score = score
-            wordchain.save()
+            words[0] = (words[0] + 1) * 2
+            cache.set(username, words, 60 * 60)
             response = self.finish('사용자가 이겼습니다.', score, request_word)
             return Response(response)
         
         response_word = random.choice(response_words)
         
         # WordChain 테이블 갱신
-        score += 1
+        words[0] += 1
         words.append(response_word)
-        wordchain.score = score
-        wordchain.words = words
-        wordchain.save()
+        cache.set(username, words, 60 * 60)
 
         response = SUCCESS.copy()
-        response.update({'request_word': request_word, 'response_word': response_word, 'score': wordchain.score})
+        response.update({'request_word': request_word, 'response_word': response_word, 'score': words[0]})
         return Response(response)
 
 
 class AnimalsPlayWordchainFinishView(APIView):
     def post(self, request):
         user = request.user
-        wordchain = get_object_or_404(WordChain, user=user)
-        score = wordchain.score
+        username = user.username
+        words = cache.get(username)
+
+        if words is None:
+            score = 0
+        else:
+            score = words[0]
+        
         animal_id = request.data.get('animal_id')
         animal = get_object_or_404(Animal, pk=animal_id)
         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
@@ -241,8 +245,8 @@ class AnimalsPlayWordchainFinishView(APIView):
         user_animal = reward_exp(user_animal, user, action, score)
         user_animal.save()
 
-        # wordchain에서 행 삭제
-        wordchain.delete()
+        # 끝말잇기 기록 제거
+        cache.delete(username)
 
         return Response(SUCCESS)
 

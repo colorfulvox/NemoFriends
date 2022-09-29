@@ -282,3 +282,16 @@ LOGGING = {
         },
     },
 }
+
+
+# Cache -- Redis
+# https://funncy.github.io/django/2020/09/24/redis/
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://j7c201.p.ssafy.io:6379/1", # 1번 DB
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}

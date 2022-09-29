@@ -25,4 +25,5 @@ urlpatterns = [
     path('play/wordchain/start/', views.PlayWordchainStartView.as_view()),
     path('play/wordchain/next/', views.PlayWordchainNextView.as_view()),
     path('play/wordchain/finish/', views.PlayWordchainFinishView.as_view()),
+    path('cache/', views.CacheView.as_view()),
 ]
