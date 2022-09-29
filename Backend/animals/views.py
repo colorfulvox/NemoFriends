@@ -105,10 +105,11 @@ class AnimalsTalkView(APIView):
         return FAIL
 
     def post(self, request):
-        try:
-            context = recongize(request.user.username, request.data.get("audio"))
-        except:
-            context = '추희원 앉아!'
+        # try:
+        context = recongize(request.user.username, request.data.get("audio"))
+        # except:
+        #     context = '추희원 앉아!'
+        print(datetime.now())
             
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
