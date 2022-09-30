@@ -22,6 +22,7 @@ class AnimalsEatView(APIView):
     def post(self, request):
         id = request.data.get('id')
         result = request.data.get('result')
+        logger.info(f'POST {request.path} user_animal_id:{id} result:{result}')
         user_animal = get_object_or_404(User_Animal, pk=id)
 
         if request.user == user_animal.user:
@@ -65,6 +66,7 @@ class AnimalsEatView(APIView):
 class AnimalsRenameView(APIView):
     def post(self, request):
         id = request.data.get('id')
+        logger.info(f'POST {request.path} user_animal_id:{id}')
         user_animal = get_object_or_404(User_Animal, id=id)
         
         if request.user == user_animal.user:
@@ -100,6 +102,7 @@ class AnimalsTalkView(APIView):
         return FAIL
 
     def post(self, request):
+        logger.info(f'POST {request.path}')
         # try:
         context = recongize(request.user.username, request.data.get("audio"))
         # except:
@@ -120,6 +123,7 @@ class AnimalsPlayWordchainStartView(APIView):
     def post(self, request):
         user = request.user
         animal_id = request.data.get('animal_id')
+        logger.info(f'POST {request.path} animal_id:{animal_id}')
         animal = get_object_or_404(Animal, pk=animal_id)
         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
 
@@ -147,6 +151,7 @@ class AnimalsPlayWordchainNextView(APIView):
         return response
 
     def post(self, request):
+        logger.info(f'POST {request.path}')
         user = request.user
         username = user.username
 
@@ -215,6 +220,7 @@ class AnimalsPlayWordchainNextView(APIView):
 
 class AnimalsPlayWordchainFinishView(APIView):
     def post(self, request):
+        logger.info(f'POST {request.path}')
         user = request.user
         username = user.username
         words = cache.get(username)
@@ -249,6 +255,7 @@ class AnimalsPlayWordchainFinishView(APIView):
 class AnimalsPlaceView(APIView):
     def post(self, request):
         id = request.data.get('id')
+        logger.info(f'POST {request.path} user_animal_id:{id}')
         user_animal = get_object_or_404(User_Animal, id=id)
 
         if request.user == user_animal.user:
@@ -261,7 +268,9 @@ class AnimalsPlaceView(APIView):
 class AnimalsMazeView(APIView):
     def post(self, request):
         user = request.user
-        user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
+        id = request.data.get('id')
+        logger.info(f'POST {request.path} user_animal_id:{id}')
+        user_animal = get_object_or_404(User_Animal, pk=id)
 
         if user == user_animal.user:
             score = int(request.data.get('score'))
@@ -274,6 +283,8 @@ class AnimalsMazeView(APIView):
 class AnimalsExpUpView(APIView):
     def post(self, request):
         user = request.user
+        id = request.data.get('id')
+        logger.info(f'POST {request.path} user_animal_id:{id}')
         user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
         response = FAIL.copy()
 
