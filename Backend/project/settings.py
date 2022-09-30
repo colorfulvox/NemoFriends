@@ -214,9 +214,9 @@ LOGGING = {
         },
     },
     'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
+        # 'require_debug_false': {
+        #     '()': 'django.utils.log.RequireDebugFalse',
+        # },
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
@@ -235,11 +235,6 @@ LOGGING = {
             'backupCount': 5,
             'formatter': 'format1',
         },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'django.server',
-        },
         # 콘솔(터미널)에 출력
         'console': {
             'level': 'INFO',
@@ -249,35 +244,20 @@ LOGGING = {
     },
     'loggers': {
         # 로거 종류
-        'django': {
-            'handlers': ['file'],
-            'propagate': True,
-            'level': 'INFO',
-        },
         'django.request': {
             'handlers':['file'],
-            'propagate': True,
-            'level':'INFO',
-        },
-        'django.server': {
-            'handlers': ['django.server'],
-            'level': 'INFO',
             'propagate': False,
+            'level':'INFO',
         },
         # 사용자 APP 지정
         'animals': {
             'handlers': ['file'],
-            'propagate': True,
+            'propagate': False,
             'level': 'INFO',
         },
         'accounts': {
             'handlers': ['file'],
-            'propagate': True,
-            'level': 'INFO',
-        },
-        'items': {
-            'handlers': ['file'],
-            'propagate': True,
+            'propagate': False,
             'level': 'INFO',
         },
     },

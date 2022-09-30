@@ -20,10 +20,8 @@ logger = logging.getLogger(__name__)
 
 class AnimalsEatView(APIView):
     def post(self, request):
-        id = request.data.get('id')
         result = request.data.get('result')
-        logger.info(f'POST {request.path} user_animal_id:{id} result:{result}')
-        user_animal = get_object_or_404(User_Animal, pk=id)
+        user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
 
         if request.user == user_animal.user:
             # 먹이 쿨타임
@@ -65,9 +63,7 @@ class AnimalsEatView(APIView):
 
 class AnimalsRenameView(APIView):
     def post(self, request):
-        id = request.data.get('id')
-        logger.info(f'POST {request.path} user_animal_id:{id}')
-        user_animal = get_object_or_404(User_Animal, id=id)
+        user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
         
         if request.user == user_animal.user:
             serializer = AnimalsRenameSerializer(instance=user_animal, data=request.data)
@@ -83,7 +79,7 @@ class AnimalsTalkView(APIView):
         action = 'talking'
         grade = user_animal.grade
         commands = user_animal.animal.commands[:grade+1]
-        commands.extend(allowance_commands)
+        commands.extend(allowance_dict)
 
         for i in range(1, len(commands)):
             if commands[i] in context:
@@ -102,12 +98,8 @@ class AnimalsTalkView(APIView):
         return FAIL
 
     def post(self, request):
-        logger.info(f'POST {request.path}')
-        # try:
         context = recongize(request.user.username, request.data.get("audio"))
-        # except:
-        #     context = '추희원 앉아!'
-        print(datetime.now())
+
         response = {}
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
@@ -123,7 +115,6 @@ class AnimalsPlayWordchainStartView(APIView):
     def post(self, request):
         user = request.user
         animal_id = request.data.get('animal_id')
-        logger.info(f'POST {request.path} animal_id:{animal_id}')
         animal = get_object_or_404(Animal, pk=animal_id)
         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
 
@@ -151,12 +142,9 @@ class AnimalsPlayWordchainNextView(APIView):
         return response
 
     def post(self, request):
-        logger.info(f'POST {request.path}')
         user = request.user
         username = user.username
-
         request_word = recongize(username, request.data.get("audio"))
-
         words = cache.get(username)
 
         # 게임을 시작했는지 확인
@@ -220,7 +208,6 @@ class AnimalsPlayWordchainNextView(APIView):
 
 class AnimalsPlayWordchainFinishView(APIView):
     def post(self, request):
-        logger.info(f'POST {request.path}')
         user = request.user
         username = user.username
         words = cache.get(username)
@@ -254,9 +241,7 @@ class AnimalsPlayWordchainFinishView(APIView):
 
 class AnimalsPlaceView(APIView):
     def post(self, request):
-        id = request.data.get('id')
-        logger.info(f'POST {request.path} user_animal_id:{id}')
-        user_animal = get_object_or_404(User_Animal, id=id)
+        user_animal = get_object_or_404(User_Animal, id=request.data.get('id'))
 
         if request.user == user_animal.user:
             user_animal.is_located = user_animal.is_located ^ 1
@@ -268,9 +253,7 @@ class AnimalsPlaceView(APIView):
 class AnimalsMazeView(APIView):
     def post(self, request):
         user = request.user
-        id = request.data.get('id')
-        logger.info(f'POST {request.path} user_animal_id:{id}')
-        user_animal = get_object_or_404(User_Animal, pk=id)
+        user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
 
         if user == user_animal.user:
             score = int(request.data.get('score'))
@@ -283,8 +266,6 @@ class AnimalsMazeView(APIView):
 class AnimalsExpUpView(APIView):
     def post(self, request):
         user = request.user
-        id = request.data.get('id')
-        logger.info(f'POST {request.path} user_animal_id:{id}')
         user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
         response = FAIL.copy()
 

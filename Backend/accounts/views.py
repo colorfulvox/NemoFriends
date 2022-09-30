@@ -26,8 +26,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-
-
 def date_init():
     # 매일 자정에 초기화 되는 컬럼 : 모두 부르기(User), 놀아주기 횟수, 대화하기 횟수(User_animal)
     users = User.objects.all()
@@ -36,7 +34,7 @@ def date_init():
     users.update(is_called = default.get('is_called'))
     user_animals.update(talking_cnt=default.get('talking_cnt'), playing_cnt=default.get('playing_cnt'))
 
-    print("수정완료")
+    logger.info('스케줄링 완료')
 
 class StartAnimalView(APIView):
     def post(self, request):

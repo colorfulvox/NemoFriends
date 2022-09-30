@@ -7,7 +7,9 @@ import requests
 import time
 import os
 import pickle
+import logging
 
+logger = logging.getLogger(__name__)
 
 # date 포맷 형식
 date_format_slash = f'%y/%m/%d/%H/%M/%S'
@@ -52,16 +54,14 @@ def vito_get(id):
         VITO_URL + 'transcribe/' + id,
         headers={'Authorization': 'bearer '+ vito_access_token},
         )
-
         if resp.status_code == 401:
             vito_authenticate()
-
+            continue
         if resp.json().get('status') == 'completed':
             break
         time.sleep(0.5)
 
     result = ''
-
     for msg in resp.json().get('results').get('utterances'):
         result = result + msg.get('msg')
 
@@ -103,7 +103,7 @@ def speech_to_text(data=None):
     # except:
     #     # data = google_stt_api(data)
     data = vito_stt_api(data)
-    print('vito임')
+    logger.info(f'vito 결과: {data}')
     return data
 
 
@@ -112,7 +112,6 @@ def recongize(username, audio):
     filename = fs.save(f'{username}.wav', audio)
 
     context = speech_to_text(filename).replace(" " , "")
-    print('STT 결과입니다.', context)
 
     fs.delete(filename)
     fs.delete(settings.MEDIA_ROOT + f'/{filename}')
@@ -121,7 +120,7 @@ def recongize(username, audio):
 
 def reward_gold(user, action, score=0):
     reward = {'eatting': 100, 'level_up': 5 * score, 'talking': 100, 'playing_wordchain': 50 * score, 'playing_maze': score}
-    print('얼마 보상?', reward[action])
+    logger.info(f'gold 보상: {reward[action]}')
     user.gold += reward[action]
     return user
 
@@ -132,6 +131,7 @@ def reward_exp(animal, user, action, score=0):
     reward = {'eatting': 50, 'talking': 50, 'playing_wordchain': 5 * score, 'exp_up': 50}
     
     exp = animal.exp + reward[action]
+    logger.info(f'exp 보상: {reward[action]}')
     next_level = animal.level + 1
 
     if levelup_exp[next_level] <= exp:
@@ -145,23 +145,23 @@ def reward_exp(animal, user, action, score=0):
     return animal
 
 # 명령 허용 단어
-allowance_commands = [
+allowance_dict = [
     '안자', '앉자', 
     '어드려', 
     '빵이야', '방야', '방이야', '빵약', 
-    '파닭파닭', '사닭파닭', '파닭사닭', '사닭사닭', '바닥파다', 
-    '나라라', '나아라',
-    '팔사', '갈사',
+    '파닭파닭', '사닭파닭', '파닭사닭', '사닭사닭', '바닥파다', '바닥', '파닥', '바닥파닥', '파닭파닥', '바닥바닥', '파닭바닥', 
+    '나라라', '나아라', 
+    '짬프', '짬푸', 
+    '팔사', '갈사', 
     '뽈', '올', 
-    '메리크지마', 
+    '메리크지마',
     '으르러', 
     '유워', '노아', '누와', 
     '루알', 
     '나이트셔', 
-    '짬프', '짬푸', 
     '짬프짬푸', '짬푸짬프', '짬프짬프', '짬푸짬푸', 
     '공중채비'
-]
+    ]
 
 
 
@@ -199,7 +199,6 @@ start_words = []
 for word in noun_dictionary_freq:
     if word[-1] not in blacklist:
         start_words.append(word)
-
 
 
 if __name__ == 'animals.utils':
