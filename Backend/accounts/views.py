@@ -163,11 +163,12 @@ class LoadGameView(APIView):
         user_animals = user.user_animal_set.all()
         user_animals_serializer = UserAnimalInfoSerializer(user_animals,many=True)
         # 시간정보 '/' 구분자로 변경
-        for user_animal in user_animals_serializer.data:            
-            user_animal['last_eating_time']=user_animal['last_eating_time'].replace('-','')
-            user_animal['last_eating_time']=user_animal['last_eating_time'].replace('T','')
-            user_animal['last_eating_time']=user_animal['last_eating_time'].replace(':','')
-            user_animal['created_at']=user_animal['created_at'].replace('-','')
+        # for user_animal in user_animals_serializer.data:
+        #     print('전', user_animal['last_eating_time'], user_animal['created_at']) 
+        #     user_animal['last_eating_time']=user_animal['last_eating_time'].replace('-','')
+        #     user_animal['last_eating_time']=user_animal['last_eating_time'].replace('T','')
+        #     user_animal['last_eating_time']=user_animal['last_eating_time'].replace(':','')
+        #     user_animal['created_at']=user_animal['created_at'].replace('-','')
         # 리스트 패딩
         user_animals_data = user_animals_serializer.data.copy()
         user_animals_data.insert(0,{})

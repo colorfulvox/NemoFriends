@@ -20,11 +20,14 @@ class UserChangeEffectSerializer(serializers.ModelSerializer):
         fields = ('effect',)
         
 class UserAnimalInfoSerializer(serializers.ModelSerializer):
+    last_eating_time = serializers.DateTimeField(format='%Y%m%d%H%M%S')
+    created_at = serializers.DateField(format='%Y%m%d')
     class Meta:
         model = User_Animal
         fields = ('id', 'name', 'animal_id', 'grade', 'level', 'exp', 
                   'last_eating_time', 'playing_cnt', 'talking_cnt',
                   'created_at','is_located')
+                  
 class UserItemInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Item
