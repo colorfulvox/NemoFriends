@@ -12,7 +12,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 # date 포맷 형식
-date_format_slash = f'%y/%m/%d/%H/%M/%S'
+date_format_slash = f'%Y%m%d%H%M%S'
 
 
 # STT
