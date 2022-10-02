@@ -29,7 +29,6 @@ class AnimalsEatView(APIView):
             possible_time = last_time + timedelta(hours=4)
             now = datetime.now()
             response = {'last_eating_time' : last_time.strftime(date_format_slash)}
-
             # 쿨타임 No
             if now < possible_time:
                 response.update(FAIL)
@@ -38,7 +37,7 @@ class AnimalsEatView(APIView):
             # 쿨타임 Ok -> 먹이 판단
             # feeds = user_animal.animal.feeds[-1]  # feeds : 전체 먹이 정보
             temp_feeds = ["개미","사과","아스파라거스","바나나","새","블랙베리","블루베리","빵","브로콜리","수풀"]
-            
+
             # 섭취 Ok
             if result in temp_feeds:
                 action = 'eatting'
