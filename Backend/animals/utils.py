@@ -128,7 +128,7 @@ def reward_gold(user, action, score=0):
 def reward_exp(animal, user, action, score=0):
     lookup_grade = [1, 1, 1, 2, 2, 3]  # lookup_grade[level] = grade
     levelup_exp = [0, 0, 100, 200, 300, 400, float('inf')]
-    reward = {'eatting': 50, 'talking': 50, 'playing_wordchain': 5 * score, 'exp_up': 50}
+    reward = {'eatting': 100, 'talking': 50, 'playing_wordchain': 5 * score, 'exp_up': 50}
     
     exp = animal.exp + reward[action]
     logger.info(f'exp 보상: {reward[action]}')
