@@ -263,7 +263,7 @@ class GachaView(APIView):
             random_box = []
             own_animals = [i.animal for i in User_Animal.objects.filter(user=user)]
             all_animals = Animal.objects.all()
-            decos = Decoration.objects.all()
+            decos = Decoration.objects.exclude(is_rare=False)
             for animal in all_animals:
                 random_box.append(animal)
             for check_animal in random_box[:]:
@@ -271,6 +271,11 @@ class GachaView(APIView):
                     random_box.remove(check_animal)
             for deco in decos:
                 random_box.append(deco)
+            random_box.append("item")
+            random_box.append("item")
+            random_box.append("item")
+            random_box.append("item")
+            random_box.append("item")
             random_box.append("item")
             random_box.append("item")
             random_box.append("item")
@@ -329,3 +334,4 @@ class ChangeEffectView(APIView):
             serializers.save()
         response = SUCCESS
         return Response(response)
+
