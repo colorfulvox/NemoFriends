@@ -177,7 +177,7 @@ class LoadGameView(APIView):
         decoration_len = Decoration.objects.all()
         list = [0 for i in range(0,decoration_len.count()+1)]
         for decoration in decorations:
-            if not decoration.decoration.is_rare and not decoration.is_located:
+            if not decoration.is_located:
                 list[decoration.decoration.id] += 1
         decorations_ilst = []
         decorations_ilst.append({})
