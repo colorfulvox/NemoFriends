@@ -35,11 +35,10 @@ class AnimalsEatView(APIView):
                 return Response(response)
 
             # 쿨타임 Ok -> 먹이 판단
-            # feeds = user_animal.animal.feeds[-1]  # feeds : 전체 먹이 정보
-            temp_feeds = ["개미","사과","아스파라거스","바나나","새","블랙베리","블루베리","빵","브로콜리","수풀"]
+            feeds = user_animal.animal.feeds[-1]  # feeds : 전체 먹이 정보
 
             # 섭취 Ok
-            if result in temp_feeds:
+            if result in feeds:
                 action = 'eatting'
                 
                 # 동물 정보 업데이트(호감도, 쿨타임)
@@ -221,10 +220,6 @@ class AnimalsPlayWordchainFinishView(APIView):
         animal = get_object_or_404(Animal, pk=animal_id)
         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
         action = 'playing_wordchain'
-
-        # 골드 증가
-        user = reward_gold(user, action, score)
-        user.save()
 
         # 놀이 횟수 차감
         user_animal.playing_cnt -= 1
