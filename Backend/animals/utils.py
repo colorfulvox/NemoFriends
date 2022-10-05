@@ -119,7 +119,7 @@ def recongize(username, audio):
 
 
 def reward_gold(user, action, score=0):
-    reward = {'eatting': 100, 'level_up': 5 * score, 'talking': 100, 'playing_wordchain': 50 * score, 'playing_maze': score}
+    reward = {'eatting': 100, 'level_up': 5 * score, 'talking': 100, 'playing_maze': score}
     logger.info(f'gold 보상: {reward[action]}')
     user.gold += reward[action]
     return user

@@ -221,10 +221,6 @@ class AnimalsPlayWordchainFinishView(APIView):
         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
         action = 'playing_wordchain'
 
-        # 골드 증가
-        user = reward_gold(user, action, score)
-        user.save()
-
         # 놀이 횟수 차감
         user_animal.playing_cnt -= 1
 
