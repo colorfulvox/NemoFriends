@@ -2,9 +2,9 @@
 
 본 글은 Django, Nginx를 이용하여 CICD 무중단 배포를 구축하는 방법에 대해 경험을 기반으로 작성한 글입니다.
 
-![image](./images/1.jpg) 1.jpg 이미지 수정 필요
+![image](./images/1.jpg)
 
-위 사진이 구축하고자 하는 그림입니다. 작동 방식은 다음과 같습니다.
+위 사진이 구축하고자 하는 그림입니다(빨간색 시긱형 부분입니다). 작동 방식은 다음과 같습니다.
 
 1. Gitlab Push Event가 일어나면
 2. Jenkins에서 WebHook을 통해 자동으로 빌드를 실행
@@ -20,11 +20,11 @@
 4. [젠킨스 프로젝트 생성, WebHook설정, 자동 빌드 테스트](#젠킨스-프로젝트-생성-webhook-설정-자동-빌드-테스트)
 5. [젠킨스 도커 이미지 빌드](#젠킨스와-연결된-gitlab-프로젝트로-도커-이미지-빌드하기)
 6. [젠킨스에서 SSH 명령어 전송하여 저장한 도커이미지로 컨테이너 생성](#젠킨스에서-ssh-명령어-전송을-통해-빌드한-도커-이미지를-베이스로-컨테이너-생성기본-배포-완료)
-7. [nginx로 react, django 구분지어주기](#nginx를-통해-react와-django-경로-설정)
+7. [nginx로 django 연결지어주기](#Nginx를-통한-Django-경로-설정-및-Https-적용)
 
 ## 사전 준비 : AWS EC2 생성하기
 
-배포 환경을 구축하기 위해서는 서버용 PC가 필요합니다. 3주차에 싸피에서 지원받은 EC2를 사용하게 됩니다. 여기서는 개인 AWS 계정을 이용하여 EC2를 생성해보겠습니다.
+배포 환경을 구축하기 위해서는 서버용 PC가 필요합니다. 프로젝트 기간동안은 싸피에서 제공받은 EC2를 사용했지만, 프로젝트 기간이 지나면 더이상 EC2를 지원받지 못하기 때문에 개인 AWS 계정을 이용하여 EC2를 생성하는 것부터 시작하겠습니다.
 
 :sparkles: EC2란? : AWS에서 제공하는 클라우드 컴퓨팅 서비스
 
@@ -314,7 +314,7 @@ services:
 
 #### :point_right: 깃랩 Repo
 
-![image](./images/43.jpg) 43.jpg 사진 변경 필요
+![image](./images/43.jpg)
 
 여기서는 Backend 폴더에 Django 프로젝트가 들어있습니다. `project`는 Django 프로젝트의 프로젝트 명입니다.
 
@@ -400,7 +400,7 @@ Secret token에는 아까 위에서 젠킨스 프로젝트를 생성할 때 저�
 
 완료했다면 Add Webhook 버튼을 눌러 webhook을 생성합니다.
 
-![image](./images/57.jpg) 57.jpg 사진 변경 필ㅇ
+![image](./images/57.jpg)
 
 WebHook을 생성하고 나면 빌드 테스트를 위해 생성된 WebHook에서 test를 누르고, Push events를 선택해줍니다.
 
@@ -480,7 +480,7 @@ apt install docker-ce docker-ce-cli containerd.io docker-compose
 Django Project DockerFile
 ```
 FROM python:3.10.5
-WORKDIR /var/jenkins_home/workspace/deploy/Backend
+WORKDIR /var/jenkins_home/workspace/deploytest/Backend
 COPY requirements.txt ./
 
 RUN pip install --upgrade pip
@@ -547,11 +547,11 @@ ls /var/jenkins_home/images_tar
 
 빌드에 성공했다는 메시지입니다.
 
-![image](./images/68.jpg) 68.jpg 사진 변경 필요
+![image](./images/68.jpg)
 
 이 글 초반부의 젠킨스 컨테이너 생성할 때의 `docker-compose.yml` 파일이 기억 나시나요? 그 때 공유 폴더로 aws의 `/jenkins`와  `/var/jenkins_home`를 연결했었습니다.
 
-젠킨스 컨테이너 안의 `/var/jenkins_home/images_tar` 폴더 안에 2개의 tar 파일이 생성되어있고, 폴더를 공유하는 EC2의 `/jenkins/images_tar`에도 똑같이 2개의 tar 파일이 생성되어 있는 것을 확인할 수 있습니다.
+젠킨스 컨테이너 안의 `/var/jenkins_home/images_tar` 폴더 안에 tar 파일이 생성되어있고, 폴더를 공유하는 EC2의 `/jenkins/images_tar`에도 똑같이 tar 파일이 생성되어 있는 것을 확인할 수 있습니다.
 
 :satisfied: 여기까지 완료했으면 젠킨스에서 도커 이미지를 빌드하여 tar 압축파일로 생성하는 부분까지 완성되었습니다!
 
@@ -580,7 +580,7 @@ ls /var/jenkins_home/images_tar
 
 위 내용을 작성하고 고급 버튼을 클릭해줍니다.
 
-![image](./images/72.jpg) 72.jpg 사진 변경 필요
+![image](./images/72.jpg)
 
 다른 건 건드리지 않고, `Use password authentication, or use different key` 체크박스를 체크해줍니다.
 
@@ -642,7 +642,7 @@ SSH 연결이 완료되었습니다. 저장 버튼을 눌러 저장해주겠습�
 
 젠킨스 프로젝트 페이지에서, 다시 구성 버튼을 클릭합니다.
 
-![image](./images/82.jpg) 82.jpg 사진 변경 필요
+![image](./images/82.jpg)
 
 빌드 후 조치 탭에서, 빌드 후 조치 추가를 클릭, `Send build artifacts over SSH`를 선택합니다.
 
@@ -934,7 +934,7 @@ server {
           }
 
           location /static/ {
-                  alias /jenkins/workspace/deploy/Backend/static/;
+                  alias /jenkins/workspace/deploytest/Backend/static/;
           }
 
           # pass PHP scripts to FastCGI server
@@ -1006,7 +1006,7 @@ location / {
 
 ```
 location /static/ {
-        alias /jenkins/workspace/deploy/Backend/static/;
+        alias /jenkins/workspace/deploytest/Backend/static/;
 }
 ```
 
@@ -1015,5 +1015,11 @@ location /static/ {
 설정파일을 수정한 부분은 설명을 다 드린 것 같습니다. 이제 nginx를 재시작 하면 공인ip로 접속을 했을 때, nginx 리버스 프록시를 통해 도커 컨테이너에서 서비스 중인 django로 연결이 되게 됩니다.
 
 `sudo service nginx restart`
+
+제대로 HTTPS가 적용되었는지 한 번 확인해보겠습니다.
+
+![image](./images/94.jpg)
+
+https 적용이 잘 된 모습을 볼 수 있습니다. 뒤에 보이는 페이지는 백엔드 서버로만 운영하는 Django 서버의 관리자 페이지 기능을 이용한 유저 데이터 관리 페이지입니다.
 
 이상 CICD 배포 매뉴얼이었습니다.
