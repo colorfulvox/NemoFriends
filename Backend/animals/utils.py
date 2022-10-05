@@ -11,12 +11,16 @@ import os
 import pickle
 import logging
 
+
 logger = logging.getLogger(__name__)
 
+
+# 동물 배치 x 상태 메세지 출력
 def get_absent_msg():
     response = {'msg' : '동물이 현재 배치되어 있지 않습니다.'}
     response.update(FAIL)
     return response
+
 
 # STT
 VITO_URL = 'https://openapi.vito.ai/v1/'
@@ -70,7 +74,7 @@ def vito_get(id):
 
     return result
 
-    
+
 def vito_stt_api(filename):
     resp = vito_create(filename)
 
@@ -83,7 +87,6 @@ def vito_stt_api(filename):
         return result
     
     else:
-        print('오류...', resp.json)
         return resp.json()
 
 
@@ -100,13 +103,16 @@ def google_stt_api(filename):
 
 def speech_to_text(data=None):
     kind = ''
+    
     try:
       kind = 'google'
       data = google_stt_api(data).replace(" " , "")
     except:
       kind = 'vito'
       data = vito_stt_api(data).replace(" " , "")
+    
     logger.info(f'{kind} 결과: {data}')
+
     return data
 
 
@@ -121,6 +127,7 @@ def recongize(username, audio):
     return context
 
 
+# 보상
 def reward_gold(user, action, score=0):
     reward = {'eatting': 100, 'level_up': 5 * score, 'talking': 100, 'playing_maze': score}
     logger.info(f'gold 보상: {reward[action]}')
@@ -146,6 +153,7 @@ def reward_exp(animal, user, action, score=0):
 
     animal.exp = exp
     return animal
+
 
 # 명령 허용 단어
 allowance_dict = {
@@ -173,6 +181,7 @@ allowance_dict = {
     '파닥파닥': ['파닭파닭', '사닭파닭', '파닭사닭', '사닭사닭', '바닥파다', '바닥', '파닥', '바닥파닥', '파닭파닥', '바닥바닥', '파닭바닥'],
     '파이어': []
 }
+
 
 # 끝말잇기
 # 두음 법칙 경우의 수
@@ -210,5 +219,6 @@ for word in noun_dictionary_freq:
         start_words.append(word)
 
 
+# 파일 생성 시, 초기 구동
 if __name__ == 'animals.utils':
     vito_authenticate()
