@@ -32,7 +32,7 @@ class AnimalsEatView(APIView):
             last_time = user_animal.last_eating_time
             possible_time = last_time + timedelta(hours=4)
             now = datetime.now()
-            response = {'last_eating_time' : last_time.strftime(f'%Y%m%d%H%M%S')}
+            response = {'last_eating_time' : last_time.strftime(date_format_slash)}
             # 쿨타임 No
             if now < possible_time:
                 response.update(FAIL)
@@ -60,7 +60,6 @@ class AnimalsEatView(APIView):
 
             # 섭취 No
             response.update(FAIL)
-            # response['recommend'] = random.choice(feeds)
             return Response(response)
 
 
@@ -82,7 +81,6 @@ class AnimalsTalkView(APIView):
         action = 'talking'
         grade = user_animal.grade
         commands = user_animal.animal.commands[:grade+1]
-        # commands.extend(allowance_dict)
 
         for i in range(1, len(commands)):
             allowance_commands = [commands[i]] + list(filter(None, allowance_dict.get(commands[i])))
@@ -109,6 +107,7 @@ class AnimalsTalkView(APIView):
         response = {}
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
+        
         for user_animal in user_animals:
             if user_animal.is_located and user_animal.name in context:
                 response = self.talk(user_animal, user, context)
