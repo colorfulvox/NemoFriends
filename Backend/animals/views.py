@@ -78,8 +78,8 @@ class AnimalsTalkView(APIView):
         action = 'talking'
         grade = user_animal.grade
         commands = user_animal.animal.commands[:grade+1]
-        commands.extend(allowance_dict)
-
+        # commands.extend(allowance_dict)
+        
         for i in range(1, len(commands)):
             if commands[i] in context:
                 # 대화 보상 Ok
@@ -98,11 +98,9 @@ class AnimalsTalkView(APIView):
 
     def post(self, request):
         context = recongize(request.user.username, request.data.get("audio"))
-        print('결과', context)
         response = {}
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
-        
         for user_animal in user_animals:
             if user_animal.name in context:
                 response = self.talk(user_animal, user, context)
