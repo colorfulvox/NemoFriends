@@ -1,6 +1,8 @@
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
+from utils import FAIL
+
 import speech_recognition as sr
 import json
 import requests
@@ -9,10 +11,15 @@ import os
 import pickle
 import logging
 
+
 logger = logging.getLogger(__name__)
 
-# date 포맷 형식
-date_format_slash = f'%Y%m%d%H%M%S'
+
+# 동물 배치 x 상태 메세지 출력
+def get_absent_msg():
+    response = {'msg' : '동물이 현재 배치되어 있지 않습니다.'}
+    response.update(FAIL)
+    return response
 
 
 # STT
@@ -67,7 +74,7 @@ def vito_get(id):
 
     return result
 
-    
+
 def vito_stt_api(filename):
     resp = vito_create(filename)
 
@@ -80,7 +87,6 @@ def vito_stt_api(filename):
         return result
     
     else:
-        print('오류...', resp.json)
         return resp.json()
 
 
@@ -97,13 +103,16 @@ def google_stt_api(filename):
 
 def speech_to_text(data=None):
     kind = ''
+    
     try:
       kind = 'google'
       data = google_stt_api(data).replace(" " , "")
     except:
       kind = 'vito'
       data = vito_stt_api(data).replace(" " , "")
+    
     logger.info(f'{kind} 결과: {data}')
+
     return data
 
 
@@ -118,6 +127,7 @@ def recongize(username, audio):
     return context
 
 
+# 보상
 def reward_gold(user, action, score=0):
     reward = {'eatting': 100, 'level_up': 5 * score, 'talking': 100, 'playing_maze': score}
     logger.info(f'gold 보상: {reward[action]}')
@@ -144,23 +154,24 @@ def reward_exp(animal, user, action, score=0):
     animal.exp = exp
     return animal
 
+
 # 명령 허용 단어
 allowance_dict = {
-    '곤방와': ['구방와', '구방화'],
+    '곰방와': ['구방와', '구방화', '곤방와', '곤방화', '곰방화'],
     '공중제비': ['공중채비'],
     '날아': ['나라', '나아'],
     '누워': ['유워', '노아', '누와'],
     '눈알': ['누와', '루알'],
     '라이트쇼': ['나이트셔'],
-    '먹이먹자': [],
+    '먹이먹자': ['거기먹자'],
     '메리크리스마스': ['메리크지마'],
     '발사': ['팔사', '갈사'],
-    '베럴롤': [],
+    '베럴롤': ['배럴롤', '배럴로', '페라리'],
     '빵야': ['빵이야', '방야', '방이야', '빵약'],
     '뿔': ['뽈', '올'],
     '썬더': ['선더'],
     '안녕': [],
-    '앉아': ['안자', '앉자', '안아'],
+    '앉아': ['안자', '앉자', '안아', '안다'],
     '엎드려': ['어드려'],
     '울부짖어': ['울부짖저', '울부지져', '울부지저', '울부짓어', '울부짖저', '울부지어'],
     '으르렁': ['으르러'],
@@ -170,6 +181,7 @@ allowance_dict = {
     '파닥파닥': ['파닭파닭', '사닭파닭', '파닭사닭', '사닭사닭', '바닥파다', '바닥', '파닥', '바닥파닥', '파닭파닥', '바닥바닥', '파닭바닥'],
     '파이어': []
 }
+
 
 # 끝말잇기
 # 두음 법칙 경우의 수
@@ -207,5 +219,6 @@ for word in noun_dictionary_freq:
         start_words.append(word)
 
 
+# 파일 생성 시, 초기 구동
 if __name__ == 'animals.utils':
     vito_authenticate()
