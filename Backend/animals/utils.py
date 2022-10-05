@@ -96,14 +96,14 @@ def google_stt_api(filename):
 
 
 def speech_to_text(data=None):
-    # try:
-    #     # data = vito_stt_api(data)
-    #     data = google_stt_api(data)
-    #     print('구글임')
-    # except:
-    #     # data = google_stt_api(data)
-    data = vito_stt_api(data)
-    logger.info(f'vito 결과: {data}')
+    kind = ''
+    try:
+      kind = 'google'
+      data = google_stt_api(data).replace(" " , "")
+    except:
+      kind = 'vito'
+      data = vito_stt_api(data).replace(" " , "")
+    logger.info(f'{kind} 결과: {data}')
     return data
 
 
@@ -111,7 +111,7 @@ def recongize(username, audio):
     fs = FileSystemStorage()
     filename = fs.save(f'{username}.wav', audio)
 
-    context = speech_to_text(filename).replace(" " , "")
+    context = speech_to_text(filename)
 
     fs.delete(filename)
     fs.delete(settings.MEDIA_ROOT + f'/{filename}')
