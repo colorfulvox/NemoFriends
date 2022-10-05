@@ -15,6 +15,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# date 포맷 형식
+date_format_slash = f'%Y%m%d%H%M%S'
+
+
 # 동물 배치 x 상태 메세지 출력
 def get_absent_msg():
     response = {'msg' : '동물이 현재 배치되어 있지 않습니다.'}
