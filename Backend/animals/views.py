@@ -79,21 +79,24 @@ class AnimalsTalkView(APIView):
         grade = user_animal.grade
         commands = user_animal.animal.commands[:grade+1]
         # commands.extend(allowance_dict)
-        
-        for i in range(1, len(commands)):
-            if commands[i] in context:
-                # 대화 보상 Ok
-                if user_animal.talking_cnt:
-                    user_animal = reward_exp(user_animal, user, action)
-                    user_animal.talking_cnt -= 1
-                    user_animal.save()
-                    user = reward_gold(user, action)
-                    user.save()
 
-                # 대화 보상 No
-                response = {'animal_id': user_animal.animal_id, 'cmd': i}
-                response.update(SUCCESS)
-                return response
+        for i in range(1, len(commands)):
+            allowance_commands = [commands[i]] + allowance_dict.get(commands[i])
+            for allowance_command in allowance_commands:
+                if allowance_command in context:
+
+                    # 대화 보상 Ok
+                    if user_animal.talking_cnt:
+                        user_animal = reward_exp(user_animal, user, action)
+                        user_animal.talking_cnt -= 1
+                        user_animal.save()
+                        user = reward_gold(user, action)
+                        user.save()
+
+                    # 대화 보상 No
+                    response = {'animal_id': user_animal.animal_id, 'cmd': i}
+                    response.update(SUCCESS)
+                    return response
         return FAIL
 
     def post(self, request):
