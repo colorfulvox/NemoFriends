@@ -9,16 +9,11 @@ from animals.models import User_Animal, Animal
 from django.conf import settings
 import jwt
 
-class UserChangeBGMSerializer(serializers.ModelSerializer):
+class UserChangeSoundSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ('bgm',)
+        fields = ('bgm','effect')
 
-class UserChangeEffectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.User
-        fields = ('effect',)
-        
 class UserAnimalInfoSerializer(serializers.ModelSerializer):
     last_eating_time = serializers.DateTimeField(format='%Y%m%d%H%M%S')
     created_at = serializers.DateField(format='%Y/%m/%d')

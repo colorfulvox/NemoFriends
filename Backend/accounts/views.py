@@ -18,7 +18,7 @@ from utils import *
 import requests, random
 
 from .models import Mbti, User
-from .serializers import UserChangeBGMSerializer, UserChangeEffectSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
+from .serializers import UserChangeSoundSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
 from animals.models import User_Animal, Animal
 from items.models import Item, Decoration, User_Item, User_Decoration
 import logging
@@ -314,24 +314,14 @@ class GachaView(APIView):
             res.data = response
             return res
 
-class ChangeBGMView(APIView):
+class ChangeSoundView(APIView):
     def post(self,request):
         response = FAIL
         user = request.user
-        serializers = UserChangeBGMSerializer(instance=user, data=request.data)
+        serializers = UserChangeSoundSerializer(instance=user, data=request.data)
         if serializers.is_valid(raise_exception=True):
             serializers.save()
         User.objects
-        response = SUCCESS
-        return Response(response)
-
-class ChangeEffectView(APIView):
-    def post(self,request):
-        response = FAIL
-        user = request.user
-        serializers = UserChangeEffectSerializer(instance=user, data=request.data)
-        if serializers.is_valid(raise_exception=True):
-            serializers.save()
         response = SUCCESS
         return Response(response)
 
