@@ -1,6 +1,8 @@
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
+from utils import FAIL
+
 import speech_recognition as sr
 import json
 import requests
@@ -11,9 +13,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# date 포맷 형식
-date_format_slash = f'%Y%m%d%H%M%S'
-
+def get_absent_msg():
+    response = {'msg' : '동물이 현재 배치되어 있지 않습니다.'}
+    response.update(FAIL)
+    return response
 
 # STT
 VITO_URL = 'https://openapi.vito.ai/v1/'

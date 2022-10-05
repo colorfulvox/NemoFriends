@@ -24,11 +24,15 @@ class AnimalsEatView(APIView):
         user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
 
         if request.user == user_animal.user:
+            if not user_animal.is_located:
+                response = get_absent_msg()
+                return Response(response)
+
             # 먹이 쿨타임
             last_time = user_animal.last_eating_time
             possible_time = last_time + timedelta(hours=4)
             now = datetime.now()
-            response = {'last_eating_time' : last_time.strftime(date_format_slash)}
+            response = {'last_eating_time' : last_time.strftime(f'%Y%m%d%H%M%S')}
             # 쿨타임 No
             if now < possible_time:
                 response.update(FAIL)
@@ -81,7 +85,8 @@ class AnimalsTalkView(APIView):
         # commands.extend(allowance_dict)
 
         for i in range(1, len(commands)):
-            allowance_commands = [commands[i]] + allowance_dict.get(commands[i])
+            allowance_commands = [commands[i]] + list(filter(None, allowance_dict.get(commands[i])))
+
             for allowance_command in allowance_commands:
                 if allowance_command in context:
 
@@ -105,7 +110,7 @@ class AnimalsTalkView(APIView):
         user = get_object_or_404(get_user_model(), username=request.user)
         user_animals = get_list_or_404(User_Animal, user=user)
         for user_animal in user_animals:
-            if user_animal.name in context:
+            if user_animal.is_located and user_animal.name in context:
                 response = self.talk(user_animal, user, context)
                 return Response(response)
         return Response(FAIL)
@@ -117,6 +122,10 @@ class AnimalsPlayWordchainStartView(APIView):
         animal_id = request.data.get('animal_id')
         animal = get_object_or_404(Animal, pk=animal_id)
         user_animal = get_object_or_404(User_Animal, user=user, animal=animal)
+
+        if not user_animal.is_located:
+            response = get_absent_msg()
+            return Response(response)
 
         if user_animal.playing_cnt < 1:
             response = FAIL.copy()
@@ -252,6 +261,11 @@ class AnimalsMazeView(APIView):
         user_animal = get_object_or_404(User_Animal, pk=request.data.get('id'))
 
         if user == user_animal.user:
+
+            if not user_animal.is_located:
+                response = get_absent_msg()
+                return Response(response)
+
             score = int(request.data.get('score'))
             user = reward_gold(request.user, 'playing_maze', score*user_animal.level)
             user.save()
@@ -266,6 +280,11 @@ class AnimalsExpUpView(APIView):
         response = FAIL.copy()
 
         if user == user_animal.user:
+            
+            if not user_animal.is_located:
+                response = get_absent_msg()
+                return Response(response)
+
             if 0 < user.exp_cnt:
                 user_animal = reward_exp(user_animal, user, 'exp_up')
                 user_animal.save()
