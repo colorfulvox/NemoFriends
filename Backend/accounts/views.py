@@ -1,26 +1,14 @@
-from datetime import datetime
-from os import access
-import re
-from django.shortcuts import get_list_or_404, get_object_or_404
-from django.conf import settings
-from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
-
-from allauth.socialaccount.models import SocialAccount
-from dj_rest_auth.registration.views import SocialLoginView
-from allauth.socialaccount.providers.google import views as google_view
-from allauth.socialaccount.providers.oauth2.client import OAuth2Client
-from rest_framework import status
 from rest_framework.response import Response
-from json.decoder import JSONDecodeError
 from rest_framework.decorators import APIView
 from utils import *
-import requests, random
+import random
 
 from .models import Mbti, User
-from .serializers import UserChangeSoundSerializer, UserAnimalInfoSerializer, UserItemInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
+from .serializers import UserChangeSoundSerializer, UserAnimalInfoSerializer, AnimalInfoSerializer, ShopInfoSerializer
 from animals.models import User_Animal, Animal
-from items.models import Item, Decoration, User_Item, User_Decoration
+from items.models import Decoration, User_Decoration
 import logging
 
 logger = logging.getLogger(__name__)
@@ -162,13 +150,7 @@ class LoadGameView(APIView):
         # 획득한 동물 정보
         user_animals = user.user_animal_set.all()
         user_animals_serializer = UserAnimalInfoSerializer(user_animals,many=True)
-        # 시간정보 '/' 구분자로 변경
-        # for user_animal in user_animals_serializer.data:
-        #     print('전', user_animal['last_eating_time'], user_animal['created_at']) 
-        #     user_animal['last_eating_time']=user_animal['last_eating_time'].replace('-','')
-        #     user_animal['last_eating_time']=user_animal['last_eating_time'].replace('T','')
-        #     user_animal['last_eating_time']=user_animal['last_eating_time'].replace(':','')
-        #     user_animal['created_at']=user_animal['created_at'].replace('-','')
+
         # 리스트 패딩
         user_animals_data = user_animals_serializer.data.copy()
         user_animals_data.insert(0,{})
