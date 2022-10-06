@@ -23,7 +23,7 @@ class Animal(models.Model):
 class User_Animal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=5)
     exp = models.IntegerField(default=0)
     is_located = models.BooleanField(default=False)
     talking_cnt = models.IntegerField(default=default['talking_cnt'])
