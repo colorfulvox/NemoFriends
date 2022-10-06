@@ -214,7 +214,7 @@ class AnimalsPlayWordchainNextView(APIView):
         if len(response_words) < 1:
             words[0] = (words[0] + 1) * 2
             cache.set(username, words, 60 * 60)
-            response = self.finish('사용자가 이겼습니다.', score, request_word)
+            response = self.finish('사용자가 이겼습니다.', words[0], request_word)
             return Response(response)
         
         response_word = random.choice(response_words)
