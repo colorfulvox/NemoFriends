@@ -1,4 +1,4 @@
-from .models import Decoration, User_Decoration
+from .models import User_Decoration
 from rest_framework import serializers
 
 
