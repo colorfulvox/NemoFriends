@@ -1,4 +1,4 @@
-ant
+git config --global core.eol nativeant
 apple
 asparagus
 banana
