@@ -1,7 +1,6 @@
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.conf import settings
 
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
@@ -13,7 +12,6 @@ import logging
 
 import random
 from datetime import datetime, timedelta
-from time import strftime, strptime
 
 
 logger = logging.getLogger(__name__)
