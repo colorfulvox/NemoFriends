@@ -9,14 +9,7 @@ class UserAnimalSerializer(serializers.ModelSerializer):
         model = models.User_Animal
         fields = '__all__'
         depth = 1
-
-
-class AnimalsRenameSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.User_Animal
-        fields = ('name',)
-
+        
 
 class AnimalColorSerializer(serializers.ModelSerializer):
 
