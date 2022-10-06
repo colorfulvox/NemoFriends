@@ -2,12 +2,11 @@ from dataclasses import fields
 
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
-from items.models import User_Item, Decoration
+from items.models import Decoration
 from . import models
 from rest_framework import serializers
 from animals.models import User_Animal, Animal
-from django.conf import settings
-import jwt
+
 
 class UserChangeSoundSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,11 +21,6 @@ class UserAnimalInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'animal_id', 'grade', 'level', 'exp', 
                   'last_eating_time', 'playing_cnt', 'talking_cnt',
                   'created_at','is_located')
-                  
-class UserItemInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User_Item
-        fields = ('item_id','cnt')
         
 class AnimalInfoSerializer(serializers.ModelSerializer):
     class Meta:
