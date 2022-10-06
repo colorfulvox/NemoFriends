@@ -274,13 +274,6 @@ class GachaView(APIView):
             random_box.append("item")
             random_box.append("item")
             random_box.append("item")
-            random_box.append("item")
-            random_box.append("item")
-            random_box.append("item")
-            random_box.append("item")
-            random_box.append("item")
-            random_box.append("item")
-            random_box.append("item")
         # 랜덤 함수로 번호 선정
             number = random.randint(0, len(random_box)-1)
             obj = random_box[number]
