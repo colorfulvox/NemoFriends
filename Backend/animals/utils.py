@@ -2,6 +2,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
 from utils import FAIL
+from kospeech.bin.inference import inference_audio
 
 import speech_recognition as sr
 import json
@@ -105,15 +106,18 @@ def google_stt_api(filename):
     return result
 
 
-def speech_to_text(data=None):
+def speech_to_text(data=None, filepath=None):
     kind = ''
     
     try:
-      kind = 'google'
-      data = google_stt_api(data).replace(" " , "")
+        kind = 'google'
+        data = google_stt_api(data).replace(" " , "")
     except:
-      kind = 'vito'
-      data = vito_stt_api(data).replace(" " , "")
+        try:
+            kind = 'vito'
+            data = vito_stt_api(data).replace(" " , "")
+        except:
+            data = inference_audio(filepath).replace(" " , "")
     
     logger.info(f'{kind} 결과: {data}')
 
@@ -123,8 +127,9 @@ def speech_to_text(data=None):
 def recongize(username, audio):
     fs = FileSystemStorage()
     filename = fs.save(f'{username}.wav', audio)
+    filepath = fs.path(filename)
 
-    context = speech_to_text(filename)
+    context = speech_to_text(filename, filepath)
 
     fs.delete(filename)
     fs.delete(settings.MEDIA_ROOT + f'/{filename}')
@@ -215,7 +220,7 @@ with open('noun_dictionary_freq.pickle', 'rb') as f:
     noun_dictionary_freq = pickle.load(f)
 
 # 시작 단어로 쓰기 안 좋은 단어 확인
-blacklist = ['즘', '틱', '늄', '슘', '퓸', '늬', '뺌', '섯', '숍', '튼', '름', '늠', '쁨', '녘', '꾼']
+blacklist = ['즘', '틱', '늄', '슘', '퓸', '늬', '뺌', '섯', '숍', '튼', '름', '늠', '쁨', '녘', '꾼', '둠']
 
 start_words = []
 for word in noun_dictionary_freq:
