@@ -2,6 +2,7 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
 from utils import FAIL
+from kospeech.bin.inference import inference_audio
 
 import speech_recognition as sr
 import json
@@ -105,15 +106,18 @@ def google_stt_api(filename):
     return result
 
 
-def speech_to_text(data=None):
+def speech_to_text(data=None, filepath=None):
     kind = ''
     
     try:
-      kind = 'google'
-      data = google_stt_api(data).replace(" " , "")
+        kind = 'google'
+        data = google_stt_api(data).replace(" " , "")
     except:
-      kind = 'vito'
-      data = vito_stt_api(data).replace(" " , "")
+        try:
+            kind = 'vito'
+            data = vito_stt_api(data).replace(" " , "")
+        except:
+            data = inference_audio(filepath).replace(" " , "")
     
     logger.info(f'{kind} 결과: {data}')
 
@@ -123,8 +127,9 @@ def speech_to_text(data=None):
 def recongize(username, audio):
     fs = FileSystemStorage()
     filename = fs.save(f'{username}.wav', audio)
+    filepath = fs.path(filename)
 
-    context = speech_to_text(filename)
+    context = speech_to_text(filename, filepath)
 
     fs.delete(filename)
     fs.delete(settings.MEDIA_ROOT + f'/{filename}')
@@ -162,11 +167,11 @@ def reward_exp(animal, user, action, score=0):
 # 명령 허용 단어
 allowance_dict = {
     '곰방와': ['구방와', '구방화', '곤방와', '곤방화', '곰방화'],
-    '공중제비': ['공중채비'],
+    '공중제비': ['공중채비', '공중재비'],
     '날아': ['나라', '나아'],
     '누워': ['유워', '노아', '누와'],
     '눈알': ['누와', '루알'],
-    '라이트쇼': ['나이트셔'],
+    '라이트쇼': ['나이트셔', '나이트쇼'],
     '먹이먹자': ['거기먹자'],
     '메리크리스마스': ['메리크지마'],
     '발사': ['팔사', '갈사'],
@@ -183,7 +188,7 @@ allowance_dict = {
     '점프': ['짬프', '짬푸'],
     '점프점프': ['짬프짬푸', '짬푸짬프', '짬프짬프', '짬푸짬푸'],
     '파닥파닥': ['파닭파닭', '사닭파닭', '파닭사닭', '사닭사닭', '바닥파다', '바닥', '파닥', '바닥파닥', '파닭파닥', '바닥바닥', '파닭바닥'],
-    '파이어': []
+    '파이어': ['빠이어']
 }
 
 
@@ -215,7 +220,7 @@ with open('noun_dictionary_freq.pickle', 'rb') as f:
     noun_dictionary_freq = pickle.load(f)
 
 # 시작 단어로 쓰기 안 좋은 단어 확인
-blacklist = ['즘', '틱', '늄', '슘', '퓸', '늬', '뺌', '섯', '숍', '튼', '름', '늠', '쁨', '녘', '꾼']
+blacklist = ['즘', '틱', '늄', '슘', '퓸', '늬', '뺌', '섯', '숍', '튼', '름', '늠', '쁨', '녘', '꾼', '둠']
 
 start_words = []
 for word in noun_dictionary_freq:
