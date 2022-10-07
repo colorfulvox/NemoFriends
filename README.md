@@ -1,9 +1,9 @@
 #  네모난친구들
 ![logo_2048](/uploads/1bfa149f94f06a6e9fbb262a0f82f25a/logo_2048.png)
 
-### UCC : [링크]()
+### UCC : [링크](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a574275f-4cb8-4d07-994c-2114882a9d6a/%EC%9D%B8%ED%8A%B8%EB%A1%9C%EA%B8%B0%EB%8A%A5%EC%86%8C%EA%B0%9C%EC%97%94%EB%94%A9%28%EC%A0%9C%EC%B6%9C%EC%9A%A9-1920p%29.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221007%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221007T022850Z&X-Amz-Expires=86400&X-Amz-Signature=3c49b8ac2850f62d4e17991beb16ff32993b7ad8b63eb319ef0690aa5d1cadab&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25EC%259D%25B8%25ED%258A%25B8%25EB%25A1%259C%252B%25EA%25B8%25B0%25EB%258A%25A5%25EC%2586%258C%25EA%25B0%259C%252B%25EC%2597%2594%25EB%2594%25A9%28%25EC%25A0%259C%25EC%25B6%259C%25EC%259A%25A9-1920p%29.mp4%22&x-id=GetObject)
 
-### 시연 시나리오 : [링크]()
+### 시연 시나리오 : [링크](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/3849544f-0815-410a-9843-c147faff2678/%ED%8A%B9%ED%99%94-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%8B%9C%EC%97%B0-%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221007%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221007T022831Z&X-Amz-Expires=86400&X-Amz-Signature=afe42843d73006a5bc48b01f8402f62fb4c4775d76c8a3d989cbd48c1c6fca5d&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25ED%258A%25B9%25ED%2599%2594-%25ED%2594%2584%25EB%25A1%259C%25EC%25A0%259D%25ED%258A%25B8-%25EC%258B%259C%25EC%2597%25B0-%25EC%258B%259C%25EB%2582%2598%25EB%25A6%25AC%25EC%2598%25A4.pdf%22&x-id=GetObject)
 
 ## ✨Overview
 1. 인공지능 기술을 접목한 동물 키우기 게임입니다. 주어진 필드를 자유롭게 꾸미고 나만의 동물과 상호작용 해보세요!
@@ -79,9 +79,9 @@
 
 ###각 개발 환경 별 포팅 매뉴얼
 
-App : [링크]()
+App : [링크](https://lab.ssafy.com/-/ide/project/s07-ai-speech-sub2/S07P22C201/tree/backend/-/exec/Unity_포팅매뉴얼.pdf)
 
-Backend : [링크]()
+Backend : [링크](https://lab.ssafy.com/-/ide/project/s07-ai-speech-sub2/S07P22C201/tree/backend/-/exec/Backend.md)
 
 ### 아키텍쳐 구성도
 
@@ -93,7 +93,7 @@ Backend : [링크]()
 
 ---
 
-백엔드 CICD 배포 및 SSL 인증서 적용 과정은 [여기](https://lab.ssafy.com/s07-webmobile3-sub2/S07P12C102/-/blob/master/CICD.md)에서 설명해두었습니다.
+백엔드 CICD 배포 및 SSL 인증서 적용 과정은 [여기](https://lab.ssafy.com/-/ide/project/s07-ai-speech-sub2/S07P22C201/tree/backend/-/exec/CICD.md)에서 설명해두었습니다.
 
 ### 특이점
 
@@ -149,7 +149,6 @@ Docker, Nginx, Jenkins를 이용하여 무중단 자동 배포를 구축하였�
 
 **예시)** 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7207e7bd-faba-474f-aa1d-26e2c78f660e/Untitled.png)
 
 **#31 fix 빌드실패 - blob → recordedBlob**
 
@@ -259,12 +258,11 @@ Docker, Nginx, Jenkins를 이용하여 무중단 자동 배포를 구축하였�
 - BackEnd : Feature합쳐서 develop에 배포
 - Feature : 각 기능들 (보통 FrontEnd와 BackEnd에서 브랜치가 나눠진다. 예를 들어, 브랜치 이름은 Frontend_기능명으로 통일하기로 한다.)
 
-![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/605413d7-2b9d-4639-8ed0-84a386d25a9e/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/605413d7-2b9d-4639-8ed0-84a386d25a9e/Untitled.png)
 
 ###  ER Diagram
 
 ---
 
-![ERD](/uploads/53e58cf572132880d670c9944203a78b/image.png)
+![ERD](/uploads/5501772d297df213e19a64563355d026/image.png)
 
 - ERD입니다.
