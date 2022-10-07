@@ -7,6 +7,6 @@ RUN pip install -r requirements.txt
 
 WORKDIR /var/jenkins_home/workspace/deploy/Backend/kospeech
 RUN pip install -e .
-
+WORKDIR /var/jenkins_home/workspace/deploy/Backend
 COPY . .
 CMD ["gunicorn", "project.wsgi", "--bind", "0.0.0.0:8000"]
