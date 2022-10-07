@@ -263,6 +263,6 @@ Docker, Nginx, Jenkins를 이용하여 무중단 자동 배포를 구축하였�
 
 ---
 
-![ERD](/uploads/5501772d297df213e19a64563355d026/image.png)
+![ERD](/uploads/b19b1e7453cb27e1f66ffb7f8aaf7006/image.png)
 
 - ERD입니다.
