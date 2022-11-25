@@ -1,5 +1,5 @@
 #  네모난친구들
-![logo_2048](/uploads/1bfa149f94f06a6e9fbb262a0f82f25a/logo_2048.png)
+![logo_2048](https://user-images.githubusercontent.com/52388470/203892569-785c3e01-5d22-4179-b0ef-ce0b6b13ce3f.png)
 
 ### UCC : [링크](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/a574275f-4cb8-4d07-994c-2114882a9d6a/%EC%9D%B8%ED%8A%B8%EB%A1%9C%EA%B8%B0%EB%8A%A5%EC%86%8C%EA%B0%9C%EC%97%94%EB%94%A9%28%EC%A0%9C%EC%B6%9C%EC%9A%A9-1920p%29.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221007%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221007T022850Z&X-Amz-Expires=86400&X-Amz-Signature=3c49b8ac2850f62d4e17991beb16ff32993b7ad8b63eb319ef0690aa5d1cadab&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22%25EC%259D%25B8%25ED%258A%25B8%25EB%25A1%259C%252B%25EA%25B8%25B0%25EB%258A%25A5%25EC%2586%258C%25EA%25B0%259C%252B%25EC%2597%2594%25EB%2594%25A9%28%25EC%25A0%259C%25EC%25B6%259C%25EC%259A%25A9-1920p%29.mp4%22&x-id=GetObject)
 
@@ -15,22 +15,22 @@
 ## 핵심 서비스
 
 ### 먹이주기
-![먹이주기](/uploads/4460c8f44c2daabd4996cc49f3c1bd4c/먹이주기.gif)
+![%EB%A8%B9%EC%9D%B4%EC%A3%BC%EA%B8%B0](https://user-images.githubusercontent.com/52388470/203892605-241c1ead-3ad2-4b77-878f-dad970cc46a3.gif)
 
 ### 대화하기
-![대화하기](/uploads/69ae130a712c2615040380532f904ab1/대화하기.gif)
+![%EB%8C%80%ED%99%94%ED%95%98%EA%B8%B0](https://user-images.githubusercontent.com/52388470/203892675-6238e9a1-0bd2-423a-93fd-96a6bcbbc317.gif)
 
 ### 놀아주기 - 끝말잇기
-![끝말잇기](/uploads/5a4a916e9434446c71c051e737fc242e/끝말잇기.gif)
+![%EB%81%9D%EB%A7%90%EC%9E%87%EA%B8%B0](https://user-images.githubusercontent.com/52388470/203897900-776a1a26-acd3-4313-aad3-b3acd86499d6.gif)
 
 ### 놀아주기 - 미로찾기
 ![미로찾기](/uploads/10b228819af583aa25038660091abfe7/미로찾기.gif)
 
 ### 필드 꾸미기
-![꾸미기](/uploads/8839eaeb647cde02f435810274d63649/꾸미기.gif)
+![%EA%BE%B8%EB%AF%B8%EA%B8%B0](https://user-images.githubusercontent.com/52388470/203897949-7360cc43-ce33-480b-9e51-e0c82dc3f262.gif)
 
 ## 뽑기
-![뽑기](/uploads/c26aa07b70a82e17723bd81c3ba9c8ea/뽑기.gif)
+![뽑기](https://user-images.githubusercontent.com/52388470/203912259-26f69773-2ed9-4ee8-88d6-07148d480c15.gif)
 
 ## ✨ 주요 기능
 ---
@@ -87,7 +87,7 @@ Backend : [링크](https://lab.ssafy.com/-/ide/project/s07-ai-speech-sub2/S07P22
 
 ---
 
-![아키텍쳐 구성도](/uploads/31a3e7022d4965f7348781040e7f73ac/image.png)
+![image](https://user-images.githubusercontent.com/52388470/203912351-377983cb-ece7-4416-800a-cdb51220379e.png)
 
 ### Jenkins를 이용한 CD 구축 및 SSL 인증서 적용
 
@@ -263,6 +263,6 @@ Docker, Nginx, Jenkins를 이용하여 무중단 자동 배포를 구축하였�
 
 ---
 
-![ERD](/uploads/b19b1e7453cb27e1f66ffb7f8aaf7006/image.png)
+![image (1)](https://user-images.githubusercontent.com/52388470/203912429-3ce1ae94-952a-48f0-8948-f280776f7e75.png)
 
 - ERD입니다.
