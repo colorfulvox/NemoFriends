@@ -1,6 +1,5 @@
 #  네모난친구들
 ![logo_2048](https://user-images.githubusercontent.com/52388470/203892569-785c3e01-5d22-4179-b0ef-ce0b6b13ce3f.png)
-
 ### UCC : [링크](https://www.youtube.com/watch?v=gl21A0Yb4P4)
 
 ## ✨Overview
